@@ -1,11 +1,14 @@
-
 // Controller for getSession
+
 import { Request, Response } from "express";
-// Typically handled into a controller folder
+
+
 async function routeHandler(
   req: Request,
   res: Response,
-  next: Function): Promise<void> {
-  console.log("Hello, World!");
+  next: Function
+): Promise<void> {
+
 }
+
 export default routeHandler;

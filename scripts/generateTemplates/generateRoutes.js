@@ -37,9 +37,11 @@ const routesTemplate = `
 // Route for ${routeName}
 // What a typical express route should look like
 import express from "express";
+
 // Import handler from controller
 import routeHandler from '${relativeControllerFilename}';
-// Create router
+
+
 const router = express.Router();
 // Mounting middleware on the route
 router.use("/${routeName}/route", routeHandler);
@@ -56,13 +58,16 @@ export default router;
 const controllerTemplate = `
 // Controller for ${routeName}
 import { Request, Response } from "express";
-// Typically handled into a controller folder
+
+
 async function routeHandler(
   req: Request,
   res: Response,
-  next: Function): Promise<void> {
+  next: Function
+): Promise<void> {
   console.log("Hello, World!");
 }
+
 export default routeHandler;
 `;
 
