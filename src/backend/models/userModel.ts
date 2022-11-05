@@ -1,7 +1,7 @@
-// importing necessary modules from mongoose
-import { Schema, Model } from "mongoose";
+import mongoose, { Schema, Model } from "mongoose";
 
-// creating the Schema (blueprint)
+
+// User blueprint
 const userSchema: Schema = new Schema({
   name: {
     type: String,
@@ -17,8 +17,8 @@ const userSchema: Schema = new Schema({
   },
 });
 
-// model which will be used to create new docs
-const User = new Model("User", userSchema);
+// Model which will be used to create new docs
+const User = mongoose.model("User", userSchema);
 
 export default User;
 
