@@ -65,7 +65,7 @@ async function routeHandler(
   res: Response,
   next: Function
 ): Promise<void> {
-  console.log("Hello, World!");
+  // Write code here
 }
 
 export default routeHandler;

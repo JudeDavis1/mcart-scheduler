@@ -1,9 +1,5 @@
 // A trolly session at a PLACE, with MEMBERS, at a certain TIME
-
-import User from "./userModel.js";
 import mongoose, { Schema } from "mongoose";
-
-
 const sessionSchema = new Schema({
     place: {
         type: String,
@@ -11,15 +7,13 @@ const sessionSchema = new Schema({
     },
     members: {
         // Array of Users because multiple mCart users will be present in a Cart Session
-        type: Array<typeof User>,
+        type: (Array),
         required: true
     },
     time: {
-        type: BigInt,
+        type: Date,
         required: true
     }
 });
-
 const Session = mongoose.model("Session", sessionSchema);
-
 export default Session;
