@@ -1,6 +1,5 @@
-// Controller for Session
+// Controller for getSession
 
-import Session from "../models/sessionModel.js";
 import { Request, Response } from "express";
 
 async function getSession(
@@ -8,7 +7,15 @@ async function getSession(
   res: Response,
   next: Function
 ): Promise<void> {
-  // Write code here
+  /*
+   *
+   *
+   *
+   * WRITE CODE HERE
+   *
+   *
+   *
+   */
 }
 
 async function createSession(
@@ -16,28 +23,15 @@ async function createSession(
   res: Response,
   next: Function
 ): Promise<void> {
-  // time: milliseconds since 1970
-  const { place, members, time } = JSON.parse(String(req.params));
-
-  // Validate session attributes
-  const sessionInvalid = !place || !members || !time;
-  if (sessionInvalid)
-  {
-    res.status(400).send({error: "Invalid request!"});
-    return;
-  }
-
-  Session.create({
-    place,
-    members,
-    time
-  }).catch(() => {
-    res.status(400).send({error: "Couldn't create session!"});
-    return;
-  }).then(() => {
-    res.status(200).send({data: "Created session"});
-    next();
-  });
+  /*
+   *
+   *
+   *
+   * WRITE CODE HERE
+   *
+   *
+   *
+   */
 }
 
 async function editSession(
@@ -45,7 +39,15 @@ async function editSession(
   res: Response,
   next: Function
 ): Promise<void> {
-  // Write code here
+  /*
+   *
+   *
+   *
+   * WRITE CODE HERE
+   *
+   *
+   *
+   */
 }
 
 export { getSession, createSession, editSession };

@@ -1,6 +1,6 @@
 // A trolly session at a PLACE, with MEMBERS, at a certain TIME
 
-import User from "./userModel.js";
+import User from "./userModel";
 import mongoose, { Schema } from "mongoose";
 
 
@@ -15,7 +15,7 @@ const sessionSchema = new Schema({
         required: true
     },
     time: {
-        type: BigInt,
+        type: Date,
         required: true
     }
 });

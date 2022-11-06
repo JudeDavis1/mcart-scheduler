@@ -5,16 +5,12 @@ dotenv.config();
 
 // Route objects
 import sessionRoutes from "./routes/sessionRoutes.js";
-import Session from "./models/sessionModel.js";
+
 
 
 const PORT = 3001;
 const app = express();
 const db = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASS}@cluster0.mdm9nru.mongodb.net/?retryWrites=true&w=majority`;
-
-// Middleware
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
 
 mongoose.connect(db)
 .catch((error: Error) => {
