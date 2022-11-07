@@ -33,20 +33,11 @@ async function createSession(
   next: Function
 ): Promise<void> {
   try {
-    // time: milliseconds since 1970
-    const { place, members, time } = JSON.parse(String(req.params));
+    // the data for a new document would usually come from the request body
+    // in my opinion i dont think it makes sense to put the fields into the url
+    const data = await Session.create(req.body);
 
-    // Validate session attributes
-    const sessionInvalid = !place || !members || !time;
-    if (sessionInvalid) throw new Error("Invalid session");
-
-    await Session.create({
-      place,
-      members,
-      time,
-    });
-
-    res.status(200).json({ data: "Created session" });
+    res.status(200).json({ data });
   } catch (error) {
     res
       .status(400)

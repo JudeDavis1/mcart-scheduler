@@ -12,7 +12,7 @@ const router = express.Router();
 router.route("/getSession/:session").get(getSession);
 
 // POST requests
-router.route("/createSession/:session").post(createSession);
+router.route("/createSession").post(createSession);
 
 // PATCH requests
 router.route("/editSession/:session").patch(editSession);
