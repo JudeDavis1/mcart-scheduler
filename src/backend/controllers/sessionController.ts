@@ -9,7 +9,7 @@ async function getSession(
   next: Function
 ): Promise<void> {
   try {
-    const { sessionId } = req.params;
+    const { sessionId } = req.body;
 
     if (!sessionId) {
       res.status(400).json({ error: "That ID is not valid" });
@@ -34,7 +34,7 @@ async function createSession(
 ): Promise<void> {
   try {
     // time: milliseconds since 1970
-    const { place, members, time } = req.params;
+    const { place, members, time } = req.body;
     console.log(place, members, time);
 
     // Validate session attributes
