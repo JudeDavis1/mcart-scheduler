@@ -3,12 +3,15 @@
 import Session from "../models/sessionModel.js";
 import { Request, Response } from "express";
 
+
 async function getSession(
   req: Request,
   res: Response,
   next: Function
 ): Promise<void> {
-  // Write code here
+  // What is to be received here?
+  // Do we receive an _id and return it?
+  // How do we return it?
 }
 
 async function createSession(
