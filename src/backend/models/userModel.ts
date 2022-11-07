@@ -1,10 +1,9 @@
 import mongoose, { Schema } from "mongoose";
 
-
 interface IUser {
-  name: String,
-  email: String,
-  congregation: String
+  name: String;
+  email: String;
+  congregation: String;
 }
 
 // User blueprint
@@ -20,6 +19,10 @@ const userSchema: Schema = new Schema({
   congregation: {
     type: String,
     required: true,
+  },
+  userType: {
+    type: String,
+    enum: ["congAdmin", "sessionCreator", "user"],
   },
 });
 
