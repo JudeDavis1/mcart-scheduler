@@ -4,6 +4,12 @@ import User from "./userModel.js";
 import mongoose, { Schema } from "mongoose";
 
 
+interface ISession {
+    place: String,
+    members: Array<typeof User>,
+    time: Date
+}
+
 const sessionSchema = new Schema({
     place: {
         type: String,
@@ -15,11 +21,14 @@ const sessionSchema = new Schema({
         required: true
     },
     time: {
-        type: BigInt,
+        type: Date,
         required: true
     }
 });
 
 const Session = mongoose.model("Session", sessionSchema);
 
-export default Session;
+export {
+    Session,
+    ISession
+};

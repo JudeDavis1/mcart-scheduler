@@ -1,6 +1,12 @@
 import mongoose, { Schema } from "mongoose";
 
 
+interface IUser {
+  name: String,
+  email: String,
+  congregation: String
+}
+
 // User blueprint
 const userSchema: Schema = new Schema({
   name: {

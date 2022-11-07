@@ -1,6 +1,6 @@
 // Controller for Session
 
-import Session from "../models/sessionModel.js";
+import { Session } from "../models/sessionModel.js";
 import { Request, Response } from "express";
 
 
@@ -33,16 +33,19 @@ async function createSession(
 ): Promise<void> {
   try {
     // time: milliseconds since 1970
-    const { place, members, time } = JSON.parse(String(req.params));
+    const { place, members, time } = req.params;
 
     // Validate session attributes
     const sessionInvalid = !place || !members || !time;
     if (sessionInvalid) throw new Error("Invalid session");
 
+    const timeObj = new Date();
+    timeObj.setTime(parseInt(time));
+
     await Session.create({
-      place,
-      members,
-      time
+      place: place,
+      members: members,
+      time: timeObj
     });
 
     res.status(200).json({ data: "Created session" });

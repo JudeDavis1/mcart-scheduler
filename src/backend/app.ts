@@ -5,7 +5,7 @@ dotenv.config();
 
 // Route objects
 import sessionRoutes from "./routes/sessionRoutes.js";
-import Session from "./models/sessionModel.js";
+import { ISession, Session } from "./models/sessionModel.js";
 
 
 const PORT = 3001;
@@ -27,6 +27,16 @@ mongoose.connect(db)
 })
 .then(() => {
     console.log('Connected to MongoDB cluster.');
+
+    Session.create({
+        place: 'place',
+        members: ['member1', 'member2'],
+        time: new Date()
+    });
+
+    Session.findOne({place: 'place'}, (err: Error, session: ISession) => {
+        console.log(session.place);
+    });
 });
 
 // Route endpoints
