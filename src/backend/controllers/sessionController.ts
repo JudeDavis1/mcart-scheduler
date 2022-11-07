@@ -3,22 +3,23 @@
 import Session from "../models/sessionModel.js";
 import { Request, Response } from "express";
 
-
 async function getSession(
   req: Request,
   res: Response,
   next: Function
 ): Promise<void> {
-  // What is to be received here?
-  // Do we receive an _id and return it?
-  // How do we return it?
-  const { sessionId } = req.params;
-
   try {
+    const { sessionId } = req.params;
+
+    if (!sessionId) {
+      res.status(400).json({ error: "That ID is not valid" });
+      throw new Error("Invalid ID");
+    }
+
     const session = await Session.findById(sessionId);
 
     if (!session) {
-      res.status(400).json({error: "Data doesn't exist"});
+      res.status(400).json({ error: "Data doesn't exist" });
       throw new Error("No data returned!");
     }
   } catch (error) {
@@ -42,12 +43,14 @@ async function createSession(
     await Session.create({
       place,
       members,
-      time
+      time,
     });
 
     res.status(200).json({ data: "Created session" });
   } catch (error) {
-    res.status(400).json({ error: "Couldn't create session. Try checking your data." });
+    res
+      .status(400)
+      .json({ error: "Couldn't create session. Try checking your data." });
     next(error);
     return;
   }
