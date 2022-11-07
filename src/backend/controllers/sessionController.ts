@@ -37,6 +37,7 @@ async function createSession(
     });
   } catch (error) {
     res.status(400).json({ error: "Couldn't create session!" });
+    next(error);
     return;
   }
 }
