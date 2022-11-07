@@ -12,6 +12,18 @@ async function getSession(
   // What is to be received here?
   // Do we receive an _id and return it?
   // How do we return it?
+  const { sessionId } = req.params;
+
+  try {
+    const session = await Session.findById(sessionId);
+
+    if (!session) {
+      res.status(400).json({error: "Data doesn't exist"});
+      throw new Error("No data returned!");
+    }
+  } catch (error) {
+    next(error);
+  }
 }
 
 async function createSession(
@@ -25,21 +37,17 @@ async function createSession(
 
     // Validate session attributes
     const sessionInvalid = !place || !members || !time;
-    if (sessionInvalid) {
-      res.status(400).json({ error: "Invalid request!" });
-      return;
-    }
+    if (sessionInvalid) throw new Error("Invalid session");
 
-    Session.create({
+    await Session.create({
       place,
       members,
       time
-    }).then(() => {
-      res.status(200).json({ data: "Created session" });
-      next();
     });
+
+    res.status(200).json({ data: "Created session" });
   } catch (error) {
-    res.status(400).json({ error: "Couldn't create session!" });
+    res.status(400).json({ error: "Couldn't create session. Try checking your data." });
     next(error);
     return;
   }
