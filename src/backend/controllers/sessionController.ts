@@ -3,6 +3,7 @@
 import { Session } from "../models/sessionModel.js";
 import { Request, Response } from "express";
 
+
 async function getSession(
   req: Request,
   res: Response,
@@ -12,20 +13,26 @@ async function getSession(
     const { sessionId } = req.body;
 
     if (!sessionId) {
-      res.status(400).json({ error: "That ID is not valid" });
+      res
+        .status(400)
+        .json({ error: "That ID is not valid" });
       throw new Error("Invalid ID");
     }
 
     const session = await Session.findById(sessionId);
 
     if (!session) {
-      res.status(400).json({ error: "Data doesn't exist" });
+      res
+        .status(400)
+        .json({ error: "Data doesn't exist" });
       throw new Error("No data returned!");
     }
 
     res.json(session.toJSON());
   } catch (error) {
-    res.status(400).json({ error: "Error receiving data, check your request." });
+    res
+      .status(400)
+      .json({ error: "Error receiving data, check your request." });
     next(error);
   }
 }
@@ -59,7 +66,6 @@ async function createSession(
       .status(400)
       .json({ error: "Couldn't create session. Try checking your data." });
     next(error);
-    return;
   }
 }
 
@@ -68,7 +74,23 @@ async function editSession(
   res: Response,
   next: Function
 ): Promise<void> {
-  // Write code here
+  try {
+    // Request should be in the format:
+    // { _id: ..., updates: { ... } }
+    const { _id, updates } = req.body;
+    if (!updates) throw new Error("Invalid updates");
+
+    await Session.updateOne({ _id }, updates);
+    res
+      .status(200)
+      .json({ data: "Successfully updated session" });
+
+  } catch (error) {
+    res
+      .status(400)
+      .json({ error: "Couldn't edit session" });
+    next(error);
+  }
 }
 
 export { getSession, createSession, editSession };

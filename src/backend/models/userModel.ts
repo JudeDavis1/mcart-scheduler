@@ -6,6 +6,13 @@ interface IUser {
   congregation: String;
 }
 
+
+enum UserType {
+  congAdmin,
+  sessionCreator,
+  user,
+}
+
 // User blueprint
 const userSchema: Schema = new Schema({
   name: {
@@ -22,13 +29,18 @@ const userSchema: Schema = new Schema({
   },
   userType: {
     type: String,
-    enum: ["congAdmin", "sessionCreator", "user"],
+    enum: UserType,
   },
 });
+
 
 // Model which will be used to create new docs
 const User = mongoose.model("User", userSchema);
 
-export default User;
+export {
+  User,
+  IUser,
+  UserType,
+};
 
 // more info -> https://mongoosejs.com/docs/guide.html

@@ -8,13 +8,13 @@ import {
 
 const router = express.Router();
 
-// GET requests
-router.route("/getSession").get(getSession);
-
 // POST requests
 router.route("/createSession").post(createSession);
 
+// GET requests
+router.route("/getSession").get(getSession);
+
 // PATCH requests
-router.route("/editSession/:session").patch(editSession);
+router.route("/editSession").patch(editSession);
 
 export default router;
