@@ -19,9 +19,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "server": "tsc && node ./build/app.js",
+    "server": "tsc && node ./build/src/backend/app.js",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test-backend": "ts-node-esm tests/testHelper.ts",
     "eject": "react-scripts eject",
     "create-route": "node ./scripts/generateTemplates/generateRoutes.js"
   },

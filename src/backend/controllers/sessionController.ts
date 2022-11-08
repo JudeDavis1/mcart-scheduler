@@ -45,7 +45,6 @@ async function createSession(
   try {
     // time: milliseconds since 1970
     const { place, members, time } = req.body;
-    console.log(place, members, time);
 
     // Validate session attributes
     const sessionInvalid = !place || !members || !time;
@@ -93,4 +92,34 @@ async function editSession(
   }
 }
 
-export { getSession, createSession, editSession };
+async function deleteSession(
+  req: Request,
+  res: Response,
+  next: Function
+): Promise<void> {
+  try {
+    // Request should be in the format:
+    // { _id: ..., updates: { ... } }
+    const { _id: sessionId } = req.body;
+    if (!sessionId) throw new Error("Invalid ID");
+
+    await Session.deleteOne({ _id: sessionId })
+    res
+      .status(200)
+      .json({ data: "Successfully delete session" });
+
+  } catch (error) {
+    res
+      .status(400)
+      .json({ error: "Couldn't delete session" });
+    next(error);
+  }
+}
+
+
+export {
+  getSession,
+  createSession,
+  editSession,
+  deleteSession,
+};

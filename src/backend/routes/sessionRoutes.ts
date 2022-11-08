@@ -1,9 +1,10 @@
 import express from "express";
 
 import {
-  getSession,
   createSession,
+  getSession,
   editSession,
+  deleteSession,
 } from "../controllers/sessionController.js";
 
 const router = express.Router();
@@ -16,5 +17,8 @@ router.route("/getSession").get(getSession);
 
 // PATCH requests
 router.route("/editSession").patch(editSession);
+
+// DELETE requests
+router.route("/deleteSession").delete(deleteSession);
 
 export default router;
