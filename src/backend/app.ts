@@ -5,6 +5,8 @@ dotenv.config();
 
 // Route objects
 import sessionRoutes from "./routes/sessionRoutes.js";
+
+// For testing
 import { ISession, Session } from "./models/sessionModel.js";
 
 
@@ -14,36 +16,36 @@ const db = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASS
 
 // Middleware
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 
 mongoose.connect(db)
-.catch((error: Error) => {
-    if (error)
-    {
-        console.log(error.message);
-        console.log('Error connecting to MongoDB cluster!');
-        return;
-    }
-})
-.then(() => {
-    console.log('Connected to MongoDB cluster.');
+	.catch((error: Error) => {
+		if (error) {
+			console.log(error.message);
+			console.log('Error connecting to MongoDB cluster!');
 
-    // Session.create({
-    //     place: 'place',
-    //     members: ['member1', 'member2'],
-    //     time: new Date()
-    // });
+			process.exit(-1);
+		}
+	})
+	.then(() => {
+		console.log('Connected to MongoDB cluster.');
 
-    // Session.findOne({place: 'place'}, (err: Error, session: ISession) => {
-    //     console.log(session.place);
-    // });
-});
+		// Session.create({
+		//     place: 'place',
+		//     members: ['member1', 'member2'],
+		//     time: new Date()
+		// });
+
+		// Session.findOne({place: 'place'}, (err: Error, session: ISession) => {
+		//     console.log(session.place);
+		// });
+	});
 
 // Route endpoints
 app.use("/api/v1/", sessionRoutes);
 
 app.listen(PORT, () => {
-    console.log('Running on PORT: ' + PORT + '.');
+	console.log('Running on PORT: ' + PORT + '.');
 });
 
 

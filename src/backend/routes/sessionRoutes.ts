@@ -9,7 +9,7 @@ import {
 const router = express.Router();
 
 // GET requests
-router.route("/getSession/:session").get(getSession);
+router.route("/getSession").get(getSession);
 
 // POST requests
 router.route("/createSession").post(createSession);

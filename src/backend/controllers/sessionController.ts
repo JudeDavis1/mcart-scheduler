@@ -22,7 +22,10 @@ async function getSession(
       res.status(400).json({ error: "Data doesn't exist" });
       throw new Error("No data returned!");
     }
+
+    res.json(session.toJSON());
   } catch (error) {
+    res.status(400).json({ error: "Error receiving data, check your request." });
     next(error);
   }
 }
