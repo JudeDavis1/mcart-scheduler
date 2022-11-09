@@ -43,4 +43,14 @@ mongoose.connect(db)
 // Route endpoints
 app.use("/api/v1/", sessionRoutes);
 
-export default app;
+// Listen without blocking the testing process
+async function listenAsync() {
+	app.listen(4444, () => {
+		console.log("[*] Test server initialized.");
+	})
+};
+
+export {
+	app,
+	listenAsync
+};

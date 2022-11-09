@@ -20,7 +20,7 @@ async function createSession(
     const timeObj = new Date();
     timeObj.setTime(parseInt(time));
 
-    await Session.create({
+    const createdSession = await Session.create({
       place: place,
       members: members,
       time: timeObj
@@ -28,7 +28,7 @@ async function createSession(
 
     res
       .status(200)
-      .json({ data: "Created session" });
+      .json({ data: "Created session", session: createdSession });
   } catch (error) {
     res
       .status(400)
