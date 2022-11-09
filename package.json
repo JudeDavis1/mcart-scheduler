@@ -21,7 +21,7 @@
     "start": "react-scripts start",
     "server": "tsc && node ./build/src/backend/server.js",
     "build": "react-scripts build",
-    "test-backend": "ts-node-esm tests/testHelper.ts",
+    "test-backend": "tsc && node ./build/tests/testHelper.js",
     "eject": "react-scripts eject",
     "create-route": "node ./scripts/generateTemplates/generateRoutes.js"
   },
