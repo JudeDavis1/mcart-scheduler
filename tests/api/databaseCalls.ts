@@ -1,14 +1,13 @@
-// Test the whole process of database calls:
-// - Create
-// - Read
-// - Update
-// - Delete (later)
+// Test the CRUD operations in database calls:
+
+import app from '../../src/backend/app.js';
+
 
 function testCreate() {
 
 }
 
-function testRead() {
+function testGet() {
 
 }
 

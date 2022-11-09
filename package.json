@@ -19,7 +19,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "server": "tsc && node ./build/src/backend/app.js",
+    "server": "tsc && node ./build/src/backend/server.js",
     "build": "react-scripts build",
     "test-backend": "ts-node-esm tests/testHelper.ts",
     "eject": "react-scripts eject",

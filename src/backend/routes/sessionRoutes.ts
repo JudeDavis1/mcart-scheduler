@@ -3,7 +3,7 @@ import express from "express";
 import {
   createSession,
   getSession,
-  editSession,
+  updateSession,
   deleteSession,
 } from "../controllers/sessionController.js";
 
@@ -16,7 +16,7 @@ router.route("/createSession").post(createSession);
 router.route("/getSession").get(getSession);
 
 // PATCH requests
-router.route("/editSession").patch(editSession);
+router.route("/updateSession").patch(updateSession);
 
 // DELETE requests
 router.route("/deleteSession").delete(deleteSession);

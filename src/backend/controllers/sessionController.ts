@@ -4,6 +4,39 @@ import { Session } from "../models/sessionModel.js";
 import { Request, Response } from "express";
 
 
+async function createSession(
+  req: Request,
+  res: Response,
+  next: Function
+): Promise<void> {
+  try {
+    // time: milliseconds since 1970
+    const { place, members, time } = req.body;
+
+    // Validate session attributes
+    const sessionInvalid = !place || !members || !time;
+    if (sessionInvalid) throw new Error("Invalid session");
+
+    const timeObj = new Date();
+    timeObj.setTime(parseInt(time));
+
+    await Session.create({
+      place: place,
+      members: members,
+      time: timeObj
+    });
+
+    res
+      .status(200)
+      .json({ data: "Created session" });
+  } catch (error) {
+    res
+      .status(400)
+      .json({ error: "Couldn't create session. Try checking your data." });
+    next(error);
+  }
+}
+
 async function getSession(
   req: Request,
   res: Response,
@@ -37,38 +70,7 @@ async function getSession(
   }
 }
 
-async function createSession(
-  req: Request,
-  res: Response,
-  next: Function
-): Promise<void> {
-  try {
-    // time: milliseconds since 1970
-    const { place, members, time } = req.body;
-
-    // Validate session attributes
-    const sessionInvalid = !place || !members || !time;
-    if (sessionInvalid) throw new Error("Invalid session");
-
-    const timeObj = new Date();
-    timeObj.setTime(parseInt(time));
-
-    await Session.create({
-      place: place,
-      members: members,
-      time: timeObj
-    });
-
-    res.status(200).json({ data: "Created session" });
-  } catch (error) {
-    res
-      .status(400)
-      .json({ error: "Couldn't create session. Try checking your data." });
-    next(error);
-  }
-}
-
-async function editSession(
+async function updateSession(
   req: Request,
   res: Response,
   next: Function
@@ -118,8 +120,8 @@ async function deleteSession(
 
 
 export {
-  getSession,
   createSession,
-  editSession,
+  getSession,
+  updateSession,
   deleteSession,
 };

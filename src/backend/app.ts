@@ -10,7 +10,6 @@ import sessionRoutes from "./routes/sessionRoutes.js";
 import { ISession, Session } from "./models/sessionModel.js";
 
 
-const PORT = 3001;
 const app = express();
 const db = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASS}@cluster0.mdm9nru.mongodb.net/?retryWrites=true&w=majority`;
 
@@ -43,10 +42,5 @@ mongoose.connect(db)
 
 // Route endpoints
 app.use("/api/v1/", sessionRoutes);
-
-app.listen(PORT, () => {
-	console.log('Running on PORT: ' + PORT + '.');
-});
-
 
 export default app;
