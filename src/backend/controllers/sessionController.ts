@@ -45,18 +45,14 @@ async function getSession(
 ): Promise<void> {
   try {
     const { sessionId } = req.body;
-
-    if (!sessionId) {
-      throw new Error("Invalid ID");
-    }
+    if (!sessionId) throw new Error("Invalid ID");
 
     const session = await Session.findById(sessionId);
+    if (!session) throw new Error("Data doesn't exist!");
 
-    if (!session) {
-      throw new Error("Data doesn't exist!");
-    }
-
-    res.json(session.toJSON());
+    res
+      .status(200)
+      .json({ data: "Found session!", session: session.toJSON() });
   } catch (error: any) {
     res
       .status(400)
@@ -81,7 +77,6 @@ async function updateSession(
     res
       .status(200)
       .json({ data: "Successfully updated session", session: updatedSession });
-
   } catch (error: any) {
     res
       .status(400)

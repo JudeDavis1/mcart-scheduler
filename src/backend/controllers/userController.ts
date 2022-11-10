@@ -82,7 +82,20 @@ async function deleteUser(
   res: Response,
   next: Function
 ): Promise<void> {
-  // Write code here...
+  try {
+    const userId = req.body;
+    if (!userId) throw new Error("Please provide a user ID.");
+
+    const deletedUser = await User.deleteOne({ _id: userId });
+    res
+      .status(200)
+      .json({ data: "Deleted user successfully!", user: deletedUser });
+  } catch (error: any) {
+    res
+      .status(400)
+      .json({ error: "Error deleting user: " + error.message });
+    next();
+  }
 }
 
 
