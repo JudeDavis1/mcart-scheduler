@@ -1,7 +1,7 @@
 // Controller for user
 
 import { Request, Response } from "express";
-import { User, UserType } from "../models/userModel";
+import { User, UserType } from "../models/userModel.js";
 
 
 // Later, we will need authentication when creating a new user.
@@ -17,7 +17,7 @@ async function createUser(
     const userInvalid = !name || !email || !congregation;
     if (userInvalid) throw new Error('One or more fields are missing.');
 
-    const createdUser = User.create({
+    const createdUser = await User.create({
       name,
       email,
       congregation,
@@ -83,7 +83,7 @@ async function deleteUser(
   next: Function
 ): Promise<void> {
   try {
-    const userId = req.body;
+    const { userId } = req.body;
     if (!userId) throw new Error("Please provide a user ID.");
 
     const deletedUser = await User.deleteOne({ _id: userId });
