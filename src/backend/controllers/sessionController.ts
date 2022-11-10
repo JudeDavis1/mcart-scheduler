@@ -37,6 +37,7 @@ async function createSession(
   }
 }
 
+
 async function getSession(
   req: Request,
   res: Response,
@@ -70,6 +71,7 @@ async function getSession(
   }
 }
 
+
 async function updateSession(
   req: Request,
   res: Response,
@@ -93,6 +95,7 @@ async function updateSession(
     next(error);
   }
 }
+
 
 async function deleteSession(
   req: Request,

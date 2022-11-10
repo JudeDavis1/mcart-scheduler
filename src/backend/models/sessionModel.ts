@@ -6,7 +6,7 @@ import mongoose, { Schema } from "mongoose";
 
 interface ISession {
     place: String,
-    members: Array<typeof User>,
+    members: Array<Schema.Types.ObjectId>,
     time: Date
 }
 
@@ -17,7 +17,8 @@ const sessionSchema = new Schema({
     },
     members: {
         // Array of Users because multiple mCart users will be present in a Cart Session
-        type: Array<typeof User>,
+        type: Array<Schema.Types.ObjectId>,
+        ref: "User",
         required: true
     },
     time: {

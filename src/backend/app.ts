@@ -4,6 +4,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 // Route objects
+import userRoutes from "./routes/userRoutes.js";
 import sessionRoutes from "./routes/sessionRoutes.js";
 
 // For testing
@@ -41,6 +42,7 @@ mongoose.connect(db)
 	});
 
 // Route endpoints
+app.use("/api/v1/", userRoutes);
 app.use("/api/v1/", sessionRoutes);
 
 // Listen without blocking the testing process

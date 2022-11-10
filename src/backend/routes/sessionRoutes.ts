@@ -10,15 +10,15 @@ import {
 const router = express.Router();
 
 // POST requests
-router.route("/createSession").post(createSession);
+router.route("/session/create").post(createSession);
 
 // GET requests
-router.route("/getSession").get(getSession);
+router.route("/session/get").get(getSession);
 
 // PATCH requests
-router.route("/updateSession").patch(updateSession);
+router.route("/session/update").patch(updateSession);
 
 // DELETE requests
-router.route("/deleteSession").delete(deleteSession);
+router.route("/session/delete").delete(deleteSession);
 
 export default router;
