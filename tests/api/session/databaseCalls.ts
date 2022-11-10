@@ -5,12 +5,14 @@ import mongoose from 'mongoose';
 
 import { listenAsync } from '../../../src/backend/app.js';
 import { User, UserType } from '../../../src/backend/models/userModel.js';
-import { Session } from '../../../src/backend/models/sessionModel.js';
+import { ISession, Session } from '../../../src/backend/models/sessionModel.js';
 
 // Async so that we can test the API
 listenAsync();
 
-async function testCreate() {
+async function testCreate(): Promise<Boolean> {
+    var testResults: Array<Boolean> = [];
+
     const date = new Date();
     date.setFullYear(2023);
     date.setMonth(3);
@@ -45,8 +47,20 @@ async function testCreate() {
         ],
         time: date.getTime()
     });
+    const actualSession: ISession = req.data.session;
 
-    const receivedSession = await Session.findByIdAndDelete(req.data);
+    const receivedSession = await Session.findByIdAndDelete(req.data.session._id);
+    if (!receivedSession) return false;
+    console.log(receivedSession.members.prototype == actualSession.members);
+    console.log(receivedSession.members.prototype)
+
+    testResults = [
+        actualSession._id == receivedSession._id,
+        actualSession.members == receivedSession.members.prototype
+    ];
+
+
+    return true;
 }
 
 function testGet() {

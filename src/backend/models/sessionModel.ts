@@ -4,9 +4,10 @@ import mongoose, { Schema } from "mongoose";
 
 
 interface ISession {
-    place: String,
-    members: Array<Schema.Types.ObjectId>,
-    time: Date
+    _id: mongoose.Types.ObjectId;
+    place: String;
+    members: Array<Schema.Types.ObjectId>;
+    time: Date;
 }
 
 const sessionSchema = new Schema({
