@@ -27,6 +27,7 @@ async function createUser(
       .json({ data: "Created session.", user: createdUser });
   } catch (error: any) {
     res.status(400).json({ error: "Invalid user fields: " + error.message });
+    next(error);
   }
 }
 
@@ -36,7 +37,20 @@ async function getUser(
   res: Response,
   next: Function
 ): Promise<void> {
-  // Write code here...
+  try {
+    const { userId } = req.body;
+    if (!userId) throw new Error("Please provide a user ID.");
+
+    const receivedUser = await User.findById(userId);
+    if (!receivedUser) throw new Error("User doesn't exist.");
+
+    res.status(200).json({ data: "Found user!", user: receivedUser });
+  } catch (error: any) {
+    res
+      .status(400)
+      .json({ error: "Error retrieving user: " + error.message });
+    next();
+  }
 }
 
 

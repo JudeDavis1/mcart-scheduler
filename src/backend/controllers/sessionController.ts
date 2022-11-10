@@ -47,26 +47,20 @@ async function getSession(
     const { sessionId } = req.body;
 
     if (!sessionId) {
-      res
-        .status(400)
-        .json({ error: "That ID is not valid" });
       throw new Error("Invalid ID");
     }
 
     const session = await Session.findById(sessionId);
 
     if (!session) {
-      res
-        .status(400)
-        .json({ error: "Data doesn't exist" });
-      throw new Error("No data returned!");
+      throw new Error("Data doesn't exist!");
     }
 
     res.json(session.toJSON());
-  } catch (error) {
+  } catch (error: any) {
     res
       .status(400)
-      .json({ error: "Error receiving data, check your request." });
+      .json({ error: "Error receiving data: " + error.message });
     next(error);
   }
 }
@@ -88,10 +82,10 @@ async function updateSession(
       .status(200)
       .json({ data: "Successfully updated session" });
 
-  } catch (error) {
+  } catch (error: any) {
     res
       .status(400)
-      .json({ error: "Couldn't edit session" });
+      .json({ error: "Couldn't edit session: " + error.message });
     next(error);
   }
 }
