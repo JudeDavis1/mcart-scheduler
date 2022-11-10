@@ -4,11 +4,8 @@
 // `testHelps.ts api`
 
 import {
-    testCreate,
-    testGet,
-    testUpdate,
-    testDelete
-} from './api/databaseCalls.js';
+    testSessionCRUD
+} from './api/session/databaseCalls.js';
 
 // Test type. So far only supporting API test
 // In this case, run `testHelper.ts api`
@@ -23,8 +20,5 @@ testType = testType.toLowerCase()
 
 
 if (testType == 'api') {
-    testCreate();
-    testGet();
-    testUpdate();
-    testDelete();
+    testSessionCRUD();
 }
