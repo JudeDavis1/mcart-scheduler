@@ -74,13 +74,13 @@ async function updateSession(
   try {
     // Request should be in the format:
     // { _id: ..., updates: { ... } }
-    const { _id, updates } = req.body;
+    const { sessionId, updates } = req.body;
     if (!updates) throw new Error("Invalid updates");
 
-    await Session.updateOne({ _id }, updates);
+    const updatedSession = await Session.updateOne({ _id: sessionId }, updates);
     res
       .status(200)
-      .json({ data: "Successfully updated session" });
+      .json({ data: "Successfully updated session", session: updatedSession });
 
   } catch (error: any) {
     res

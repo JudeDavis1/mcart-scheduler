@@ -1,7 +1,7 @@
 // Controller for user
 
 import { Request, Response } from "express";
-import { User } from "../models/userModel";
+import { User, UserType } from "../models/userModel";
 
 
 // Later, we will need authentication when creating a new user.
@@ -59,7 +59,21 @@ async function updateUser(
   res: Response,
   next: Function
 ): Promise<void> {
-  // Write code here...
+  try {
+    const { userId, updates } = req.body;
+    if (!userId) throw new Error("Please provide a user ID.");
+    if (!updates) throw new Error("Please provide updates.");
+
+    const updatedUser = await User.updateOne({ _id: userId }, updates);
+    res
+      .status(200)
+      .json({ data: "Updated user successfully!", user: updatedUser });
+  } catch (error: any) {
+    res
+      .status(400)
+      .json({ error: "Error updating user: " + error.message });
+    next();
+  }
 }
 
 
