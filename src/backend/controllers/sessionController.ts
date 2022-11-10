@@ -28,7 +28,7 @@ async function createSession(
 
     res
       .status(200)
-      .json({ data: "Created session", session: createdSession });
+      .json({ data: "Created session.", session: createdSession });
   } catch (error) {
     res
       .status(400)
