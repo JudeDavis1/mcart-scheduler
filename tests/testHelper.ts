@@ -20,5 +20,8 @@ testType = testType.toLowerCase()
 
 
 if (testType == 'api') {
-    testSessionCRUD();
+    console.log('[*] Initializing test cases for session...')
+    if (testSessionCRUD()) {
+        console.log("Passed Test for")
+    }
 }

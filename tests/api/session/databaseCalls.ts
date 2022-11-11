@@ -51,23 +51,37 @@ async function testCreate(): Promise<Boolean> {
         time: date.getTime()
     });
     const actualSession: ISession = req.data.session;
-
     const receivedSession = await Session.findByIdAndDelete(req.data.session._id);
+    
     await User.deleteMany({congregation: "Some Congregation"});
     if (!receivedSession) return false;
 
+
+    // Sort members so that they can 
+    const actualMembers = actualSession.members.map((val) => val.toString());
+    const receivedMembers = receivedSession.members.map((val) => val.toString());
+
+    receivedSession.members;
+
     // Assert that both member lengths are equal
+    
+    // *TEST MEMBERS*
     if (actualSession.members.length != receivedSession.members.length) testResults.push(false);
-    actualSession.members.forEach((item, i, arr) => {
-        testResults.push(item.toString() == receivedSession.members[i].toString());
+    actualSession.members.forEach((item, i) => {
+        testResults.push(actualMembers[i] == receivedMembers[i]);
+        console.log(item.toString(), receivedSession.members[i].toString())
     });
 
-    testResults = [
-        actualSession._id == receivedSession._id,
-        actualSession.members == receivedSession.members
-    ];
+    // *TEST _ID*
+    testResults.push(actualSession._id == receivedSession._id);
+    
+    // *TEST PLACE*
+    testResults.push(actualSession.place == receivedSession.place);
 
-    return true;
+    // *TEST TIME*
+    testResults.push(actualSession.time == receivedSession.time);
+
+    return testResults.every((val) => val);
 }
 
 function testGet() {
