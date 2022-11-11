@@ -6,6 +6,9 @@ import mongoose from 'mongoose';
 import { listenAsync } from '../../../src/backend/app.js';
 import { User, UserType } from '../../../src/backend/models/userModel.js';
 import { ISession, Session } from '../../../src/backend/models/sessionModel.js';
+import { ObjectId } from 'mongodb';
+import { clear } from 'console';
+import assert from 'assert';
 
 // Async so that we can test the API
 listenAsync();
@@ -50,15 +53,19 @@ async function testCreate(): Promise<Boolean> {
     const actualSession: ISession = req.data.session;
 
     const receivedSession = await Session.findByIdAndDelete(req.data.session._id);
+    await User.deleteMany({congregation: "Some Congregation"});
     if (!receivedSession) return false;
-    console.log(receivedSession.members.prototype == actualSession.members);
-    console.log(receivedSession.members.prototype)
+
+    // Assert that both member lengths are equal
+    if (actualSession.members.length != receivedSession.members.length) testResults.push(false);
+    actualSession.members.forEach((item, i, arr) => {
+        testResults.push(item.toString() == receivedSession.members[i].toString());
+    });
 
     testResults = [
         actualSession._id == receivedSession._id,
-        actualSession.members == receivedSession.members.prototype
+        actualSession.members == receivedSession.members
     ];
-
 
     return true;
 }
