@@ -11,48 +11,10 @@ import { ISession, Session } from '../../../src/backend/models/sessionModel.js';
 // Async so that we can test the API
 listenAsync();
 
-function logResult(result: Boolean) {
-    if (result) console.log("PASSED!");
-    else console.log("FAILED!");
-}
-
 async function testCreate(): Promise<Boolean> {
     var testResults: Array<Boolean> = [];
 
-    const date = new Date();
-    date.setFullYear(2023);
-    date.setMonth(3);
-    date.setDate(29);
-    date.setHours(12);
-
-    // Create 2 IDs and user objects. Save the ID so that we can delete it later.
-    const tmpUserId1 = new mongoose.Types.ObjectId();
-    const tmpUserId2 = new mongoose.Types.ObjectId();
-
-    await User.create({
-        _id: tmpUserId1,
-        name: "Test name",
-        email: "test@test.com",
-        congregation: "Some Congregation",
-        userType: UserType.user
-    });
-
-    await User.create({
-        _id: tmpUserId2,
-        name: "Test name2",
-        email: "test2@test.com",
-        congregation: "Some Congregation",
-        userType: UserType.user
-    });
-
-    const req = await axios.post('http://localhost:3001/api/v1/session/create', {
-        place: "Some place",
-        members: [
-            tmpUserId1,
-            tmpUserId2
-        ],
-        time: date.getTime()
-    });
+    const req = await axios.post('http://localhost:3001/api/v1/session/create', await generateSession());
     const actualSession: ISession = req.data.session;
     const receivedSession = await Session.findByIdAndDelete(req.data.session._id);
     
@@ -93,7 +55,6 @@ async function testCreate(): Promise<Boolean> {
 
     // Return whether or not all items are TRUE in testResults
     return testResults.every((val) => val);
-    
 }
 
 function testGet() {
@@ -115,6 +76,55 @@ async function testSessionCRUD() {
     testUpdate();
     testDelete();
 }
+
+
+
+// Helper functions
+
+function logResult(result: Boolean): void {
+    if (result) console.log("PASSED!");
+    else console.log("FAILED!");
+}
+
+async function generateSession(): Promise<Object> {
+    const date = new Date();
+    date.setFullYear(2023);
+    date.setMonth(3);
+    date.setDate(29);
+    date.setHours(12);
+
+    // Create 2 IDs and user objects. Save the ID so that we can delete it later.
+    const tmpUserId1 = new mongoose.Types.ObjectId();
+    const tmpUserId2 = new mongoose.Types.ObjectId();
+
+    await User.create({
+        _id: tmpUserId1,
+        name: "Test name",
+        email: "test@test.com",
+        congregation: "Some Congregation",
+        userType: UserType.user
+    });
+
+    await User.create({
+        _id: tmpUserId2,
+        name: "Test name2",
+        email: "test2@test.com",
+        congregation: "Some Congregation",
+        userType: UserType.user
+    });
+
+    const session = {
+        place: "Some place",
+        members: [
+            tmpUserId1,
+            tmpUserId2
+        ],
+        time: date.getTime()
+    };
+
+    return session;
+}
+
 
 export {
     testSessionCRUD
