@@ -2,16 +2,19 @@
 
 import axios from 'axios';
 import mongoose from 'mongoose';
+import { stdout } from 'process';
 
 import { listenAsync } from '../../../src/backend/app.js';
 import { User, UserType } from '../../../src/backend/models/userModel.js';
 import { ISession, Session } from '../../../src/backend/models/sessionModel.js';
-import { ObjectId } from 'mongodb';
-import { clear } from 'console';
-import assert from 'assert';
 
 // Async so that we can test the API
 listenAsync();
+
+function logResult(result: Boolean) {
+    if (result) console.log("PASSED!");
+    else console.log("FAILED!");
+}
 
 async function testCreate(): Promise<Boolean> {
     var testResults: Array<Boolean> = [];
@@ -56,12 +59,9 @@ async function testCreate(): Promise<Boolean> {
     await User.deleteMany({congregation: "Some Congregation"});
     if (!receivedSession) return false;
 
-
     // Sort members so that they can 
     const actualMembers = actualSession.members.map((val) => val.toString());
     const receivedMembers = receivedSession.members.map((val) => val.toString());
-
-    receivedSession.members;
 
     // Assert that both member lengths are equal
     
@@ -69,19 +69,31 @@ async function testCreate(): Promise<Boolean> {
     if (actualSession.members.length != receivedSession.members.length) testResults.push(false);
     actualSession.members.forEach((item, i) => {
         testResults.push(actualMembers[i] == receivedMembers[i]);
-        console.log(item.toString(), receivedSession.members[i].toString())
     });
 
+    var result = true;
+
     // *TEST _ID*
-    testResults.push(actualSession._id == receivedSession._id);
+    stdout.write('[*] Testing _id...        ');
+    result = actualSession._id == receivedSession._id;
+    testResults.push(result);
+    logResult(result);
     
     // *TEST PLACE*
-    testResults.push(actualSession.place == receivedSession.place);
+    stdout.write('[*] Testing place...      ');
+    result = actualSession.place == receivedSession.place;
+    testResults.push(result);
+    logResult(result);
 
     // *TEST TIME*
-    testResults.push(actualSession.time == receivedSession.time);
+    stdout.write('[*] Testing time...       ');
+    result = Date.parse(actualSession.time) == receivedSession.time.getTime();
+    testResults.push(result);
+    logResult(result);
 
+    // Return whether or not all items are TRUE in testResults
     return testResults.every((val) => val);
+    
 }
 
 function testGet() {
@@ -96,8 +108,9 @@ function testDelete() {
 
 }
 
-function testSessionCRUD() {
-    testCreate();
+async function testSessionCRUD() {
+    if (await testCreate()) console.log("[*] Passed Test for Session CRUD");
+    else console.log("[-] Test failed for Session CRUD");
     testGet();
     testUpdate();
     testDelete();

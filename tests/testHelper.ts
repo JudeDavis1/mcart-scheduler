@@ -1,7 +1,7 @@
 // Test different aspects of the application
 // Usage: testHelps.ts {testType}
 // For example, to test the API, run:
-// `testHelps.ts api`
+// `npm run test-backend api`
 
 import {
     testSessionCRUD
@@ -21,7 +21,6 @@ testType = testType.toLowerCase()
 
 if (testType == 'api') {
     console.log('[*] Initializing test cases for session...')
-    if (testSessionCRUD()) {
-        console.log("Passed Test for")
-    }
+    await testSessionCRUD();
+    process.exit();
 }

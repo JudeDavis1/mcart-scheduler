@@ -7,7 +7,7 @@ interface ISession {
     _id: mongoose.Types.ObjectId;
     place: String;
     members: [mongoose.Types.ObjectId] | [String];
-    time: Date;
+    time: string;
 }
 
 const sessionSchema = new Schema({
