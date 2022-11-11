@@ -37,22 +37,20 @@ async function testCreate(): Promise<Boolean> {
     var result = true;
 
     // *TEST _ID*
-    stdout.write('[*] Testing _id...        ');
     result = actualSession._id == receivedSession._id;
     testResults.push(result);
-    logResult(result);
+    logResult('[*] Testing _id...        ', result);
     
     // *TEST PLACE*
     
     result = actualSession.place == receivedSession.place;
     testResults.push(result);
-    logResult(result);
+    logResult('[*] Testing _id...        ', result);
 
     // *TEST TIME*
-    stdout.write('[*] Testing time...       ');
     result = Date.parse(actualSession.time) == receivedSession.time.getTime();
     testResults.push(result);
-    logResult(result);
+    logResult('[*] Testing _id...        ', result);
 
     // Return whether or not all items are TRUE in testResults
     return testResults.every((val) => val);
@@ -81,7 +79,7 @@ async function testSessionCRUD() {
 
 // Helper functions
 
-function logResult(result: Boolean): void {
+function logResult(text: String, result: Boolean): void {
     stdout.write('[*] Testing place...      ');
     if (result) console.log("PASSED!");
     else console.log("FAILED!");
