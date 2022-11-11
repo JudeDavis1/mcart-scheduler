@@ -15,49 +15,93 @@ listenAsync();
 async function testCreate(): Promise<Boolean> {
     var testResults: Array<Boolean> = [];
 
-    const req = await axios.post('http://localhost:3001/api/v1/session/create', await generateSession());
+    const req = await axios.post("http://localhost:3001/api/v1/session/create", await generateSession());
     const actualSession: ISession = req.data.session;
     const receivedSession = await Session.findByIdAndDelete(req.data.session._id);
-    
-    await User.deleteMany({congregation: "Some Congregation"});
-    if (!receivedSession) return false;
 
-    // Sort members so that they can 
+    if (!receivedSession) {
+        logResult("validity", false);
+        return false;
+    }
+
+    // Sort members so that they can
     const actualMembers = actualSession.members.map((val) => val.toString());
     const receivedMembers = receivedSession.members.map((val) => val.toString());
 
     // Assert that both member lengths are equal
-    
+
     // *TEST MEMBERS*
     if (actualSession.members.length != receivedSession.members.length) testResults.push(false);
     actualSession.members.forEach((item, i) => {
         testResults.push(actualMembers[i] == receivedMembers[i]);
     });
+    if (testResults.every((val) => val)) logResult("members", true);
 
-    var result = true;
+    var result: Boolean;
 
     // *TEST _ID*
     result = actualSession._id == receivedSession._id;
     testResults.push(result);
-    logResult('[*] Testing _id...        ', result);
-    
+    logResult("_id", result);
+
     // *TEST PLACE*
-    
+
     result = actualSession.place == receivedSession.place;
     testResults.push(result);
-    logResult('[*] Testing _id...        ', result);
+    logResult("place", result);
 
     // *TEST TIME*
     result = Date.parse(actualSession.time) == receivedSession.time.getTime();
     testResults.push(result);
-    logResult('[*] Testing _id...        ', result);
+    logResult("time", result);
 
     // Return whether or not all items are TRUE in testResults
     return testResults.every((val) => val);
 }
 
-function testGet() {
-    const session = generateSession();
+async function testGet(): Promise<Boolean> {
+    var testResults = [];
+
+    const actualSession: ITestSession = await generateSession();
+    const createdSession = await Session.create(actualSession);
+    actualSession._id = createdSession._id;
+
+    const req = await axios.get("http://localhost:3001/api/v1/session/get?sessionId=" + actualSession._id);
+    const receivedSession: ISession = req.data.session;
+
+    // Free up MongoDB storage space
+    await User.deleteMany({ congregation: "Some Congregation" });
+    await Session.deleteOne({ _id: actualSession._id });
+
+    if (!receivedSession) {
+        logResult("validity", false);
+        return false;
+    }
+    logResult("validity", true);
+
+    var result: Boolean;
+
+    // *TEST _ID*
+    result = actualSession._id == receivedSession._id;
+    testResults.push(result);
+    logResult("_id", result);
+
+    // *TEST MEMBERS*
+    actualSession.members.forEach((val, i, arr) => {
+        testResults.push(val.toString() == receivedSession.members[i].toString());
+    });
+
+    // *TEST TIME*
+    result = parseInt(actualSession.time) == Date.parse(receivedSession.time);
+    testResults.push(result);
+    logResult("time", result);
+
+    // *TEST PLACE*
+    result = actualSession.place == receivedSession.place;
+    testResults.push(result);
+    logResult("place", result);
+
+    return true;
 }
 
 function testUpdate() {
@@ -69,9 +113,9 @@ function testDelete() {
 }
 
 async function testSessionCRUD() {
-    if (await testCreate()) console.log("[*] Passed Test for Session CRUD");
-    else console.log("[-] Test failed for Session CRUD");
-    testGet();
+    passedTests("createSession", await testCreate());
+    passedTests("getSession", await testGet());
+
     testUpdate();
     testDelete();
 }
@@ -79,13 +123,20 @@ async function testSessionCRUD() {
 
 // Helper functions
 
+interface ITestSession {
+    _id: mongoose.Types.ObjectId;
+    members: Array<mongoose.Types.ObjectId>;
+    place: String;
+    time: string;
+}
+
 function logResult(text: String, result: Boolean): void {
-    stdout.write('[*] Testing place...      ');
+    stdout.write(`[*] Testing ${text}...      `);
     if (result) console.log("PASSED!");
     else console.log("FAILED!");
 }
 
-async function generateSession(): Promise<Object> {
+async function generateSession(): Promise<any> {
     const date = new Date();
     date.setFullYear(2023);
     date.setMonth(3);
@@ -122,6 +173,13 @@ async function generateSession(): Promise<Object> {
     };
 
     return session;
+}
+
+function passedTests(subject: String, didPass: Boolean) {
+    if (didPass)
+        console.log(`\n** Passed tests for \`${subject}\` **\n`);
+    else
+        console.log(`\n** Test failed for \`${subject}\` **\n`);
 }
 
 

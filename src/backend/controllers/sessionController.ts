@@ -44,7 +44,7 @@ async function getSession(
   next: Function
 ): Promise<void> {
   try {
-    const { sessionId } = req.body;
+    const { sessionId } = req.query;
     if (!sessionId) throw new Error("Invalid ID");
 
     const session = await Session.findById(sessionId);
