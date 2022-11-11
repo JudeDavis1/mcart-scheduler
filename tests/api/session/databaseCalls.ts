@@ -8,6 +8,7 @@ import { listenAsync } from '../../../src/backend/app.js';
 import { User, UserType } from '../../../src/backend/models/userModel.js';
 import { ISession, Session } from '../../../src/backend/models/sessionModel.js';
 
+
 // Async so that we can test the API
 listenAsync();
 
@@ -42,7 +43,7 @@ async function testCreate(): Promise<Boolean> {
     logResult(result);
     
     // *TEST PLACE*
-    stdout.write('[*] Testing place...      ');
+    
     result = actualSession.place == receivedSession.place;
     testResults.push(result);
     logResult(result);
@@ -58,7 +59,7 @@ async function testCreate(): Promise<Boolean> {
 }
 
 function testGet() {
-
+    const session = generateSession();
 }
 
 function testUpdate() {
@@ -78,10 +79,10 @@ async function testSessionCRUD() {
 }
 
 
-
 // Helper functions
 
 function logResult(result: Boolean): void {
+    stdout.write('[*] Testing place...      ');
     if (result) console.log("PASSED!");
     else console.log("FAILED!");
 }
