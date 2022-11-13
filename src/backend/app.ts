@@ -46,8 +46,8 @@ app.use("/api/v1/", userRoutes);
 app.use("/api/v1/", sessionRoutes);
 
 // Listen without blocking the testing process
-async function listenAsync() {
-	app.listen(3001, () => {
+async function listenAsync(port: number = 3001) {
+	app.listen(port, () => {
 		console.log("[*] Test server initialized.");
 	});
 };

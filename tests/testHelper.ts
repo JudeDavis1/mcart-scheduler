@@ -7,6 +7,8 @@ import {
     testSessionCRUD
 } from './api/session/databaseCalls.js';
 
+
+
 // Test type. So far only supporting API test
 // In this case, run `testHelper.ts api`
 var testType = process.argv[2];
@@ -18,9 +20,11 @@ if (!testType) {
 
 testType = testType.toLowerCase()
 
+console.log('[*] Initializing test cases for session...');
+
+testSessionCRUD();
+
+process.exit();
 
 if (testType == 'api') {
-    console.log('[*] Initializing test cases for session...')
-    await testSessionCRUD();
-    process.exit();
 }

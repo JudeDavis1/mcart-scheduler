@@ -45,5 +45,8 @@
       "last 1 safari version"
     ]
   },
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "mocha": "^10.1.0"
+  }
 }

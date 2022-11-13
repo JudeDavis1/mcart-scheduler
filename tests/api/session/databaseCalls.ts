@@ -7,15 +7,18 @@ import { stdout } from 'process';
 import { listenAsync } from '../../../src/backend/app.js';
 import { User, UserType } from '../../../src/backend/models/userModel.js';
 import { ISession, Session } from '../../../src/backend/models/sessionModel.js';
+import assert from 'assert';
 
+
+const PORT = 4444;
 
 // Async so that we can test the API
-listenAsync();
+listenAsync(PORT);
 
 async function testCreate(): Promise<Boolean> {
     var testResults: Array<Boolean> = [];
 
-    const req = await axios.post("http://localhost:3001/api/v1/session/create", await generateSession());
+    const req = await axios.post(`http://localhost:${PORT}/api/v1/session/create`, await generateSession());
     const actualSession: ISession = req.data.session;
     const receivedSession = await Session.findByIdAndDelete(req.data.session._id);
 
@@ -34,6 +37,7 @@ async function testCreate(): Promise<Boolean> {
     if (actualSession.members.length != receivedSession.members.length) testResults.push(false);
     actualSession.members.forEach((item, i) => {
         testResults.push(actualMembers[i] == receivedMembers[i]);
+        assert.equal(actualMembers[i], receivedMembers[i]);
     });
     if (testResults.every((val) => val)) logResult("members", true);
 
@@ -42,18 +46,21 @@ async function testCreate(): Promise<Boolean> {
     // *TEST _ID*
     result = actualSession._id == receivedSession._id;
     testResults.push(result);
-    logResult("_id", result);
+    assert(result);
+    // logResult("_id", result);
 
     // *TEST PLACE*
 
     result = actualSession.place == receivedSession.place;
     testResults.push(result);
-    logResult("place", result);
+    assert(result);
+    // logResult("place", result);
 
     // *TEST TIME*
     result = Date.parse(actualSession.time) == receivedSession.time.getTime();
     testResults.push(result);
-    logResult("time", result);
+    // logResult("time", result);
+    assert(result);
 
     // Return whether or not all items are TRUE in testResults
     return testResults.every((val) => val);
@@ -83,23 +90,27 @@ async function testGet(): Promise<Boolean> {
 
     // *TEST _ID*
     result = actualSession._id == receivedSession._id;
+    assert(result);
     testResults.push(result);
     logResult("_id", result);
 
     // *TEST MEMBERS*
     actualSession.members.forEach((val, i, arr) => {
         testResults.push(val.toString() == receivedSession.members[i].toString());
+        assert(val.toString() == receivedSession.members[i].toString());
     });
 
     // *TEST TIME*
     result = parseInt(actualSession.time) == Date.parse(receivedSession.time);
     testResults.push(result);
-    logResult("time", result);
+    assert(result);
+    // logResult("time", result);
 
     // *TEST PLACE*
     result = actualSession.place == receivedSession.place;
     testResults.push(result);
-    logResult("place", result);
+    assert(result);
+    // logResult("place", result);
 
     return true;
 }
@@ -113,8 +124,15 @@ function testDelete() {
 }
 
 async function testSessionCRUD() {
-    passedTests("createSession", await testCreate());
-    passedTests("getSession", await testGet());
+    // passedTests("createSession", await testCreate());
+    // passedTests("getSession", await testGet());
+
+    describe("API", function() {
+        describe("#SessionCRUD", function() {
+            it("Test createSession", testCreate);
+            it("Test getSession", testGet);
+        });
+    });
 
     testUpdate();
     testDelete();
