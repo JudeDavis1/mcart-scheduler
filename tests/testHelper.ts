@@ -25,15 +25,11 @@ testType = testType.toLowerCase()
 console.log('[*] Initializing test cases for session...');
 
 describe("API", function () {
-    it("Test createSession", function () {
-        testCreate();
-    });
-    it("Test getSession", function () {
-        testGet();
-    });
+    it("Test createSession", testCreate);
+    it("Test getSession", testGet);
 });
 
-process.exit();
+// process.exit()
 
 if (testType == 'api') {
 }

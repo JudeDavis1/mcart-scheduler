@@ -23,6 +23,7 @@
     "start": "react-scripts start",
     "server": "tsc && node ./build/src/backend/server.js",
     "build": "react-scripts build",
+    "test": "npx tsc && npx mocha ./build/tests --recursive",
     "test-backend": "tsc && node ./build/tests/testHelper.js",
     "eject": "react-scripts eject",
     "create-route": "node ./scripts/generateTemplates/generateRoutes.js"
