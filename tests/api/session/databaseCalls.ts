@@ -1,13 +1,12 @@
 // Test the CRUD operations in database calls:
 
 import axios from 'axios';
+import assert from 'assert';
 import mongoose from 'mongoose';
-import { stdout } from 'process';
 
 import { listenAsync } from '../../../src/backend/app.js';
 import { User, UserType } from '../../../src/backend/models/userModel.js';
 import { ISession, Session } from '../../../src/backend/models/sessionModel.js';
-import assert from 'assert';
 
 
 const PORT = 4444;
@@ -15,62 +14,33 @@ const PORT = 4444;
 // Async so that we can test the API
 listenAsync(PORT);
 
-async function testCreate(): Promise<Boolean> {
-    var testResults: Array<Boolean> = [];
+async function testCreate() {
 
     const req = await axios.post(`http://localhost:${PORT}/api/v1/session/create`, await generateSession());
     const actualSession: ISession = req.data.session;
     const receivedSession = await Session.findByIdAndDelete(req.data.session._id);
 
-    if (!receivedSession) {
-        logResult("validity", false);
-        return false;
-    }
+    it("validity", () => { assert(receivedSession) });
 
-    // Sort members so that they can
-    const actualMembers = actualSession.members.map((val) => val.toString());
-    const receivedMembers = receivedSession.members.map((val) => val.toString());
-
-    // Assert that both member lengths are equal
-
-    // *TEST MEMBERS*
-    if (actualSession.members.length != receivedSession.members.length) testResults.push(false);
-    actualSession.members.forEach((item, i) => {
-        testResults.push(actualMembers[i] == receivedMembers[i]);
-        assert.equal(actualMembers[i], receivedMembers[i]);
-
-        console.log(actualMembers[i] == receivedMembers[i]);
-    });
-    if (testResults.every((val) => val)) logResult("members", true);
-
-    var result: Boolean;
+    // Test session members equals true (all of them)
+    const memberResults: Array<Boolean> = actualSession.members.map(
+        (val, i) => val.toString() == receivedSession!.members[i].toString()
+    );
+    it("members", () => { assert(memberResults.every((val) => val)); });
 
     // *TEST _ID*
-    result = actualSession._id == receivedSession._id;
-    testResults.push(result);
-    assert(result);
-    // logResult("_id", result);
+    it("_id", () => { assert(actualSession._id == receivedSession!._id) });
 
     // *TEST PLACE*
-
-    result = actualSession.place == receivedSession.place;
-    testResults.push(result);
-    assert(result);
-    // logResult("place", result);
+    it("place", () => { assert(actualSession.place == receivedSession!.place) });
 
     // *TEST TIME*
-    result = Date.parse(actualSession.time) == receivedSession.time.getTime();
-    testResults.push(result);
-    // logResult("time", result);
-    assert(result);
-
-    // Return whether or not all items are TRUE in testResults
-    return testResults.every((val) => val);
+    it("date-time", () => { assert(
+        Date.parse(actualSession.time) == receivedSession!.time.getTime());
+    });
 }
 
-async function testGet(): Promise<Boolean> {
-    var testResults = [];
-
+async function testGet() {
     const actualSession: ITestSession = await generateSession();
     const createdSession = await Session.create(actualSession);
     actualSession._id = createdSession._id;
@@ -82,43 +52,76 @@ async function testGet(): Promise<Boolean> {
     await User.deleteMany({ congregation: "Some Congregation" });
     await Session.deleteOne({ _id: actualSession._id });
 
-    if (!receivedSession) {
-        logResult("validity", false);
-        return false;
-    }
-    logResult("validity", true);
-
-    var result: Boolean;
+    // Test that the received session actually exists
+    it("validity", () => { assert(receivedSession); });
 
     // *TEST _ID*
-    result = actualSession._id == receivedSession._id;
-    assert(result);
-    testResults.push(result);
-    logResult("_id", result);
+    it("_id", () => { assert(actualSession._id == receivedSession._id); });
 
     // *TEST MEMBERS*
-    actualSession.members.forEach((val, i, arr) => {
-        testResults.push(val.toString() == receivedSession.members[i].toString());
-        assert(val.toString() == receivedSession.members[i].toString());
+    const memberResults: Array<Boolean> = actualSession.members.map(
+        (val, i) => val.toString() == receivedSession.members[i].toString()
+    );
+    it("members", () => { assert(memberResults.every((val) => val)); });
+
+    // *TEST TIME*
+    it("date-time", () => {
+        assert(parseInt(actualSession.time) == Date.parse(receivedSession.time));
+    })
+
+    // *TEST PLACE*
+    it("place", () => {
+        assert(actualSession.place == receivedSession.place);
+    });
+}
+
+async function testUpdate() {
+    const actualSession: ITestSession = await generateSession();
+    const createdSession = await Session.create(actualSession);
+    actualSession._id = createdSession._id;
+
+    // Update local session
+    const newId = new mongoose.Types.ObjectId();
+    const newMember = await User.create({
+        _id: newId,
+        name: "A new name",
+        email: "eeeee@example.com",
+        congregation: "Some Congregation",
+        userType: UserType.sessionCreator
+    });
+    actualSession.members = [newId];
+
+    const req = await axios.patch(`http://localhost:${PORT}/api/v1/session/update`, {
+        sessionId: actualSession._id,
+        updates: {
+            members: [newId],
+        }
+    });
+    const receivedSession: ISession = req.data.session;
+
+    // MongoDB cleanup
+    await User.deleteOne({ _id: newId });
+
+    // Test that the received session actually exists
+    it("validity", () => { assert(receivedSession); });
+
+    // *TEST _ID*
+    it("_id", () => { assert(actualSession._id == receivedSession._id); });
+
+    // *TEST MEMBERS*
+    it("members", () => { assert(
+        newId.toString() == receivedSession.members[0].toString());
     });
 
     // *TEST TIME*
-    result = parseInt(actualSession.time) == Date.parse(receivedSession.time);
-    testResults.push(result);
-    assert(result);
-    // logResult("time", result);
+    it("date-time", () => {
+        assert(parseInt(actualSession.time) == Date.parse(receivedSession.time));
+    })
 
     // *TEST PLACE*
-    result = actualSession.place == receivedSession.place;
-    testResults.push(result);
-    assert(result);
-    // logResult("place", result);
-
-    return true;
-}
-
-function testUpdate() {
-
+    it("place", () => {
+        assert(actualSession.place == receivedSession.place);
+    });
 }
 
 function testDelete() {
@@ -129,10 +132,12 @@ async function testSessionCRUD() {
     // passedTests("createSession", await testCreate());
     // passedTests("getSession", await testGet());
 
-
-
-    testUpdate();
-    testDelete();
+    describe("Session CRUD operations", function () {
+        it("Test createSession", testCreate);
+        it("Test getSession", testGet);
+        it("Test updateSession", testUpdate);
+        it("Test deleteSession", testDelete);
+    });
 }
 
 
@@ -143,12 +148,6 @@ interface ITestSession {
     members: Array<mongoose.Types.ObjectId>;
     place: String;
     time: string;
-}
-
-function logResult(text: String, result: Boolean): void {
-    stdout.write(`[*] Testing ${text}...      `);
-    if (result) console.log("PASSED!");
-    else console.log("FAILED!");
 }
 
 async function generateSession(): Promise<any> {
@@ -190,19 +189,7 @@ async function generateSession(): Promise<any> {
     return session;
 }
 
-function passedTests(subject: String, didPass: Boolean) {
-    if (didPass)
-        console.log(`\n** Passed tests for \`${subject}\` **\n`);
-    else
-        console.log(`\n** Test failed for \`${subject}\` **\n`);
-}
-
 
 export {
-    testSessionCRUD,
-
-    testCreate,
-    testGet,
-    testUpdate,
-    testDelete
+    testSessionCRUD
 }
