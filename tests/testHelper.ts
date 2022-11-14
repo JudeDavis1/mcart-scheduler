@@ -4,6 +4,8 @@
 // `npm run test-backend api`
 
 import {
+    testCreate,
+    testGet,
     testSessionCRUD
 } from './api/session/databaseCalls.js';
 
@@ -22,7 +24,14 @@ testType = testType.toLowerCase()
 
 console.log('[*] Initializing test cases for session...');
 
-testSessionCRUD();
+describe("API", function () {
+    it("Test createSession", function () {
+        testCreate();
+    });
+    it("Test getSession", function () {
+        testGet();
+    });
+});
 
 process.exit();
 

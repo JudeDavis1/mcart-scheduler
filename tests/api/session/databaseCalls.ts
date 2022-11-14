@@ -38,6 +38,8 @@ async function testCreate(): Promise<Boolean> {
     actualSession.members.forEach((item, i) => {
         testResults.push(actualMembers[i] == receivedMembers[i]);
         assert.equal(actualMembers[i], receivedMembers[i]);
+
+        console.log(actualMembers[i] == receivedMembers[i]);
     });
     if (testResults.every((val) => val)) logResult("members", true);
 
@@ -73,7 +75,7 @@ async function testGet(): Promise<Boolean> {
     const createdSession = await Session.create(actualSession);
     actualSession._id = createdSession._id;
 
-    const req = await axios.get("http://localhost:3001/api/v1/session/get?sessionId=" + actualSession._id);
+    const req = await axios.get(`http://localhost:${PORT}/api/v1/session/get?sessionId=` + actualSession._id);
     const receivedSession: ISession = req.data.session;
 
     // Free up MongoDB storage space
@@ -127,12 +129,7 @@ async function testSessionCRUD() {
     // passedTests("createSession", await testCreate());
     // passedTests("getSession", await testGet());
 
-    describe("API", function() {
-        describe("#SessionCRUD", function() {
-            it("Test createSession", testCreate);
-            it("Test getSession", testGet);
-        });
-    });
+
 
     testUpdate();
     testDelete();
@@ -202,5 +199,10 @@ function passedTests(subject: String, didPass: Boolean) {
 
 
 export {
-    testSessionCRUD
+    testSessionCRUD,
+
+    testCreate,
+    testGet,
+    testUpdate,
+    testDelete
 }
