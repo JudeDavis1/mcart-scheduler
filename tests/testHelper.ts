@@ -21,6 +21,7 @@ testType = testType.toLowerCase()
 
 console.log('[*] Initializing test cases for session...');
 
-
-testSessionCRUD();
+describe("Running tests:", () => {
+    testSessionCRUD();
+});
 

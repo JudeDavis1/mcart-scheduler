@@ -147,9 +147,6 @@ async function testDelete() {
 }
 
 async function testSessionCRUD() {
-    // passedTests("createSession", await testCreate());
-    // passedTests("getSession", await testGet());
-
     describe("Session CRUD operations", function () {
         it("Test createSession", testCreate);
         it("Test getSession", testGet);
