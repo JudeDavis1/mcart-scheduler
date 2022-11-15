@@ -24,7 +24,4 @@ console.log('[*] Initializing test cases for session...');
 
 // process.exit()
 
-testSessionCRUD();
-
-if (testType == 'api') {
-}
+testSessionCRUD()
