@@ -12,5 +12,5 @@
 # Development
 
 ## Testing
-## - Ensure that you have run `npm install`.
-## - Run: `npm test` in this project's root directory.
+- Ensure that you have run `npm install`.
+- Run: `npm test` in this project's root directory.
