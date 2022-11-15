@@ -3,22 +3,29 @@
 import axios from 'axios';
 import assert from 'assert';
 import mongoose from 'mongoose';
+import { randomBytes } from 'crypto';
 
 import { listenAsync } from '../../../src/backend/app.js';
 import { User, UserType } from '../../../src/backend/models/userModel.js';
 import { ISession, Session } from '../../../src/backend/models/sessionModel.js';
 
 
+var testsAreCompleted: Boolean;
+
 const PORT = 4444;
+const testCongName = "Some congregation for testing: " + randomBytes(10).toString();
 
 // Async so that we can test the API
 listenAsync(PORT);
 
 async function testCreate() {
-
-    const req = await axios.post(`http://localhost:${PORT}/api/v1/session/create`, await generateSession());
+    const sessionGen = await generateSession();
+    const req = await axios.post(`http://localhost:${PORT}/api/v1/session/create`, sessionGen);
     const actualSession: ISession = req.data.session;
+
+    // Retreive required data and cleanup
     const receivedSession = await Session.findByIdAndDelete(req.data.session._id);
+    await User.deleteMany({ congregation: testCongName });
 
     it("validity", () => { assert(receivedSession) });
 
@@ -49,7 +56,7 @@ async function testGet() {
     const receivedSession: ISession = req.data.session;
 
     // Free up MongoDB storage space
-    await User.deleteMany({ congregation: "Some Congregation" });
+    await User.deleteMany({ congregation: testCongName });
     await Session.deleteOne({ _id: actualSession._id });
 
     // Test that the received session actually exists
@@ -86,7 +93,7 @@ async function testUpdate() {
         _id: newId,
         name: "A new name",
         email: "eeeee@example.com",
-        congregation: "Some Congregation",
+        congregation: testCongName,
         userType: UserType.sessionCreator
     });
     actualSession.members = [newId];
@@ -100,7 +107,9 @@ async function testUpdate() {
     const receivedSession: ISession = req.data.session;
 
     // MongoDB cleanup
-    await User.deleteOne({ _id: newId });
+    await User.deleteOne({ _id: newId });  // Delete updated member (Just in case the congregation is different)
+    await User.deleteMany({ congregation: testCongName });  // Delete the other users created
+    await Session.deleteOne({ _id: actualSession._id });
 
     // Test that the received session actually exists
     it("validity", () => { assert(receivedSession); });
@@ -124,8 +133,17 @@ async function testUpdate() {
     });
 }
 
-function testDelete() {
+async function testDelete() {
+    const actualSession: ITestSession = await generateSession();
 
+    // MongoDB cleanup
+    User.deleteMany({ congregation: testCongName });
+    // The following returns null if the session does not exist
+    const idOrNull = await Session.exists({ _id: actualSession._id });
+
+    it("isDeleted", () => {
+        assert(idOrNull == null);
+    });
 }
 
 async function testSessionCRUD() {
@@ -165,7 +183,7 @@ async function generateSession(): Promise<any> {
         _id: tmpUserId1,
         name: "Test name",
         email: "test@test.com",
-        congregation: "Some Congregation",
+        congregation: testCongName,
         userType: UserType.user
     });
 
@@ -173,7 +191,7 @@ async function generateSession(): Promise<any> {
         _id: tmpUserId2,
         name: "Test name2",
         email: "test2@test.com",
-        congregation: "Some Congregation",
+        congregation: testCongName,
         userType: UserType.user
     });
 

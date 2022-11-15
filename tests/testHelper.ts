@@ -3,11 +3,10 @@
 // For example, to test the API, run:
 // `npm run test-backend api`
 
+
 import {
     testSessionCRUD
 } from './api/session/databaseCalls.js';
-
-
 
 // Test type. So far only supporting API test
 // In this case, run `testHelper.ts api`
@@ -22,6 +21,6 @@ testType = testType.toLowerCase()
 
 console.log('[*] Initializing test cases for session...');
 
-// process.exit()
 
-testSessionCRUD()
+testSessionCRUD();
+
