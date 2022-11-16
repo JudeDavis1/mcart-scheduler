@@ -11,7 +11,7 @@ async function createUser(
   next: Function
 ): Promise<void> {
   try {
-    const { name, email, congregation } = req.body;
+    const { name, email, congregation, userType } = req.body;
 
     // Validate fields
     const userInvalid = !name || !email || !congregation;
@@ -21,6 +21,7 @@ async function createUser(
       name,
       email,
       congregation,
+      userType
     });
     res
       .status(200)
@@ -38,7 +39,8 @@ async function getUser(
   next: Function
 ): Promise<void> {
   try {
-    const { userId } = req.body;
+    const { userId } = req.query;
+    
     if (!userId) throw new Error("Please provide a user ID.");
 
     const receivedUser = await User.findById(userId);

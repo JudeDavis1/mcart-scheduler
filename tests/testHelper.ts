@@ -36,4 +36,4 @@ setInterval(async () => {
       server.close();
       process.exit();
     }
-}, 2000);
+}, 3000);

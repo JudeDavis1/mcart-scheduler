@@ -1,12 +1,5 @@
 import mongoose, { Schema } from "mongoose";
 
-interface IUser {
-  name: String;
-  email: String;
-  congregation: String;
-  _id: mongoose.Types.ObjectId;
-}
-
 
 enum UserType {
   congAdmin,
@@ -14,8 +7,16 @@ enum UserType {
   user,
 }
 
+interface IUser {
+  name: String;
+  email: String;
+  userType: UserType;
+  congregation: String;
+  _id: mongoose.Types.ObjectId;
+}
+
 // User blueprint
-const userSchema: Schema = new Schema({
+const userSchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -31,6 +32,7 @@ const userSchema: Schema = new Schema({
   userType: {
     type: String,
     enum: UserType,
+    required: true
   },
 });
 

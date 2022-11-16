@@ -24,21 +24,66 @@ async function testCreate() {
 
     // *TEST _ID*
     it("_id", () => {
-        assert(foundUser!._id == actualUser._id);
+        assert(actualUser._id == foundUser!._id);
     });
 
     // *TEST name*
     it("name", () => {
-        
-    })
+        assert(actualUser.name == foundUser!.name);
+    });
 
     // *TEST email*
+    it("email", () => {
+        assert(actualUser.email == foundUser!.email);
+    });
+
     // *TEST congregation*
+    it("congregation", () => {
+        assert(actualUser.congregation == foundUser!.congregation);
+    });
+
     // *TEST userType*
+    it("userType", () => {
+        assert(actualUser.userType.toString() == foundUser!.userType);
+    })
 }
 
 async function testGet() {
+    const actualUser: IUser = await generateUser(true);
+    const req = await axios.get(`http://localhost:${PORT}/api/v1/user/get?userId=` + actualUser._id);
+    const foundUser = req.data.user;
 
+    // Cleanup
+    await User.deleteOne({ _id: actualUser._id });
+
+    it("validity", () => {
+        assert(foundUser);
+    });
+
+    // *TEST _id*
+    it("_id", () => {
+        assert(actualUser._id == foundUser!._id);
+    });
+
+    // *TEST name*
+    it("name", () => {
+        assert(actualUser.name == foundUser!.name);
+    });
+
+    // *TEST email*
+    it("email", () => {
+        assert(actualUser.email == foundUser!.name);
+    });
+
+    // *TEST congregation*
+    it("congregation", () => {
+        assert(actualUser.congregation == foundUser!.congregation);
+    });
+
+    // *TEST userType*
+    it("userType", () => {
+        assert(actualUser.userType.toString() == foundUser!.userType);
+    })
 }
 
 async function testUpdate() {
@@ -58,7 +103,7 @@ async function testUserCRUD() {
     });
 }
 
-async function generateUser(): Promise<any> {
+async function generateUser(create: Boolean = false): Promise<any> {
     const userJson = {
         _id: new mongoose.Types.ObjectId(),
         name: "Test name",
@@ -66,7 +111,7 @@ async function generateUser(): Promise<any> {
         congregation: testCongName,
         userType: UserType.user
     }
-    await User.create(userJson);
+    if (create) await User.create(userJson);
     
     return userJson;
 }
