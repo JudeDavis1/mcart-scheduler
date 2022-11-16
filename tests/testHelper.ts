@@ -3,11 +3,13 @@
 // For example, to test the API, run:
 // `npm run test-backend api`
 
-import { testSessionCRUD, server } from "./api/session/databaseCalls.js";
+import { listenAsync } from "../src/backend/app.js";
+import { server, testSessionCRUD } from "./api/session/databaseCalls.js";
 
 // Test type. So far only supporting API test
 // In this case, run `testHelper.ts api`
 var testType = process.argv[2];
+var testFinished: boolean = false;
 
 if (!testType) {
   console.error("[-] No test specified.");
@@ -18,6 +20,12 @@ testType = testType.toLowerCase();
 
 console.log("[*] Initializing test cases for session...");
 
-describe("Running tests:", () => {
-  testSessionCRUD();
+listenAsync();
+describe("Running tests:", async () => {
+  await testSessionCRUD();
+  testFinished = true;
 });
+
+setInterval(async () => {
+    if (testFinished) server.close();
+}, 2000);

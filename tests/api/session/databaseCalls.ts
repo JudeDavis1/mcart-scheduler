@@ -8,7 +8,7 @@ import { randomBytes } from "crypto";
 import { listenAsync } from "../../../src/backend/app.js";
 import { User, UserType } from "../../../src/backend/models/userModel.js";
 import { ISession, Session } from "../../../src/backend/models/sessionModel.js";
-import { setTimeout } from "timers";
+
 
 const PORT = 65523;
 const testCongName =
@@ -16,6 +16,7 @@ const testCongName =
 
 // Async so that we can test the API
 const server = await listenAsync(PORT);
+
 
 async function testCreate() {
   try {
@@ -198,10 +199,6 @@ async function testSessionCRUD() {
       it("Test updateSession", testUpdate);
       it("Test deleteSession", testDelete);
     });
-
-    setTimeout(async () => {
-      process.exit(-1);
-    }, 10000);
   } catch (err) {
     console.error(err);
   }

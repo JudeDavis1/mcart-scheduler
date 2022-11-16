@@ -1,4 +1,3 @@
-import axios from "axios";
 import { randomBytes } from "crypto";
 import { listenAsync } from "../../../src/backend/app.js";
 
