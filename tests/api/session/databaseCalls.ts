@@ -12,11 +12,10 @@ import { ISession, Session } from "../../../src/backend/models/sessionModel.js";
 
 const PORT = 65523;
 const testCongName =
-  "Some congregation for testing: " + randomBytes(10).toString();
+  "Some congregation for testing: " + randomBytes(20).toString();
 
 // Async so that we can test the API
 const server = await listenAsync(PORT);
-
 
 async function testCreate() {
   try {
@@ -25,12 +24,13 @@ async function testCreate() {
       `http://localhost:${PORT}/api/v1/session/create`,
       sessionGen
     );
-    const actualSession: ISession = req.data.session;
+
+    // Update ID in generated session because it is undefined.
+    sessionGen._id = req.data.session._id;
+    const actualSession: ISession = sessionGen;
 
     // Retreive required data and cleanup
-    const receivedSession = await Session.findByIdAndDelete(
-      req.data.session._id
-    );
+    const receivedSession = await Session.findByIdAndDelete(actualSession._id);
     await User.deleteMany({ congregation: testCongName });
 
     it("validity", () => {

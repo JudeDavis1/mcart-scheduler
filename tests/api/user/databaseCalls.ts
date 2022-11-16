@@ -1,21 +1,40 @@
+import axios from "axios";
+import assert from "assert";
 import { randomBytes } from "crypto";
+import mongoose from "mongoose";
 import { listenAsync } from "../../../src/backend/app.js";
 
-import { User, UserType } from "../../../src/backend/models/userModel.js";
+import { IUser, User, UserType } from "../../../src/backend/models/userModel.js";
 
 
 const PORT = 4444;
 const testCongName = "Some congregation for testing: " + randomBytes(10).toString();
 
-// TODO:
-// - Ensure that the listening connection is closed before listening again.
-// - Or make the API listen in the testHelper instead of individual tests.
-
 listenAsync(PORT);
 
 async function testCreate() {
-    // const actualUser = generateUser();
-    // const req = axios.get(`http://localhost:`)
+    const userGen = await generateUser();
+    const req = await axios.post(`http://localhost:${PORT}/api/v1/user/create`, userGen);
+    const foundUser = await User.findByIdAndDelete(req.data.user._id);
+    const actualUser: IUser = userGen;
+
+    it("validity", () => {
+        assert(foundUser);
+    });
+
+    // *TEST _ID*
+    it("_id", () => {
+        assert(foundUser!._id == actualUser._id);
+    });
+
+    // *TEST name*
+    it("name", () => {
+        
+    })
+
+    // *TEST email*
+    // *TEST congregation*
+    // *TEST userType*
 }
 
 async function testGet() {
@@ -39,13 +58,17 @@ async function testUserCRUD() {
     });
 }
 
-async function generateUser() {
-    return await User.create({
+async function generateUser(): Promise<any> {
+    const userJson = {
+        _id: new mongoose.Types.ObjectId(),
         name: "Test name",
         email: "test@test.com",
         congregation: testCongName,
         userType: UserType.user
-    });
+    }
+    await User.create(userJson);
+    
+    return userJson;
 }
 
 

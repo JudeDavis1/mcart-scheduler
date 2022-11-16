@@ -5,6 +5,7 @@
 
 import { listenAsync } from "../src/backend/app.js";
 import { server, testSessionCRUD } from "./api/session/databaseCalls.js";
+import { testUserCRUD } from "./api/user/databaseCalls.js";
 
 // Test type. So far only supporting API test
 // In this case, run `testHelper.ts api`
@@ -23,6 +24,8 @@ console.log("[*] Initializing test cases for session...");
 listenAsync();
 describe("Running tests:", async () => {
   await testSessionCRUD();
+  await testUserCRUD();
+
   testFinished = true;
 });
 

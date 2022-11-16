@@ -4,6 +4,7 @@ interface IUser {
   name: String;
   email: String;
   congregation: String;
+  _id: mongoose.Types.ObjectId;
 }
 
 
