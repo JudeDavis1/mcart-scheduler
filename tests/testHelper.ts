@@ -26,6 +26,11 @@ describe("Running tests:", async () => {
   testFinished = true;
 });
 
+// Check if the testing process is finished.
 setInterval(async () => {
-    if (testFinished) server.close();
+    if (testFinished)
+    {
+      server.close();
+      process.exit();
+    }
 }, 2000);
