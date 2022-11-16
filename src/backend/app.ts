@@ -7,9 +7,6 @@ dotenv.config();
 import userRoutes from "./routes/userRoutes.js";
 import sessionRoutes from "./routes/sessionRoutes.js";
 
-// For testing
-import { ISession, Session } from "./models/sessionModel.js";
-
 
 const app = express();
 const db = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASS}@cluster0.mdm9nru.mongodb.net/?retryWrites=true&w=majority`;
@@ -34,7 +31,7 @@ app.use("/api/v1/", sessionRoutes);
 
 // Listen without blocking the testing process
 async function listenAsync(port: number = 3001) {
-	app.listen(port, () => {
+	return app.listen(port, () => {
 		console.log("[*] Test server initialized.");
 	});
 };
