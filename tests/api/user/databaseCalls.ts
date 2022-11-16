@@ -15,8 +15,8 @@ const testCongName = "Some congregation for testing: " + randomBytes(10).toStrin
 listenAsync(PORT);
 
 async function testCreate() {
-    const actualUser = generateUser();
-    const req = axios.get(`http://localhost:`)
+    // const actualUser = generateUser();
+    // const req = axios.get(`http://localhost:`)
 }
 
 async function testGet() {

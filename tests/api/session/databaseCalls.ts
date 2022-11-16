@@ -12,7 +12,7 @@ import { ISession, Session } from '../../../src/backend/models/sessionModel.js';
 
 var testsAreCompleted: Boolean;
 
-const PORT = 4444;
+const PORT = 65523;
 const testCongName = "Some congregation for testing: " + randomBytes(10).toString();
 
 // Async so that we can test the API
