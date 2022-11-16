@@ -1,9 +1,9 @@
-import { app } from './app.js';
-
+import { app } from "./app.js";
 
 const PORT = 3001;
 
-app.listen(PORT, () => {
-	console.log('Running on PORT: ' + PORT + '.');
+const server = app.listen(PORT, () => {
+  console.log("Running on PORT: " + PORT + ".");
 });
 
+export { server };
