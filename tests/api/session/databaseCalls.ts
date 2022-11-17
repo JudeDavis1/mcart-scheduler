@@ -18,54 +18,41 @@ const testCongName =
 const server = await listenAsync(PORT);
 
 async function testCreate() {
-  try {
-    const sessionGen = await generateSession();
-    const req = await axios.post(
-      `http://localhost:${PORT}/api/v1/session/create`,
-      sessionGen
-    );
+  const sessionGen = await generateSession();
+  const req = await axios.post(
+    `http://localhost:${PORT}/api/v1/session/create`,
+    sessionGen
+  );
 
-    // Update ID in generated session because it is undefined.
-    sessionGen._id = req.data.session._id;
-    const actualSession: ISession = sessionGen;
+  // Update ID in generated session because it is undefined.
+  sessionGen._id = req.data.session._id;
+  const actualSession: ISession = sessionGen;
 
-    // Retreive required data and cleanup
-    const receivedSession = await Session.findByIdAndDelete(actualSession._id);
-    await User.deleteMany({ congregation: testCongName });
+  // Retreive required data and cleanup
+  const receivedSession = await Session.findByIdAndDelete(actualSession._id);
+  await User.deleteMany({ congregation: testCongName });
 
-    it("validity", () => {
-      assert(receivedSession);
-    });
+  it("validity", () => {
+    assert(receivedSession);
+  });
 
-    // Test session members equals true (all of them)
-    const memberResults: Array<Boolean> = actualSession.members.map(
-      (val, i) => val.toString() == receivedSession!.members[i].toString()
-    );
-    it("members", () => {
-      assert(memberResults.every((val) => val));
-    });
+  // Test session members equals true (all of them)
+  const memberResults: Array<Boolean> = actualSession.members.map(
+    (val, i) => val.toString() == receivedSession!.members[i].toString()
+  );
+  assert(memberResults.every((val) => val));
 
-    // *TEST _ID*
-    it("_id", () => {
-      assert(actualSession._id == receivedSession!._id);
-    });
+  // *TEST _ID*
+  assert(actualSession._id == receivedSession!._id);
 
-    // *TEST PLACE*
-    it("place", () => {
-      assert(actualSession.place == receivedSession!.place);
-    });
+  // *TEST PLACE*
+  assert(actualSession.place == receivedSession!.place);
 
-    // *TEST TIME*
-    it("date-time", () => {
-      assert(Date.parse(actualSession.time) == receivedSession!.time.getTime());
-    });
-  } catch (err) {
-    console.error(err);
-  }
+  // *TEST TIME*
+  assert(parseInt(actualSession.time) == receivedSession!.time.getTime());
 }
 
 async function testGet() {
-  try {
     const actualSession: ITestSession = await generateSession();
     const createdSession = await Session.create(actualSession);
     actualSession._id = createdSession._id;
@@ -81,129 +68,95 @@ async function testGet() {
     await Session.deleteOne({ _id: actualSession._id });
 
     // Test that the received session actually exists
-    it("validity", () => {
-      assert(receivedSession);
-    });
+    assert(receivedSession);
 
     // *TEST _ID*
-    it("_id", () => {
-      assert(actualSession._id == receivedSession._id);
-    });
-
+    assert(actualSession._id == receivedSession._id);
+    
     // *TEST MEMBERS*
     const memberResults: Array<Boolean> = actualSession.members.map(
       (val, i) => val.toString() == receivedSession.members[i].toString()
     );
-    it("members", () => {
-      assert(memberResults.every((val) => val));
-    });
+    assert(memberResults.every((val) => val));
 
     // *TEST TIME*
-    it("date-time", () => {
-      assert(parseInt(actualSession.time) == Date.parse(receivedSession.time));
-    });
+    assert(parseInt(actualSession.time) == Date.parse(receivedSession.time));
 
     // *TEST PLACE*
-    it("place", () => {
-      assert(actualSession.place == receivedSession.place);
-    });
-  } catch (err) {
-    console.error(err);
-  }
+    assert(actualSession.place == receivedSession.place);
 }
 
 async function testUpdate() {
-  try {
-    const actualSession: ITestSession = await generateSession();
-    const createdSession = await Session.create(actualSession);
-    actualSession._id = createdSession._id;
+  const actualSession: ITestSession = await generateSession();
+  const createdSession = await Session.create(actualSession);
+  actualSession._id = createdSession._id;
 
-    // Update local session
-    const newId = new mongoose.Types.ObjectId();
-    const newMember = await User.create({
-      _id: newId,
-      name: "A new name",
-      email: "eeeee@example.com",
-      congregation: testCongName,
-      userType: UserType.sessionCreator,
-    });
-    actualSession.members = [newId];
+  // Update local session
+  const newId = new mongoose.Types.ObjectId();
+  const newMember = await User.create({
+    _id: newId,
+    name: "A new name",
+    email: "eeeee@example.com",
+    congregation: testCongName,
+    userType: UserType.sessionCreator,
+  });
+  actualSession.members = [newId];
 
-    const req = await axios.patch(
-      `http://localhost:${PORT}/api/v1/session/update`,
-      {
-        sessionId: actualSession._id,
-        updates: {
-          members: [newId],
-        },
-      }
-    );
-    const receivedSession: ISession = req.data.session;
+  const req = await axios.patch(
+    `http://localhost:${PORT}/api/v1/session/update`,
+    {
+      sessionId: actualSession._id,
+      updates: {
+        members: [newId],
+      },
+    }
+  );
+  const receivedSession: ISession = req.data.session;
 
-    // MongoDB cleanup
-    await User.deleteOne({ _id: newId }); // Delete updated member (Just in case the congregation is different)
-    await User.deleteMany({ congregation: testCongName }); // Delete the other users created
-    await Session.deleteOne({ _id: actualSession._id });
+  // MongoDB cleanup
+  await User.deleteOne({ _id: newId }); // Delete updated member (Just in case the congregation is different)
+  await User.deleteMany({ congregation: testCongName }); // Delete the other users created
+  await Session.deleteOne({ _id: actualSession._id });
 
-    // Test that the received session actually exists
-    it("validity", () => {
-      assert(receivedSession);
-    });
+  // Test that the received session actually exists
+  assert(receivedSession);
 
-    // *TEST _ID*
-    it("_id", () => {
-      assert(actualSession._id == receivedSession._id);
-    });
+  // *TEST _ID*
+  assert(actualSession._id == receivedSession._id);
 
-    // *TEST MEMBERS*
-    it("members", () => {
-      assert(newId.toString() == receivedSession.members[0].toString());
-    });
+  // *TEST MEMBERS*
+  assert(newId.toString() == receivedSession.members[0].toString());
 
-    // *TEST TIME*
-    // This will be comparing milliseconds since 1970 for both objects.
-    // Convert the actualSession time to an integer then parse the received session time which returns milliseconds also.
-    it("date-time", () => {
-      assert(parseInt(actualSession.time) == Date.parse(receivedSession.time));
-    });
+  // *TEST TIME*
+  // This will be comparing milliseconds since 1970 for both objects.
+  // Convert the actualSession time to an integer then parse the received session time which returns milliseconds also.
+  assert(parseInt(actualSession.time) == Date.parse(receivedSession.time));
 
-    // *TEST PLACE*
-    it("place", () => {
-      assert(actualSession.place == receivedSession.place);
-    });
-  } catch (err) {
-    console.error(err);
-  }
+  // *TEST PLACE*
+  assert(actualSession.place == receivedSession.place);
 }
 
 async function testDelete() {
-  try {
-    const actualSession: ITestSession = await generateSession();
+  const actualSession: ITestSession = await generateSession();
+  const createdSession = await Session.create(actualSession);
 
-    // MongoDB cleanup
-    await User.deleteMany({ congregation: testCongName });
-    // The following returns null if the session does not exist
-    const idOrNull = await Session.exists({ _id: actualSession._id });
+  // Delete session
+  await axios.delete(`http://localhost:${PORT}/api/v1/session/delete?sessionId=` + createdSession._id);
 
-    it("isDeleted", () => {
-      assert(idOrNull == null);
-    });
-  } catch (err) {
-    console.error(err);
-  }
+  // MongoDB cleanup
+  await User.deleteMany({ congregation: testCongName });
+  // The following returns null if the session does not exist
+  const sessionExists = await Session.exists({ _id: createdSession._id });
+  assert(!sessionExists);
 }
 
 async function testSessionCRUD() {
-  try {
-    describe("Session CRUD operations", function () {
-      it("Test createSession", testCreate);
-      it("Test getSession", testGet);
-      it("Test updateSession", testUpdate);
-      it("Test deleteSession", testDelete);
-    });
-  } catch (err) {
-    console.error(err);
-  }
+  describe("Session CRUD operations", function () {
+    it("Test createSession", testCreate);
+    it("Test getSession", testGet);
+    it("Test updateSession", testUpdate);
+    it("Test deleteSession", testDelete);
+  });
 }
 
 // Helper functions

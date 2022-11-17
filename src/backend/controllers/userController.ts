@@ -66,7 +66,8 @@ async function updateUser(
     if (!userId) throw new Error("Please provide a user ID.");
     if (!updates) throw new Error("Please provide updates.");
 
-    const updatedUser = await User.updateOne({ _id: userId }, updates);
+    await User.updateOne({ _id: userId }, updates);
+    const updatedUser = await User.findById(userId);
     res
       .status(200)
       .json({ data: "Updated user successfully!", user: updatedUser });
@@ -85,7 +86,7 @@ async function deleteUser(
   next: Function
 ): Promise<void> {
   try {
-    const { userId } = req.body;
+    const { userId } = req.query;
     if (!userId) throw new Error("Please provide a user ID.");
 
     const deletedUser = await User.deleteOne({ _id: userId });

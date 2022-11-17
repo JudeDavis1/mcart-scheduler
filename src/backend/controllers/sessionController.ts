@@ -73,7 +73,8 @@ async function updateSession(
     const { sessionId, updates } = req.body;
     if (!updates) throw new Error("Invalid updates");
 
-    const updatedSession = await Session.updateOne({ _id: sessionId }, updates);
+    await Session.updateOne({ _id: sessionId }, updates);
+    const updatedSession = await Session.findById(sessionId);
     res
       .status(200)
       .json({ data: "Successfully updated session", session: updatedSession });
@@ -94,7 +95,7 @@ async function deleteSession(
   try {
     // Request should be in the format:
     // { _id: ..., updates: { ... } }
-    const { _id: sessionId } = req.body;
+    const { sessionId } = req.query;
     if (!sessionId) throw new Error("Invalid ID");
 
     await Session.deleteOne({ _id: sessionId })

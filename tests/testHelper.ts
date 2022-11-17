@@ -25,15 +25,16 @@ listenAsync();
 describe("Running tests:", async () => {
   await testSessionCRUD();
   await testUserCRUD();
-
-  testFinished = true;
 });
+
+console.log("HELLO DONE")
+testFinished = true;
 
 // Check if the testing process is finished.
 setInterval(async () => {
     if (testFinished)
     {
-      // server.close();
-      // process.exit();
+      server.close();
+      process.exit();
     }
-}, 4000);
+}, 3000);

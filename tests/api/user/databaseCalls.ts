@@ -1,7 +1,7 @@
 import axios from "axios";
 import assert from "assert";
-import { randomBytes } from "crypto";
 import mongoose from "mongoose";
+import { randomBytes } from "crypto";
 import { listenAsync } from "../../../src/backend/app.js";
 
 import { IUser, User, UserType } from "../../../src/backend/models/userModel.js";
@@ -18,34 +18,21 @@ async function testCreate() {
     const foundUser = await User.findByIdAndDelete(req.data.user._id);
     const actualUser: IUser = userGen;
 
-    it("validity", () => {
-        assert(foundUser);
-    });
+    assert(foundUser);
 
-    // *TEST _ID*
-    it("_id", () => {
-        assert(actualUser._id == foundUser!._id);
-    });
+    // No ID test needed for this one.
 
     // *TEST name*
-    it("name", () => {
-        assert(actualUser.name == foundUser!.name);
-    });
+    assert(actualUser.name == foundUser!.name);
 
     // *TEST email*
-    it("email", () => {
-        assert(actualUser.email == foundUser!.email);
-    });
+    assert(actualUser.email == foundUser!.email);
 
     // *TEST congregation*
-    it("congregation", () => {
-        assert(actualUser.congregation == foundUser!.congregation);
-    });
+    assert(actualUser.congregation == foundUser!.congregation);
 
     // *TEST userType*
-    it("userType", () => {
-        assert(actualUser.userType.toString() == foundUser!.userType);
-    });
+    assert(actualUser.userType.toString() == foundUser!.userType);
 }
 
 async function testGet() {
@@ -56,34 +43,22 @@ async function testGet() {
     // Cleanup
     await User.deleteOne({ _id: actualUser._id });
 
-    it("validity", () => {
-        assert(foundUser);
-    });
+    assert(foundUser);
 
     // *TEST _id*
-    it("_id", () => {
-        assert(actualUser._id == foundUser!._id);
-    });
+    assert(actualUser._id == foundUser!._id);
 
     // *TEST name*
-    it("name", () => {
-        assert(actualUser.name == foundUser!.name);
-    });
+    assert(actualUser.name == foundUser!.name);
 
     // *TEST email*
-    it("email", () => {
-        assert(actualUser.email == foundUser!.name);
-    });
+    assert(actualUser.email == foundUser!.email);
 
     // *TEST congregation*
-    it("congregation", () => {
-        assert(actualUser.congregation == foundUser!.congregation);
-    });
+    assert(actualUser.congregation == foundUser!.congregation);
 
     // *TEST userType*
-    it("userType", () => {
-        assert(actualUser.userType.toString() == foundUser!.userType);
-    });
+    assert(actualUser.userType.toString() == foundUser!.userType);
 }
 
 async function testUpdate() {
@@ -103,38 +78,31 @@ async function testUpdate() {
     await User.deleteOne(actualUser._id);
 
     // Validity
-    it("validity", () => {
-        assert(updatedUser);
-    });
+    assert(updatedUser);
 
     // *TEST _id*
-    it("_id", () => {
-        assert(actualUser._id == updatedUser._id);
-    });
+    assert(actualUser._id == updatedUser._id);
 
     // *TEST name*
-    it("name", () => {
-        assert(actualUser.name == updatedUser.name);
-    });
-
+    assert(actualUser.name == updatedUser.name);
+    
     // *TEST email*
-    it("email", () => {
-        assert(actualUser.email == updatedUser.email);
-    });
+    assert(actualUser.email == updatedUser.email);
 
     // *TEST congregation*
-    it("congregation", () => {
-        assert(actualUser.congregation == updatedUser.congregation);
-    });
-
+    assert(actualUser.congregation == updatedUser.congregation);
+    
     // *TEST userType*
-    it("userType", () => {
-        assert(actualUser.userType.toString() == updatedUser.userType);
-    });
+    assert(actualUser.userType.toString() == updatedUser.userType);
 }
 
 async function testDelete() {
+    const createdUser: IUser = await generateUser(true);
+    await axios.delete(`http://localhost:${PORT}/api/v1/user/delete?userId=` + createdUser._id);
 
+    const userExists = await User.exists({ _id: createdUser._id });
+
+    assert(!userExists);
 }
 
 // Main testing function
@@ -147,7 +115,7 @@ async function testUserCRUD() {
     });
 }
 
-async function generateUser(create: Boolean = false): Promise<any> {
+async function generateUser(dbCreate: Boolean = false): Promise<any> {
     const userJson = {
         _id: new mongoose.Types.ObjectId(),
         name: "Test name",
@@ -155,7 +123,7 @@ async function generateUser(create: Boolean = false): Promise<any> {
         congregation: testCongName,
         userType: UserType.user
     }
-    if (create) await User.create(userJson);
+    if (dbCreate) await User.create(userJson);
     
     return userJson;
 }
