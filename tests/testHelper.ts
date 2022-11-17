@@ -33,7 +33,7 @@ describe("Running tests:", async () => {
 setInterval(async () => {
     if (testFinished)
     {
-      server.close();
-      process.exit();
+      // server.close();
+      // process.exit();
     }
-}, 3000);
+}, 4000);

@@ -45,7 +45,7 @@ async function testCreate() {
     // *TEST userType*
     it("userType", () => {
         assert(actualUser.userType.toString() == foundUser!.userType);
-    })
+    });
 }
 
 async function testGet() {
@@ -83,17 +83,61 @@ async function testGet() {
     // *TEST userType*
     it("userType", () => {
         assert(actualUser.userType.toString() == foundUser!.userType);
-    })
+    });
 }
 
 async function testUpdate() {
+    const actualUser: IUser = await generateUser(true);
+    // Updates for the created user
+    const updates = {
+        email: "updated_test@test.com"
+    };
+    // Update 
+    actualUser.email = updates.email;
+    const req = await axios.patch(`http://localhost:${PORT}/api/v1/user/update`, {
+        userId: actualUser._id,
+        updates: updates
+    });
+    const updatedUser = req.data.user;
+    // Free MongoDB space
+    await User.deleteOne(actualUser._id);
 
+    // Validity
+    it("validity", () => {
+        assert(updatedUser);
+    });
+
+    // *TEST _id*
+    it("_id", () => {
+        assert(actualUser._id == updatedUser._id);
+    });
+
+    // *TEST name*
+    it("name", () => {
+        assert(actualUser.name == updatedUser.name);
+    });
+
+    // *TEST email*
+    it("email", () => {
+        assert(actualUser.email == updatedUser.email);
+    });
+
+    // *TEST congregation*
+    it("congregation", () => {
+        assert(actualUser.congregation == updatedUser.congregation);
+    });
+
+    // *TEST userType*
+    it("userType", () => {
+        assert(actualUser.userType.toString() == updatedUser.userType);
+    });
 }
 
 async function testDelete() {
 
 }
 
+// Main testing function
 async function testUserCRUD() {
     describe("User CRUD operations", () => {
         it("Test createUser", testCreate);

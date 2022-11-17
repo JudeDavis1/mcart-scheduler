@@ -161,6 +161,8 @@ async function testUpdate() {
     });
 
     // *TEST TIME*
+    // This will be comparing milliseconds since 1970 for both objects.
+    // Convert the actualSession time to an integer then parse the received session time which returns milliseconds also.
     it("date-time", () => {
       assert(parseInt(actualSession.time) == Date.parse(receivedSession.time));
     });
