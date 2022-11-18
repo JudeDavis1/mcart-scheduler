@@ -1,6 +1,6 @@
 function Signup() {
     return (
-        <div className='signup'>
+        <div className='signup app-sub-component'>
             <h1></h1>
         </div>
     )

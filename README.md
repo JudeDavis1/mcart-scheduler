@@ -15,3 +15,8 @@
 - Ensure that you have run `npm install`.
 - Run: `npm test` in this project's root directory.
 - Do a Ctrl-C when done.
+
+<br />
+
+# Progress
+<img src='progress.jpg' />

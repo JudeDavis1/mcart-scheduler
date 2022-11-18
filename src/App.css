@@ -1,0 +1,13 @@
+.App {
+    margin-bottom: 10px;
+}
+
+.app-sub-component {
+    margin-top: 55pt;
+}
+
+@media screen and (max-width: 242pt) {
+    .app-sub-component {
+        margin-top: 70pt;
+    }
+}
