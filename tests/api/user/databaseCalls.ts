@@ -67,7 +67,7 @@ async function testUpdate() {
     const updates = {
         email: "updated_test@test.com"
     };
-    // Update 
+    // Update email
     actualUser.email = updates.email;
     const req = await axios.patch(`http://localhost:${PORT}/api/v1/user/update`, {
         userId: actualUser._id,
