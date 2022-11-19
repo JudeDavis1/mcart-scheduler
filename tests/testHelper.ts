@@ -27,7 +27,6 @@ describe("Running tests:", async () => {
   await testUserCRUD();
 });
 
-console.log("HELLO DONE")
 testFinished = true;
 
 // Check if the testing process is finished.
@@ -37,4 +36,4 @@ setInterval(async () => {
       server.close();
       process.exit();
     }
-}, 3000);
+}, 4000);

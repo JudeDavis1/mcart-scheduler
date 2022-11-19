@@ -4,7 +4,7 @@ async function verifyUser(
     req: Request,
     res: Response,
     next: Function) {
-    // TODO
+        // TODO:
 }
 
 export {
