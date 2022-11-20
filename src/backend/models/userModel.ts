@@ -34,6 +34,10 @@ const userSchema = new Schema({
     enum: UserType,
     required: true
   },
+  passSalt: {
+    type: String,
+    required: false
+  }
 });
 
 

@@ -13,19 +13,19 @@ function NavigationMenu() {
     <div className='navigation-menu'>
       <Navbar collapseOnSelect expand='sm' fixed='top' bg='dark' variant='dark'>
         <Container>
-          <Navbar.Brand href='/' >mCart Scheduler</Navbar.Brand>
+          <Navbar.Brand href='/' className='navbar-brand'>mCart Scheduler</Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto">
               <Nav.Link as={ Link } to='/home'>Home</Nav.Link>
               <NavDropdown title='Features'>
-                <NavDropdown.Item>Ministry Cart pairing</NavDropdown.Item>
+                <NavDropdown.Item>Ministry Cart Pairing</NavDropdown.Item>
               </NavDropdown>
               <Nav.Link as={ Link } to='/contact-us'>Contact Us</Nav.Link>
             </Nav>
             <Nav>
-              <Button className='login-button right-menu-item' variant='primary'>Login</Button>
-              <Button className='signup-button right-menu-item' variant='outline-light'>Signup</Button>
+              <Button as={ Link } to='/login' className='login-button right-menu-item' variant='primary'>Login</Button>
+              <Button as={ Link } to='/signup' className='signup-button right-menu-item' variant='outline-light'>Signup</Button>
             </Nav>
           </Navbar.Collapse>
         </Container>

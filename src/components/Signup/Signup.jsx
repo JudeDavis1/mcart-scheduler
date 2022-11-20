@@ -1,7 +1,7 @@
 function Signup() {
     return (
         <div className='signup app-sub-component'>
-            <h1></h1>
+            <h1>Signup</h1>
         </div>
     )
 }

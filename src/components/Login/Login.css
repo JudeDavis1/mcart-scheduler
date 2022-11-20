@@ -1,0 +1,11 @@
+.login {
+    display: flex;
+    flex-direction: column;
+}
+
+.login-field {
+    width: 40%;
+    padding: 10pt;
+    /* Top and bottom margin */
+    margin: 10px 0 10px 0;
+}

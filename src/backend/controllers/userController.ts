@@ -17,12 +17,7 @@ async function createUser(
     const userInvalid = !name || !email || !congregation;
     if (userInvalid) throw new Error('One or more fields are missing.');
 
-    const createdUser = await User.create({
-      name,
-      email,
-      congregation,
-      userType
-    });
+    const createdUser = await User.create(req.body);
     res
       .status(200)
       .json({ data: "Created session.", user: createdUser });

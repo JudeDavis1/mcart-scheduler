@@ -1,3 +1,7 @@
 .right-menu-item {
     margin: 5pt;
 }
+
+.navbar-brand {
+    text-shadow: 2px 2px black;
+}
