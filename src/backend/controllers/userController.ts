@@ -12,16 +12,26 @@ async function createUser(
   next: Function
 ): Promise<void> {
   try {
-    const { name, email, congregation } = req.body;
+    const { name, email, congregation, hashedPassword, ...rest } = req.body;
+    if (await User.exists({ email })) throw new Error("User with this email already exists!");
 
     // Validate fields
     const userInvalid = !name || !email || !congregation;
-    if (userInvalid) throw new Error('One or more fields are missing.');
-
-    const createdUser = await User.create(req.body);
+    if (userInvalid) throw new Error("One or more fields are missing.");
+    
+    const salt = await bcrypt.genSalt();
+    const bcrytedPassword = await bcrypt.hash(hashedPassword, salt);
+    const createdUser = await User.create({
+      name,
+      email,
+      congregation,
+      hashedPassword: bcrytedPassword,
+      salt,
+      ...rest
+    });
     res
       .status(200)
-      .json({ data: "Created session.", user: createdUser });
+      .json({ data: "Account created successfully!", user: createdUser });
   } catch (error: any) {
     res.status(400).json({ error: "Invalid user fields: " + error.message });
     next(error);

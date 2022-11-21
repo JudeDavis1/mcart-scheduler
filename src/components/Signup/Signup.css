@@ -9,3 +9,11 @@
     /* Top and bottom margin */
     margin: 10px 0 10px 0;
 }
+
+.error-message {
+    color: red;
+}
+
+.success-message {
+    color: green;
+}

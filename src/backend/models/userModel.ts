@@ -35,7 +35,6 @@ const userSchema = new Schema({
   },
   hashedPassword: {
     type: String,
-    enum: UserType,
     required: true
   },
   salt: {
