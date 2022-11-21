@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import mongoose from "mongoose";
 import * as dotenv from "dotenv";
 dotenv.config();
@@ -10,6 +10,18 @@ import sessionRoutes from "./routes/sessionRoutes.js";
 
 const app = express();
 const db = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASS}@cluster0.mdm9nru.mongodb.net/?retryWrites=true&w=majority`;
+
+app.use((req: Request, res: Response, next: Function) => {
+    // Middleware
+    // Ensure that the recipient is allowed to access the page
+    res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+    res.header(
+        "Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content-Type, Accept"
+    );
+
+    next();
+});
 
 // Middleware
 app.use(express.json());

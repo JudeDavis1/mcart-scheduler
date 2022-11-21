@@ -121,7 +121,7 @@ async function generateUser(dbCreate: Boolean = false): Promise<any> {
         name: "Test name",
         email: "test@test.com",
         congregation: testCongName,
-        userType: UserType.user
+        userType: UserType.publisher
     }
     if (dbCreate) await User.create(userJson);
     

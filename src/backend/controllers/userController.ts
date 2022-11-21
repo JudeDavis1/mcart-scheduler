@@ -1,5 +1,6 @@
 // Controller for user
 
+import bcrypt from 'bcryptjs';
 import { Request, Response } from "express";
 import { User, UserType } from "../models/userModel.js";
 
@@ -11,7 +12,7 @@ async function createUser(
   next: Function
 ): Promise<void> {
   try {
-    const { name, email, congregation, userType } = req.body;
+    const { name, email, congregation } = req.body;
 
     // Validate fields
     const userInvalid = !name || !email || !congregation;
@@ -97,9 +98,45 @@ async function deleteUser(
 }
 
 
+async function userExists(
+  req: Request,
+  res: Response,
+  next: Function
+): Promise<void> {
+  try {
+    console.log("SDFJSDKFJSDLKFJDLKFJSLDKFJSDLKF");
+    const { email, hashedPassword } = req.body;
+    if (!email || !hashedPassword) throw new Error("Provide an email + password please.");
+
+    const userId = await User.exists({ email });
+    if (!userId) {
+      // The user does not exist
+      res
+        .status(200)
+        .json({ exists: false });
+      return;
+    }
+    const user = await User.findById(userId);
+    const newHash = await bcrypt.hash(hashedPassword, user!.salt);
+
+    if (user!.hashedPassword == newHash) {
+      res
+        .status(200)
+        .json({ exists: true });
+    }
+  } catch (error: any) {
+    res
+      .status(400)
+      .json({ error: "Couldn't find user: " + error.message });
+    next();
+  }
+}
+
+
 export {
   createUser,
   getUser,
   updateUser,
-  deleteUser
+  deleteUser,
+  userExists
 };

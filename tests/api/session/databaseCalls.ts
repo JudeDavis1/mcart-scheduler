@@ -98,7 +98,7 @@ async function testUpdate() {
     name: "A new name",
     email: "eeeee@example.com",
     congregation: testCongName,
-    userType: UserType.sessionCreator,
+    userType: UserType.publisher,
   });
   actualSession.members = [newId];
 
@@ -184,7 +184,7 @@ async function generateSession(): Promise<any> {
     name: "Test name",
     email: "test@test.com",
     congregation: testCongName,
-    userType: UserType.user,
+    userType: UserType.publisher,
   });
 
   await User.create({
@@ -192,7 +192,7 @@ async function generateSession(): Promise<any> {
     name: "Test name2",
     email: "test2@test.com",
     congregation: testCongName,
-    userType: UserType.user,
+    userType: UserType.publisher,
   });
 
   const session = {

@@ -3,8 +3,7 @@ import mongoose, { Schema } from "mongoose";
 
 enum UserType {
   congAdmin,
-  sessionCreator,
-  user,
+  publisher,
 }
 
 interface IUser {
@@ -34,9 +33,14 @@ const userSchema = new Schema({
     enum: UserType,
     required: true
   },
-  passSalt: {
+  hashedPassword: {
     type: String,
-    required: false
+    enum: UserType,
+    required: true
+  },
+  salt: {
+    type: String,
+    required: true
   }
 });
 
