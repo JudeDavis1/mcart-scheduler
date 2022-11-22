@@ -133,7 +133,7 @@ async function userExists(
       res
         .status(200)
         .json({ exists: true });
-    }
+    } else throw new Error("Invalid password");
   } catch (error: any) {
     res
       .status(400)

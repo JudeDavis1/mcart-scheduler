@@ -46,6 +46,8 @@ function Signup() {
         }).then((val) => {
             if (val.status == 200) setSuccessMsg(val.data.data);
             else setErrMsg(val.data.error);
+        }).catch((val) => {
+            setErrMsg(val.response.data.error);
         });
     }
 
