@@ -6,6 +6,7 @@ import Button from "react-bootstrap/Button";
 
 import './Signup.css';
 import config from '../../config';
+import MAlert from '../MAlert/MAlert';
 
 
 function Signup() {
@@ -17,19 +18,21 @@ function Signup() {
     var [congregation, setCongregation] = useState('');
     var [userType, setUserType] = useState('');
     
-    var [errMsg, setErrMsg] = useState('');
-    var [successMsg, setSuccessMsg] = useState('');
+    var [msg, setMsg] = useState('');
+    var [status, setStatus] = useState('success');
+    var [shouldShow, setShouldShow] = useState(false);
 
     const didTapSubmit = () => {
         // Validate params
         if (password != retypedPassword) {
-            setErrMsg("Both passwords must be the same!");
+            setMsg("Both passwords must be the same!");
             return;
         }
 
         // Check all fields are filled out
         if (!(email && password && retypedPassword && congregation && userType && firstName && lastName)) {
-            setErrMsg("Please fill out all fields!");
+            setMsg("Please fill out all fields!");
+            return;
         }
 
         // Prepare data for transport
@@ -44,11 +47,23 @@ function Signup() {
             userType,
             congregation: toTitleCase(congregation)
         }).then((val) => {
-            if (val.status == 200) setSuccessMsg(val.data.data);
-            else setErrMsg(val.data.error);
+            if (val.status == 200) {
+                setStatus('success');
+                setMsg(val.data.data);
+
+                setTimeout(() => {
+                    window.location = '/login';
+                }, 700);
+            }
+            else {
+                setStatus('danger');
+                setMsg(val.data.error);
+            }
         }).catch((val) => {
-            setErrMsg(val.response.data.error);
+            setStatus('danger');
+            setMsg(val.response.data.error);
         });
+        setShouldShow(true);
     }
 
     return (
@@ -56,8 +71,7 @@ function Signup() {
             <h1>Signup</h1>
             <Form onKeyDown={(e) => {
                 if (e.key == 'Enter') didTapSubmit(email, password);
-            }} onChange={() => setErrMsg("")}>
-                <p className="error-message">{ errMsg }</p>
+            }} onChange={() => setMsg("")}>
                 <Form.Control onChange={(e) => setFirstName(e.target.value.trim())} className='firstname-field login-field' placeholder='First Name' />
                 <Form.Control onChange={(e) => setLastName(e.target.value.trim())} className='lastname-field login-field' placeholder='Last Name' />
                 <Form.Control onChange={(e) => setEmail(e.target.value.trim())} className='email-field login-field' placeholder='Email' type='email' />
@@ -72,7 +86,7 @@ function Signup() {
                 <Button onClick={ () => didTapSubmit()}>Submit</Button>
             </Form>
             <br />
-            <h2 className="success-message">{ successMsg }</h2>
+            {shouldShow && <MAlert onClose={ () => setShouldShow(false) } variant={ status } text={ msg } />}
             <br />
         </div>
     );

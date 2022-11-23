@@ -1,0 +1,17 @@
+.PAAlert {
+    animation: fadeIn 1s;
+    text-align: center;
+    width: 50vw;
+}
+
+@keyframes fadeIn {
+    0% {
+        top: 25pt;
+        opacity: 0;
+    }
+
+    100% {
+        top: 0;
+        opacity: 1;
+    }
+}

@@ -9,3 +9,7 @@
     /* Top and bottom margin */
     margin: 10px 0 10px 0;
 }
+
+.loggedin-message {
+    color: green;
+}

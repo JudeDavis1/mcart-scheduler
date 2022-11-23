@@ -114,7 +114,6 @@ async function userExists(
   next: Function
 ): Promise<void> {
   try {
-    console.log("SDFJSDKFJSDLKFJDLKFJSLDKFJSDLKF");
     const { email, hashedPassword } = req.body;
     if (!email || !hashedPassword) throw new Error("Provide an email + password please.");
 
@@ -129,6 +128,7 @@ async function userExists(
     const user = await User.findById(userId);
     const newHash = await bcrypt.hash(hashedPassword, user!.salt);
 
+    // Ensure hashes match.
     if (user!.hashedPassword == newHash) {
       res
         .status(200)

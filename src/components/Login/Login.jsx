@@ -6,6 +6,7 @@ import Button from "react-bootstrap/Button";
 
 import './Login.css'
 import config from '../../config';
+import MAlert from '../MAlert/MAlert';
 
 
 function Login(props) {
@@ -26,6 +27,8 @@ function Login(props) {
             if (result.exists) {
                 // User logged in successfully
                 setSuccessMsg('Logged In!');
+            } else {
+                setErrorMsg('User does not exist.');
             }
         }).catch(err => setErrorMsg(err.response.data.error));
     }
@@ -43,7 +46,7 @@ function Login(props) {
                     didTapSubmit();
                 }}>Submit</Button>
             </Form>
-            <br /><h2>{ successMsg }</h2>
+            <br /><h2 className='loggedin-message'>{ successMsg }</h2>
         </div>
     );
 }
