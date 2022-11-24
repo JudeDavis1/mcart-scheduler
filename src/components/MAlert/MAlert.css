@@ -1,7 +1,7 @@
 .PAAlert {
     animation: fadeIn 1s;
     text-align: center;
-    width: 50vw;
+    width: 70vw;
 }
 
 @keyframes fadeIn {

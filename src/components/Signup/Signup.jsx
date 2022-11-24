@@ -25,14 +25,17 @@ function Signup() {
     const didTapSubmit = () => {
         // Validate params
         if (password != retypedPassword) {
+            setStatus("danger");
             setMsg("Both passwords must be the same!");
+            setShouldShow(true);
             return;
         }
 
         // Check all fields are filled out
         if (!(email && password && retypedPassword && congregation && userType && firstName && lastName)) {
+            setStatus("danger");
             setMsg("Please fill out all fields!");
-            return;
+            setShouldShow(true);
             return;
         }
 
@@ -56,10 +59,6 @@ function Signup() {
                     window.location = '/login';
                 }, 700);
             }
-            else {
-                setStatus('danger');
-                setMsg(val.data.error);
-            }
         }).catch((val) => {
             setStatus('danger');
             setMsg(val.response.data.error);
@@ -72,23 +71,26 @@ function Signup() {
             <h1>Signup</h1>
             <Form onKeyDown={(e) => {
                 if (e.key == 'Enter') didTapSubmit(email, password);
-            }} onChange={() => setMsg("")}>
-                <Form.Control onChange={(e) => setFirstName(e.target.value.trim())} className='firstname-field login-field' placeholder='First Name' />
-                <Form.Control onChange={(e) => setLastName(e.target.value.trim())} className='lastname-field login-field' placeholder='Last Name' />
-                <Form.Control onChange={(e) => setEmail(e.target.value.trim())} className='email-field login-field' placeholder='Email' type='email' />
-                <Form.Control onChange={(e) => setPassword(e.target.value)} className='password-field login-field' placeholder='Password' type='password' />
-                <Form.Control onChange={(e) => setRetypedPassword(e.target.value)} className='retyped-password-field login-field' placeholder='Re-type password' type='password' />
-                <Form.Control onChange={(e) => setCongregation(e.target.value.trim())} className='congregation-field login-field' placeholder='Congregation' />
-                <Form.Select className="login-field" onChange={(e) => setUserType(e.target.value)}>
-                    <option value="">Select the type of user you are:</option>
-                    <option value="publisher">Publisher</option>
-                    <option value="congAdmin">Congregation Admin</option>
-                </Form.Select>
+            }} onChange={() => setShouldShow(false)}>
+                <Form.Group>
+                    <br />
+                    {shouldShow && <MAlert onClose={ () => setShouldShow(false) } variant={ status } text={ msg } />}
+                    <br />
+                    <Form.Control onChange={(e) => setFirstName(e.target.value.trim())} className='firstname-field signup-field' placeholder='First Name' />
+                    <Form.Control onChange={(e) => setLastName(e.target.value.trim())} className='lastname-field signup-field' placeholder='Last Name' />
+                    <Form.Control onChange={(e) => setEmail(e.target.value.trim())} className='email-field signup-field' placeholder='Email' type='email' />
+                    <Form.Control onChange={(e) => setPassword(e.target.value)} className='password-field signup-field' placeholder='Password' type='password' />
+                    <Form.Control onChange={(e) => setRetypedPassword(e.target.value)} className='retyped-password-field signup-field' placeholder='Re-type password' type='password' />
+                    <Form.Control onChange={(e) => setCongregation(e.target.value.trim())} className='congregation-field signup-field' placeholder='Congregation' />
+                    <Form.Select className="signup-field" onChange={(e) => setUserType(e.target.value)}>
+                        <option value="">Select the type of user you are:</option>
+                        <option value="publisher">Publisher</option>
+                        <option value="congAdmin">Congregation Admin</option>
+                    </Form.Select>
+                </Form.Group>
                 <Button onClick={ () => didTapSubmit()}>Submit</Button>
             </Form>
-            <br />
-            {shouldShow && <MAlert onClose={ () => setShouldShow(false) } variant={ status } text={ msg } />}
-            <br />
+            
         </div>
     );
 }

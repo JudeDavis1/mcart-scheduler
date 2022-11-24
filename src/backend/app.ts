@@ -14,7 +14,7 @@ const db = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASS
 app.use((req: Request, res: Response, next: Function) => {
     // Middleware
     // Ensure that the recipient is allowed to access the page
-    res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+    res.header("Access-Control-Allow-Origin", "*");
     res.header(
         "Access-Control-Allow-Headers",
         "Origin, X-Requested-With, Content-Type, Accept"

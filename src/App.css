@@ -6,7 +6,7 @@
     margin-top: 55pt;
 }
 
-@media screen and (max-width: 242pt) {
+@media screen and (max-width: 241px) {
     .app-sub-component {
         margin-top: 70pt;
     }

@@ -4,7 +4,7 @@
 }
 
 .login-field {
-    width: 40%;
+    width: 40vw;
     padding: 5pt;
     /* Top and bottom margin */
     margin: 10px 0 10px 0;
@@ -12,4 +12,10 @@
 
 .loggedin-message {
     color: green;
+}
+
+@media (width < 668px) {
+    .login-field {
+        width: 70vw;
+    }
 }

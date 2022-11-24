@@ -1,10 +1,10 @@
-.login {
+.signup {
     display: flex;
     flex-direction: column;
 }
 
-.login-field {
-    width: 40%;
+.signup-field {
+    width: 40vw;;
     padding: 5pt;
     /* Top and bottom margin */
     margin: 10px 0 10px 0;
@@ -16,4 +16,13 @@
 
 .success-message {
     color: green;
+}
+
+/* Make sure password and show password button are on the same row */
+
+
+@media (width < 668px) {
+    .signup-field {
+        width: 70vw;
+    }
 }
