@@ -5,17 +5,15 @@
 
 .signup-field {
     width: 40vw;;
-    padding: 5pt;
+    padding: 7pt;
     /* Top and bottom margin */
     margin: 10px 0 10px 0;
 }
 
-.error-message {
-    color: red;
-}
-
-.success-message {
-    color: green;
+.signup-form {
+    color: aliceblue;
+    padding: 10px;
+    background-image: url('../../assets/connecting.gif');
 }
 
 /* Make sure password and show password button are on the same row */

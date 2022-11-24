@@ -31,6 +31,7 @@ function Signup() {
             return;
         }
 
+
         // Check all fields are filled out
         if (!(email && password && retypedPassword && congregation && userType && firstName && lastName)) {
             setStatus("danger");
@@ -68,10 +69,10 @@ function Signup() {
 
     return (
         <div align='center' className='signup app-sub-component'>
-            <h1>Signup</h1>
-            <Form onKeyDown={(e) => {
+            <Form className='signup-form' onKeyDown={(e) => {
                 if (e.key == 'Enter') didTapSubmit(email, password);
             }} onChange={() => setShouldShow(false)}>
+                <h1>Sign Up</h1>
                 <Form.Group>
                     <br />
                     {shouldShow && <MAlert onClose={ () => setShouldShow(false) } variant={ status } text={ msg } />}

@@ -55,7 +55,7 @@ function Login(props) {
     return (
         <div align='center' className='login app-sub-component'>
             <h1>Login</h1>
-            <Form onChange={ () => closeAlert() } onKeyDown={(e) => {
+            <Form className='login-form' onChange={ () => closeAlert() } onKeyDown={(e) => {
                 if (e.key == 'Enter') didTapSubmit();
             }}>
                 <br />{ shouldShow && <MAlert variant={ status } onClose={() => closeAlert()} text={ msg } /> }

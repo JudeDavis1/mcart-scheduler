@@ -3,7 +3,7 @@ import Carousel from "react-bootstrap/Carousel";
 
 import bg from '../../assets/background.jpg'
 
-const ii = <img src={bg} height='250px' width='100%' />;
+const ii = <img src={bg} height='500px' width='100%' />;
 
 function Home() {
     return (
