@@ -4,7 +4,7 @@ import sha256 from 'crypto-js/sha256';
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
-import './Login.css'
+import './Login.css';
 import config from '../../config';
 import MAlert from '../MAlert/MAlert';
 
@@ -32,7 +32,7 @@ function Login() {
         axios.post(config.backend_url + 'user/exists', { email, hashedPassword })
         .then((val) => {
             const result = val.data;
-            console.log(result);
+            
             if (result.exists) {
                 // User logged in successfully
                 setMsg('Logged In!');

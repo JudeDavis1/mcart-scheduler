@@ -37,6 +37,7 @@ function Signup() {
             setMsg("Please fill out all fields!");
             setShouldShow(true);
             return;
+            return;
         }
 
         // Prepare data for transport
