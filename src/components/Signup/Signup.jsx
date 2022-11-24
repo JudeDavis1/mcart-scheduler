@@ -25,17 +25,13 @@ function Signup() {
     const didTapSubmit = () => {
         // Validate params
         if (password != retypedPassword) {
-            setStatus('danger');
             setMsg("Both passwords must be the same!");
-            setShouldShow(true);
             return;
         }
 
         // Check all fields are filled out
         if (!(email && password && retypedPassword && congregation && userType && firstName && lastName)) {
-            setStatus('danger');
             setMsg("Please fill out all fields!");
-            setShouldShow(true);
             return;
             return;
         }
@@ -76,7 +72,7 @@ function Signup() {
             <h1>Signup</h1>
             <Form onKeyDown={(e) => {
                 if (e.key == 'Enter') didTapSubmit(email, password);
-            }} onChange={() => setShouldShow(false)}>
+            }} onChange={() => setMsg("")}>
                 <Form.Control onChange={(e) => setFirstName(e.target.value.trim())} className='firstname-field login-field' placeholder='First Name' />
                 <Form.Control onChange={(e) => setLastName(e.target.value.trim())} className='lastname-field login-field' placeholder='Last Name' />
                 <Form.Control onChange={(e) => setEmail(e.target.value.trim())} className='email-field login-field' placeholder='Email' type='email' />
@@ -88,7 +84,7 @@ function Signup() {
                     <option value="publisher">Publisher</option>
                     <option value="congAdmin">Congregation Admin</option>
                 </Form.Select>
-                <Button onClick={ () => didTapSubmit()}>Sign Up</Button>
+                <Button onClick={ () => didTapSubmit()}>Submit</Button>
             </Form>
             <br />
             {shouldShow && <MAlert onClose={ () => setShouldShow(false) } variant={ status } text={ msg } />}

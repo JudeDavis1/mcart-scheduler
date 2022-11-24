@@ -9,22 +9,13 @@ import config from '../../config';
 import MAlert from '../MAlert/MAlert';
 
 
-function Login() {
+function Login(props) {
     var [email, setEmail] = useState('');
     var [password, setPassword] = useState('');
-
-    var [msg, setMsg] = useState('');
-    var [status, setStatus] = useState('success');
-    var [shouldShow, setShouldShow] = useState(false);
+    var [errorMsg, setErrorMsg] = useState('');
+    var [successMsg, setSuccessMsg] = useState('Not Logged On');
 
     const didTapSubmit = () => {
-        if (!(email && password)) {
-            setMsg('Please enter an Email and Password');
-            setStatus('danger');
-            setShouldShow(true);
-            return;
-        }
-
         const hashedPassword = sha256(password).toString();
         password = undefined;
     
@@ -35,30 +26,27 @@ function Login() {
             
             if (result.exists) {
                 // User logged in successfully
-                setMsg('Logged In!');
-                setStatus('success');
+                setSuccessMsg('Logged In!');
             } else {
-                setMsg('User does not exist.');
-                setStatus('danger');
+                setErrorMsg('User does not exist.');
             }
-        }).catch(err => {
-            setMsg(err.response.data.error);
-            setStatus('danger');
-        });
-        setShouldShow(true);
+        }).catch(err => setErrorMsg(err.response.data.error));
     }
 
     return (
         <div align='center' className='login app-sub-component'>
             <h1>Login</h1>
-            <Form onClick={ () => setShouldShow(false) } onChange={ () => setMsg('') } onKeyDown={(e) => {
+            <p className='error-message'>{ errorMsg }</p>
+            <Form onClick={ () => setSuccessMsg('') } onChange={ () => setErrorMsg('') } onKeyDown={(e) => {
                 if (e.key == 'Enter') didTapSubmit();
             }}>
                 <Form.Control onChange={(e) => setEmail(e.target.value)} className='email-field login-field' placeholder='Email' type='email' />
                 <Form.Control onChange={(e) => setPassword(e.target.value)} className='password-field login-field' placeholder='Password' type='password' />
-                <Button onClick={() => didTapSubmit()} >Login</Button>
+                <Button onClick={ () => {
+                    didTapSubmit();
+                }}>Submit</Button>
             </Form>
-            <br />{ shouldShow && <MAlert variant={ status } onClose={() => setShouldShow(false)} text={ msg } /> }
+            <br /><h2 className='loggedin-message'>{ successMsg }</h2>
         </div>
     );
 }
