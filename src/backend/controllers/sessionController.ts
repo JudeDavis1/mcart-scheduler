@@ -10,6 +10,7 @@ async function createSession(
   next: Function
 ): Promise<void> {
   try {
+    console.log('ehl;lodifhsds')
     // time: milliseconds since 1970
     const { place, members, time } = req.body;
 

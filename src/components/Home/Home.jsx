@@ -1,9 +1,12 @@
+
 import React from "react";
+import Particles from "react-tsparticles";
 import Carousel from "react-bootstrap/Carousel";
 
 import bg from '../../assets/background.jpg'
 
 const ii = <img src={bg} height='500px' width='100%' />;
+
 
 function Home() {
     return (
@@ -35,6 +38,7 @@ function Home() {
             <h4 align='center'>
                 An easy-to-use ministry cart scheduler that simplifies the scheduling process for trolly-work.
             </h4>
+            <div className="hi"></div>
         </div>
     );
 }
