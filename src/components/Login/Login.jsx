@@ -15,8 +15,7 @@ import MAlert from '../MAlert/MAlert';
 const Item = styled(Paper)(({theme}) => ({
     color: theme.palette.text.secondary,
     padding: '20px',
-    margin: '20px'
-}))
+}));
 const darkTheme = createTheme({ palette: { mode: 'dark' } });
 
 function Login(props) {
@@ -65,7 +64,7 @@ function Login(props) {
     return (
         <div align='center' className='login app-sub-component'>
             <ThemeProvider theme={darkTheme}>
-            <Item elevation={15}>
+            <Item className='Item' elevation={15}>
             <h1>Login</h1>
             <div className='login-form' onChange={ () => closeAlert() } onKeyDown={(e) => {
                 if (e.key == 'Enter') didTapSubmit();

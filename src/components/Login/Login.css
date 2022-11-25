@@ -15,8 +15,21 @@
     margin: 10pt;
 }
 
+.Item {
+    margin: 20px;
+}
+
 @media (width < 668px) {
     .login-field {
-        width: 70vw;
+        width: 80vw;
+    }
+
+    .login-form {
+        padding: 2px;
+        margin: 2pt;
+    }
+
+    .Item {
+        margin: 0;
     }
 }

@@ -28,6 +28,11 @@
 
 @media (width < 668px) {
     .signup-field {
-        width: 70vw;
+        width: 80vw;
+    }
+
+    .signup-form {
+        padding: 0;
+        margin: 1pt;
     }
 }

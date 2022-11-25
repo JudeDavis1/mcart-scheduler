@@ -19,11 +19,10 @@ import MAlert from '../MAlert/MAlert';
 const Item = styled(Paper)(({theme}) => ({
     color: theme.palette.text.secondary,
     padding: '20px'
-}))
+}));
 const darkTheme = createTheme({ palette: { mode: 'dark' } });
 
 function Signup() {
-
     var [firstName, setFirstName] = useState('');
     var [lastName, setLastName] = useState('');
     var [email, setEmail] = useState('');
@@ -44,7 +43,6 @@ function Signup() {
             setShouldShow(true);
             return;
         }
-
 
         // Check all fields are filled out
         if (!(email && password && retypedPassword && congregation && userType && firstName && lastName)) {
