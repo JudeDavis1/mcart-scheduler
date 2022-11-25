@@ -12,7 +12,6 @@ async function createUser(
   next: Function
 ): Promise<void> {
   try {
-    console.log("HEKFHEKH");
     const { name, email, congregation, hashedPassword, ...rest } = req.body;
     if (await User.exists({ email })) throw new Error("User with this email already exists!");
 
