@@ -6,6 +6,7 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import { makeStyles } from '@mui/material';
+import emailValidator from 'email-validator';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
@@ -48,6 +49,14 @@ function Signup() {
         if (!(email && password && retypedPassword && congregation && userType && firstName && lastName)) {
             setStatus("danger");
             setMsg("Please fill out all fields!");
+            setShouldShow(true);
+            return;
+        }
+
+        const isValid = emailValidator.validate(email);
+        if (!isValid) {
+            setStatus("danger");
+            setMsg("Invalid email!");
             setShouldShow(true);
             return;
         }
