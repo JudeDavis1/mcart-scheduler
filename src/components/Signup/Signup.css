@@ -4,16 +4,23 @@
 }
 
 .signup-field {
-    width: 40vw;;
+    width: 40vw;
     padding: 7pt;
     /* Top and bottom margin */
     margin: 10px 0 10px 0;
 }
 
 .signup-form {
-    color: aliceblue;
     padding: 10px;
-    background-image: url('../../assets/connecting.gif');
+    margin: 10pt;
+}
+
+.signup-submit {
+    padding: 10px;
+}
+
+.signup-paper {
+    padding: 15px;
 }
 
 /* Make sure password and show password button are on the same row */

@@ -1,13 +1,23 @@
 import axios from 'axios';
 import { useState } from "react";
 import sha256 from 'crypto-js/sha256';
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
+import Grid from '@mui/material/Grid';
+import Button from "@mui/material/Button";
+import TextField from '@mui/material/TextField';
+import Paper from '@mui/material/Paper';
+import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 
 import './Login.css';
 import config from '../../config';
 import MAlert from '../MAlert/MAlert';
 
+
+const Item = styled(Paper)(({theme}) => ({
+    color: theme.palette.text.secondary,
+    padding: '20px',
+    margin: '20px'
+}))
+const darkTheme = createTheme({ palette: { mode: 'dark' } });
 
 function Login(props) {
     var [email, setEmail] = useState('');
@@ -54,22 +64,29 @@ function Login(props) {
 
     return (
         <div align='center' className='login app-sub-component'>
+            <ThemeProvider theme={darkTheme}>
+            <Item elevation={15}>
             <h1>Login</h1>
-            <Form className='login-form' onChange={ () => closeAlert() } onKeyDown={(e) => {
+            <div className='login-form' onChange={ () => closeAlert() } onKeyDown={(e) => {
                 if (e.key == 'Enter') didTapSubmit();
             }}>
                 <br />{ shouldShow && <MAlert variant={ status } onClose={() => closeAlert()} text={ msg } /> }
-                <Form.Control onChange={(e) => setEmail(e.target.value)} className='email-field login-field' placeholder='Email' type='email' />
-                <Form.Control onChange={(e) => setPassword(e.target.value)} className='password-field login-field' placeholder='Password' type='password' />
-                <Button onClick={ () => {
-                    didTapSubmit();
-                }}>Submit</Button>
-            </Form>
+                <Grid container spacing={2} direction={'column'}>
+                    <Grid item><TextField onChange={(e) => setEmail(e.target.value)} className='email-field login-field' label='Email' type='email' /></Grid>
+                    <Grid item><TextField onChange={(e) => setPassword(e.target.value)} className='password-field login-field' label='Password' type='password' /></Grid>
+                <Grid item>
+                    <Button variant='contained' style={{padding: '10px', margin: "10px"}} onClick={ () => {
+                        didTapSubmit();
+                    }}>Submit</Button>
+                </Grid>
+                </Grid>
+            </div>
+            </Item>
+            </ThemeProvider>
             
         </div>
     );
 }
-
 
 
 

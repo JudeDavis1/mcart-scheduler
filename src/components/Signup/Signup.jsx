@@ -1,15 +1,29 @@
 import axios from 'axios';
 import { useState } from "react";
+import Box from '@mui/material/Box';
 import sha256 from 'crypto-js/sha256';
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import { makeStyles } from '@mui/material';
+import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
+import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
+// import Button from "react-bootstrap/Button";
 
 import './Signup.css';
 import config from '../../config';
 import MAlert from '../MAlert/MAlert';
 
 
+const Item = styled(Paper)(({theme}) => ({
+    color: theme.palette.text.secondary,
+    padding: '20px'
+}))
+const darkTheme = createTheme({ palette: { mode: 'dark' } });
+
 function Signup() {
+
     var [firstName, setFirstName] = useState('');
     var [lastName, setLastName] = useState('');
     var [email, setEmail] = useState('');
@@ -69,29 +83,34 @@ function Signup() {
 
     return (
         <div align='center' className='signup app-sub-component'>
-            <Form className='signup-form' onKeyDown={(e) => {
+            <div className='signup-form' onKeyDown={(e) => {
                 if (e.key == 'Enter') didTapSubmit(email, password);
             }} onChange={() => setShouldShow(false)}>
+                <ThemeProvider theme={darkTheme}>
+                <Item elevation={15} >
                 <h1>Sign Up</h1>
-                <Form.Group>
+                <Grid container direction={'column'} spacing={2}>
                     <br />
                     {shouldShow && <MAlert onClose={ () => setShouldShow(false) } variant={ status } text={ msg } />}
                     <br />
-                    <Form.Control onChange={(e) => setFirstName(e.target.value.trim())} className='firstname-field signup-field' placeholder='First Name' />
-                    <Form.Control onChange={(e) => setLastName(e.target.value.trim())} className='lastname-field signup-field' placeholder='Last Name' />
-                    <Form.Control onChange={(e) => setEmail(e.target.value.trim())} className='email-field signup-field' placeholder='Email' type='email' />
-                    <Form.Control onChange={(e) => setPassword(e.target.value)} className='password-field signup-field' placeholder='Password' type='password' />
-                    <Form.Control onChange={(e) => setRetypedPassword(e.target.value)} className='retyped-password-field signup-field' placeholder='Re-type password' type='password' />
-                    <Form.Control onChange={(e) => setCongregation(e.target.value.trim())} className='congregation-field signup-field' placeholder='Congregation' />
-                    <Form.Select className="signup-field" onChange={(e) => setUserType(e.target.value)}>
-                        <option value="">Select the type of user you are:</option>
-                        <option value="publisher">Publisher</option>
-                        <option value="congAdmin">Congregation Admin</option>
-                    </Form.Select>
-                </Form.Group>
-                <Button onClick={ () => didTapSubmit()}>Submit</Button>
-            </Form>
-            
+                    <Grid item><TextField onChange={(e) => setFirstName(e.target.value.trim())} className='firstname-field signup-field' variant='outlined' label='First Name' /></Grid>
+                    <Grid item><TextField onChange={(e) => setLastName(e.target.value.trim())} className='lastname-field signup-field' label='Last Name' /></Grid>
+                    <Grid item><TextField onChange={(e) => setEmail(e.target.value.trim())} className='email-field signup-field' label='Email' type='email' /></Grid>
+                    <Grid item><TextField onChange={(e) => setPassword(e.target.value)} className='password-field signup-field' label='Password' type='password' /></Grid>
+                    <Grid item><TextField onChange={(e) => setRetypedPassword(e.target.value)} className='retyped-password-field signup-field' label='Re-type password' type='password' /></Grid>
+                    <Grid item><TextField onChange={(e) => setCongregation(e.target.value.trim())} className='congregation-field signup-field' label='Congregation' /></Grid>
+
+                    <Grid item>
+                        <TextField select label='User type' className="signup-field" input onChange={(e) => setUserType(e.target.value)} value={userType} variant='standard'>
+                            <MenuItem value="publisher">Publisher</MenuItem>
+                            <MenuItem value="congAdmin">Congregation Admin</MenuItem>
+                        </TextField >
+                    </Grid>
+                <Grid item><Button variant='contained' onClick={ () => didTapSubmit()}>Submit</Button></Grid>
+                </Grid>
+                </Item>
+                </ThemeProvider>
+            </div>
         </div>
     );
 }

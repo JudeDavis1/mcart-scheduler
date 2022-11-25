@@ -12,11 +12,7 @@
 
 .login-form {
     padding: 10px;
-    background-color: #373433;
-}
-
-.loggedin-message {
-    color: green;
+    margin: 10pt;
 }
 
 @media (width < 668px) {
