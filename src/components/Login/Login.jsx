@@ -76,11 +76,11 @@ function Login() {
                 <Grid container spacing={2} direction={'column'}>
                     <Grid item><TextField onChange={(e) => setEmail(e.target.value)} className='email-field login-field' label='Email' type='email' /></Grid>
                     <Grid item><TextField onChange={(e) => setPassword(e.target.value)} className='password-field login-field' label='Password' type='password' /></Grid>
-                <Grid item>
-                    <Button variant='contained' style={{padding: '10px', margin: "10px"}} onClick={ () => {
-                        didTapSubmit();
-                    }}>Submit</Button>
-                </Grid>
+                    <Grid item>
+                        <Button variant='contained' style={{padding: '10px', margin: "10px"}} onClick={ () => {
+                            didTapSubmit();
+                        }}>Submit</Button>
+                    </Grid>
                 </Grid>
             </div>
             </Item>

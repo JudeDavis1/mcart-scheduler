@@ -1,11 +1,9 @@
 import axios from 'axios';
 import { useState } from "react";
-import Box from '@mui/material/Box';
 import sha256 from 'crypto-js/sha256';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
-import { makeStyles } from '@mui/material';
 import emailValidator from 'email-validator';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
@@ -21,7 +19,7 @@ const Item = styled(Paper)(({theme}) => ({
     color: theme.palette.text.secondary,
     padding: '20px',
     opacity: '1',
-    zIndex: 999
+    zIndex: '10000  !important'
 }));
 const darkTheme = createTheme({ palette: { mode: 'dark' } });
 
@@ -102,7 +100,7 @@ function Signup() {
                 if (e.key == 'Enter') didTapSubmit(email, password);
             }} onChange={() => setShouldShow(false)}>
                 <ThemeProvider theme={darkTheme}>
-                <Item elevation={15} >
+                <Item className='paper-item' elevation={15} >
                 <h1>Sign Up</h1>
                 <Grid container direction={'column'} spacing={2}>
                     <br />

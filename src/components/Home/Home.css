@@ -1,3 +1,7 @@
 .home {
     background-color: transparent;
 }
+
+.car {
+    z-index: 999;
+}

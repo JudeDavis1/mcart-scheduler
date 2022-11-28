@@ -1,6 +1,7 @@
 .signup {
     display: flex;
     flex-direction: column;
+    z-index: 999;
 }
 
 .signup-field {
@@ -19,8 +20,8 @@
     padding: 10px;
 }
 
-.signup-paper {
-    padding: 15px;
+.paper-item {
+    margin: 20px;
 }
 
 /* Make sure password and show password button are on the same row */

@@ -11,7 +11,7 @@ const ii = <img src={bg} height='500px' width='100%' />;
 function Home() {
     return (
         <div className='home app-sub-component'>
-            <Carousel>
+            <Carousel className="car">
                 <Carousel.Item>
                 {ii}
                 <Carousel.Caption>
