@@ -15,10 +15,12 @@ import MAlert from '../MAlert/MAlert';
 const Item = styled(Paper)(({theme}) => ({
     color: theme.palette.text.secondary,
     padding: '20px',
+    opacity: '1',
+    zIndex: 999
 }));
 const darkTheme = createTheme({ palette: { mode: 'dark' } });
 
-function Login(props) {
+function Login() {
     var [email, setEmail] = useState('');
     var [password, setPassword] = useState('');
     
@@ -34,6 +36,7 @@ function Login(props) {
             return;
         }
 
+        // SHA-2 hash for transport
         const hashedPassword = sha256(password).toString();
         password = undefined;
     

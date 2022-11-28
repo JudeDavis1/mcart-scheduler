@@ -19,7 +19,9 @@ import MAlert from '../MAlert/MAlert';
 
 const Item = styled(Paper)(({theme}) => ({
     color: theme.palette.text.secondary,
-    padding: '20px'
+    padding: '20px',
+    opacity: '1',
+    zIndex: 999
 }));
 const darkTheme = createTheme({ palette: { mode: 'dark' } });
 
@@ -36,30 +38,36 @@ function Signup() {
     var [status, setStatus] = useState('success');
     var [shouldShow, setShouldShow] = useState(false);
 
-    const didTapSubmit = () => {
+    const isInvalid = () =>{
+        let messages = [];
+
         // Validate params
         if (password != retypedPassword) {
-            setStatus("danger");
-            setMsg("Both passwords must be the same!");
-            setShouldShow(true);
-            return;
+            messages.push("Both passwords must be the same!");
         }
 
         // Check all fields are filled out
         if (!(email && password && retypedPassword && congregation && userType && firstName && lastName)) {
-            setStatus("danger");
-            setMsg("Please fill out all fields!");
-            setShouldShow(true);
-            return;
+            messages.push("Please fill out all fields!");
         }
 
+        //Check if email
         const isValid = emailValidator.validate(email);
         if (!isValid) {
-            setStatus("danger");
-            setMsg("Invalid email!");
-            setShouldShow(true);
-            return;
+            messages.push("Invalid email!");
         }
+
+        if(messages.length > 0){
+            setStatus("danger");
+            setShouldShow(true);
+            setMsg(messages[0]);
+            return true;
+        }
+        return false;
+    }
+
+    const didTapSubmit = () => {
+        if(isInvalid()) return;
 
         // Prepare data for transport
         const name = toTitleCase(firstName + ' ' + lastName);

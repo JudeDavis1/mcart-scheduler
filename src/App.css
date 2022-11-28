@@ -1,9 +1,14 @@
 .App {
     margin-bottom: 10px;
+    background-color: 	#909090;
 }
 
 .app-sub-component {
-    margin-top: 55pt;
+    margin-top: 60pt;
+}
+
+#tsparticles {
+    height: 50vh;
 }
 
 @media screen and (max-width: 241px) {
