@@ -31,7 +31,7 @@ function Signup() {
     var [retypedPassword, setRetypedPassword] = useState('');
     var [congregation, setCongregation] = useState('');
     var [userType, setUserType] = useState('');
-    
+
     var [msg, setMsg] = useState('');
     var [status, setStatus] = useState('success');
     var [shouldShow, setShouldShow] = useState(false);
@@ -49,7 +49,7 @@ function Signup() {
             messages.push("Please fill out all fields!");
         }
 
-        //Check if email
+        // Check if email
         const isValid = emailValidator.validate(email);
         if (!isValid) {
             messages.push("Invalid email!");
@@ -71,7 +71,7 @@ function Signup() {
         const name = toTitleCase(firstName + ' ' + lastName);
         const hashedPassword = sha256(password).toString();
         password = undefined;
-    
+
         axios.post(config.backend_url + 'user/create', {
             name,
             email,
@@ -96,16 +96,16 @@ function Signup() {
 
     return (
         <div align='center' className='signup app-sub-component'>
+            <ThemeProvider theme={darkTheme}>
+            <Item className='paper-item' elevation={15} >
             <div className='signup-form' onKeyDown={(e) => {
                 if (e.key == 'Enter') didTapSubmit(email, password);
             }} onChange={() => setShouldShow(false)}>
-                <ThemeProvider theme={darkTheme}>
-                <Item className='paper-item' elevation={15} >
                 <h1>Sign Up</h1>
                 <Grid container direction={'column'} spacing={2}>
                     <br />
                     {shouldShow && <MAlert onClose={ () => setShouldShow(false) } variant={ status } text={ msg } />}
-                    <br />
+
                     <Grid item><TextField onChange={(e) => setFirstName(e.target.value.trim())} className='firstname-field signup-field' variant='outlined' label='First Name' /></Grid>
                     <Grid item><TextField onChange={(e) => setLastName(e.target.value.trim())} className='lastname-field signup-field' label='Last Name' /></Grid>
                     <Grid item><TextField onChange={(e) => setEmail(e.target.value.trim())} className='email-field signup-field' label='Email' type='email' /></Grid>
@@ -121,9 +121,9 @@ function Signup() {
                     </Grid>
                 <Grid item><Button variant='contained' onClick={ () => didTapSubmit()}>Submit</Button></Grid>
                 </Grid>
-                </Item>
-                </ThemeProvider>
             </div>
+            </Item>
+            </ThemeProvider>
         </div>
     );
 }
