@@ -6,7 +6,7 @@
 .app-sub-component {
     margin-top: 60pt;
     animation-name: fade-in;
-    animation-duration: 0.5s;
+    animation-duration: 1s;
 }
 
 #tsparticles {
