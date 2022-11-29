@@ -1,18 +1,31 @@
 .App {
     margin-bottom: 10px;
-    background-color: #4e4e4e;
+    background: linear-gradient(#1C1C1C, #0C122C);
 }
 
 .app-sub-component {
     margin-top: 60pt;
+    animation-name: fade-in;
+    animation-duration: 0.5s;
 }
 
 #tsparticles {
     height: 50vh;
 }
 
+
+@keyframes fade-in {
+    0% { padding-top: 900px; }
+    100% { padding-top: 0; }
+}
+
+
 @media screen and (max-width: 241px) {
     .app-sub-component {
         margin-top: 70pt;
     }
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: white !important;
 }

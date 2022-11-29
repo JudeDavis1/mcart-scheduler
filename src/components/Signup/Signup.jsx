@@ -19,7 +19,7 @@ const Item = styled(Paper)(({theme}) => ({
     color: theme.palette.text.secondary,
     padding: '20px',
     opacity: '1',
-    zIndex: '10000  !important'
+    zIndex: '1 !important'
 }));
 const darkTheme = createTheme({ palette: { mode: 'dark' } });
 
@@ -65,6 +65,8 @@ function Signup() {
     }
 
     const didTapSubmit = () => {
+        // Scroll to the top so user can see the alert
+        window.scrollTo(window.scrollX, 0);
         if(isInvalid()) return;
 
         // Prepare data for transport
@@ -114,7 +116,7 @@ function Signup() {
                     <Grid item><TextField onChange={(e) => setCongregation(e.target.value.trim())} className='congregation-field signup-field' label='Congregation' /></Grid>
 
                     <Grid item>
-                        <TextField select label='User type' className="signup-field" input onChange={(e) => setUserType(e.target.value)} value={userType} variant='standard'>
+                        <TextField select label='User Type' className="signup-field" input onChange={(e) => setUserType(e.target.value)} value={userType} variant='standard'>
                             <MenuItem value="publisher">Publisher</MenuItem>
                             <MenuItem value="congAdmin">Congregation Admin</MenuItem>
                         </TextField >

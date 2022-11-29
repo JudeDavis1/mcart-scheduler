@@ -16,7 +16,7 @@ const Item = styled(Paper)(({theme}) => ({
     color: theme.palette.text.secondary,
     padding: '20px',
     opacity: '1',
-    zIndex: 999
+    zIndex: 1
 }));
 const darkTheme = createTheme({ palette: { mode: 'dark' } });
 

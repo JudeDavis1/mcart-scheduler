@@ -35,4 +35,8 @@
         padding: 0;
         margin: 1pt;
     }
+
+    .paper-item {
+        margin: 0;
+    }
 }
