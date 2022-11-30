@@ -1,5 +1,5 @@
 const config = {
-    backend_url: 'http://localhost:3001/api/v1/',
+    backend_url: 'https://mcart-scheduler-backend.onrender.com/api/v1/',
 }
 
 export default config;
