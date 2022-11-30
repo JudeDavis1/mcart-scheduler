@@ -1,4 +1,4 @@
-import { app } from "./app.js";
+import { app } from "./src/backend/app.js";
 
 const PORT = 3001;
 
