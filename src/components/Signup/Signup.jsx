@@ -32,13 +32,13 @@ function Signup() {
     var [retypedPassword, setRetypedPassword] = useState('');
     var [congregation, setCongregation] = useState('');
     var [userType, setUserType] = useState('');
-    var [shouldSpin, setShouldSpin] = useState(false);
-
+    
     var [msg, setMsg] = useState('');
     var [status, setStatus] = useState('success');
     var [shouldShow, setShouldShow] = useState(false);
+    var [shouldSpin, setShouldSpin] = useState(false);
 
-    const isInvalid = () =>{
+    const isInvalid = () => {
         let messages = [];
 
         // Validate params
@@ -116,10 +116,10 @@ function Signup() {
                 if (e.key == 'Enter') didTapSubmit(email, password);
             }} onChange={() => setShouldShow(false)}>
                 <h1>Sign Up</h1>
+                <br />
+                {shouldSpin && <Spinner animation="border" />}
+                {shouldShow && <MAlert onClose={ () => setShouldShow(false) } variant={ status } text={ msg } />}
                 <Grid container direction={'column'} spacing={2}>
-                    <br />
-                    {shouldSpin && <Spinner animation="border" />}
-                    {shouldShow && <MAlert onClose={ () => setShouldShow(false) } variant={ status } text={ msg } />}
 
                     <Grid item><TextField onChange={(e) => setFirstName(e.target.value.trim())} className='firstname-field signup-field' variant='outlined' label='First Name' /></Grid>
                     <Grid item><TextField onChange={(e) => setLastName(e.target.value.trim())} className='lastname-field signup-field' label='Last Name' /></Grid>

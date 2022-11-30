@@ -5,6 +5,7 @@ import Grid from '@mui/material/Grid';
 import Button from "@mui/material/Button";
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
+import Spinner from 'react-bootstrap/Spinner';
 import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 
 import './Login.css';
@@ -27,12 +28,19 @@ function Login() {
     var [msg, setMsg] = useState('');
     var [status, setStatus] = useState('success');
     var [shouldShow, setShouldShow] = useState(false);
+    var [shouldSpin, setShouldSpin] = useState(false);
 
     const didTapSubmit = () => {
+        setShouldSpin(true);
         if (!(email && password)) {
             setStatus('danger');
             setMsg('Please enter an Email and Password');
+
+            // Show alert
             setShouldShow(true);
+
+            // Stop spinning
+            setShouldSpin(false);
             return;
         }
 
@@ -56,8 +64,10 @@ function Login() {
             // A status of 400 should hopefully throw an error
             setStatus('danger');
             setMsg(err.response.data.error);
+        }).then(() => {
+            setShouldSpin(false);
+            setShouldShow(true);
         });
-        setShouldShow(true);
     };
 
     const closeAlert = () => {
@@ -72,6 +82,7 @@ function Login() {
             <div className='login-form' onChange={ () => closeAlert() } onKeyDown={(e) => {
                 if (e.key == 'Enter') didTapSubmit();
             }}>
+                {shouldSpin && <Spinner animation="border" />}
                 <br />{ shouldShow && <MAlert variant={ status } onClose={() => closeAlert()} text={ msg } /> }
                 <Grid container spacing={2} direction={'column'}>
                     <Grid item><TextField onChange={(e) => setEmail(e.target.value)} className='email-field login-field' label='Email' type='email' /></Grid>
