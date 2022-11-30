@@ -72,7 +72,10 @@ function Signup() {
 
         // Scroll to the top so user can see the alert
         window.scrollTo(window.scrollX, 0);
-        if(isInvalid()) return;
+        if(isInvalid()) {
+            setShouldSpin(false);
+            return;
+        }
 
         // Prepare data for transport
         const name = toTitleCase(firstName + ' ' + lastName);
@@ -87,7 +90,6 @@ function Signup() {
             congregation: toTitleCase(congregation)
         }).then((val) => {
             if (val.status == 200) {
-                setShouldSpin(false);
 
                 setStatus('success');
                 setMsg(val.data.data);
@@ -96,13 +98,14 @@ function Signup() {
                     window.location = '/login';
                 }, 700);
             }
-            setShouldSpin(false);
+
         }).catch((val) => {
             setStatus('danger');
             setMsg(val.response.data.error);
+        }).then(() => {
             setShouldSpin(false);
+            setShouldShow(true);
         });
-        setShouldShow(true);
     }
 
     return (
