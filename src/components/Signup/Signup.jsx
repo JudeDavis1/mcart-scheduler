@@ -8,6 +8,7 @@ import emailValidator from 'email-validator';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
+import Spinner from 'react-bootstrap/Spinner';
 // import Button from "react-bootstrap/Button";
 
 import './Signup.css';
@@ -31,6 +32,7 @@ function Signup() {
     var [retypedPassword, setRetypedPassword] = useState('');
     var [congregation, setCongregation] = useState('');
     var [userType, setUserType] = useState('');
+    var [shouldSpin, setShouldSpin] = useState(false);
 
     var [msg, setMsg] = useState('');
     var [status, setStatus] = useState('success');
@@ -65,6 +67,9 @@ function Signup() {
     }
 
     const didTapSubmit = () => {
+        // Begin loading animation
+        setShouldSpin(true);
+
         // Scroll to the top so user can see the alert
         window.scrollTo(window.scrollX, 0);
         if(isInvalid()) return;
@@ -82,6 +87,8 @@ function Signup() {
             congregation: toTitleCase(congregation)
         }).then((val) => {
             if (val.status == 200) {
+                setShouldSpin(false);
+
                 setStatus('success');
                 setMsg(val.data.data);
 
@@ -89,9 +96,11 @@ function Signup() {
                     window.location = '/login';
                 }, 700);
             }
+            setShouldSpin(false);
         }).catch((val) => {
             setStatus('danger');
             setMsg(val.response.data.error);
+            setShouldSpin(false);
         });
         setShouldShow(true);
     }
@@ -106,6 +115,7 @@ function Signup() {
                 <h1>Sign Up</h1>
                 <Grid container direction={'column'} spacing={2}>
                     <br />
+                    {shouldSpin && <Spinner animation="border" />}
                     {shouldShow && <MAlert onClose={ () => setShouldShow(false) } variant={ status } text={ msg } />}
 
                     <Grid item><TextField onChange={(e) => setFirstName(e.target.value.trim())} className='firstname-field signup-field' variant='outlined' label='First Name' /></Grid>
