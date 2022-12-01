@@ -35,6 +35,7 @@
   },
   "scripts": {
     "start": "npm i serve && npx serve -s build",
+    "deploy": "npm run build && npm run start",
     "server": "npx tsc && node ./workspace/server.js",
     "build": "react-scripts build",
     "test": "npx tsc && npx mocha ./build/tests --recursive"
