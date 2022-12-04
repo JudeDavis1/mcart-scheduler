@@ -8,7 +8,12 @@ path = '/workspace/mcart-scheduler'
 def on_push():
     print(request.get_json())
     os.system('killall node')
-    os.system(f'cd {path} && git checkout production && git pull && npm run build && sh startup.sh')
+    os.system(f'''cd {path} &&
+        git checkout production &&
+        git pull &&
+        npm install &&
+        npm run build &&
+        sh startup.sh''')
     return 'Done'
 
 
