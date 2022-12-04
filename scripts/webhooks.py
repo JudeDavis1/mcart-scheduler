@@ -11,4 +11,4 @@ def on_push():
     return 'Done'
 
 
-app.run()
+app.run(host='0.0.0.0')
