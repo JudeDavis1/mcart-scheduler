@@ -6,7 +6,7 @@ path = '/workspace/mcart-scheduler'
 
 @app.route('/webhooks/push', methods=['POST'])
 def on_push():
-    os.system(f'cd {path} && git checkout production && git pull && npm run deploy')
+    os.system(f'cd {path} && git checkout production && git pull && npm run build && sh startup.sh')
     return 'Done'
 
 
