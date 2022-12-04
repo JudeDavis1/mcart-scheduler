@@ -1,6 +1,4 @@
-import axios from 'axios';
 import { useState } from "react";
-import sha256 from 'crypto-js/sha256';
 import Grid from '@mui/material/Grid';
 import Button from "@mui/material/Button";
 import TextField from '@mui/material/TextField';
@@ -9,8 +7,8 @@ import Spinner from 'react-bootstrap/Spinner';
 import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 
 import './Login.css';
-import config from '../../config';
 import MAlert from '../MAlert/MAlert';
+import transport from '../../controllers/loginController.js';
 
 
 const Item = styled(Paper)(({theme}) => ({
@@ -30,8 +28,8 @@ function Login() {
     var [shouldShow, setShouldShow] = useState(false);
     var [shouldSpin, setShouldSpin] = useState(false);
 
-    const didTapSubmit = () => {
-        setShouldSpin(true);
+    const didTapSubmit = async () => {
+        await setShouldSpin(true);
         if (!(email && password)) {
             setStatus('danger');
             setMsg('Please enter an Email and Password');
@@ -40,19 +38,13 @@ function Login() {
             setShouldShow(true);
 
             // Stop spinning
-            setShouldSpin(false);
+            await setShouldSpin(false);
             return;
         }
 
-        // SHA-2 hash for transport
-        const hashedPassword = sha256(password).toString();
-        password = undefined;
-    
         // Verify user exists and is authenticated
-        axios.post(config.backend_url + 'user/exists', { email, hashedPassword })
-        .then((val) => {
-            const result = val.data;
-            if (result.exists) {
+        transport({ email, password }, (success) => {
+            if (success) {
                 // User logged in successfully
                 setStatus('success');
                 setMsg('Logged In!');
@@ -60,13 +52,12 @@ function Login() {
                 setStatus("danger");
                 setMsg("The details seem incorrect. Please try again");
             }
-        }).catch(err => {
-            // A status of 400 should hopefully throw an error
+        }, (err) => {
             setStatus('danger');
             setMsg(err.response.data.error);
-        }).then(() => {
-            setShouldSpin(false);
+        }, async () => {
             setShouldShow(true);
+            await setShouldSpin(false);
         });
     };
 
@@ -88,8 +79,8 @@ function Login() {
                     <Grid item><TextField onChange={(e) => setEmail(e.target.value)} className='email-field login-field' label='Email' type='email' /></Grid>
                     <Grid item><TextField onChange={(e) => setPassword(e.target.value)} className='password-field login-field' label='Password' type='password' /></Grid>
                     <Grid item>
-                        <Button variant='contained' style={{padding: '10px', margin: "10px"}} onClick={ () => {
-                            didTapSubmit();
+                        <Button variant='contained' style={{padding: '10px', margin: "10px"}} onClick={ async () => {
+                            await didTapSubmit();
                         }}>Submit</Button>
                     </Grid>
                 </Grid>
