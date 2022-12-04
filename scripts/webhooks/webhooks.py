@@ -6,7 +6,6 @@ path = '/workspace/mcart-scheduler'
 
 @app.route('/webhooks/push', methods=['POST'])
 def on_push():
-    print(request.get_json())
     if request.get_json()['ref'] != 'refs/heads/production':
         print('This isn\'t production')
         return 'Is not production'
