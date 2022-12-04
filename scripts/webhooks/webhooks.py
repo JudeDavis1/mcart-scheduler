@@ -18,7 +18,7 @@ def on_push():
         npm run build &&
         sh startup.sh''')
     print('Deployed')
-    return 'Done'
+    return 'Deployed.'
 
 
 app.run(host='0.0.0.0')
