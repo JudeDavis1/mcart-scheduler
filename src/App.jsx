@@ -31,7 +31,7 @@ function App() {
     </div>
   );
 }
-//
+
 const options = {
   fullScreen: { enable: true },
   background: {
