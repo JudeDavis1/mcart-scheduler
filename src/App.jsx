@@ -32,6 +32,7 @@ function App() {
   );
 }
 
+// Particle configs
 const options = {
   fullScreen: { enable: true },
   background: {
