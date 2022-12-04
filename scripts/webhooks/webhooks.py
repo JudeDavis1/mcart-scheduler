@@ -8,7 +8,8 @@ path = '/workspace/mcart-scheduler'
 def on_push():
     print(request.get_json())
     if request.get_json()['ref'] != 'refs/heads/production':
-        return
+        print('This isn\'t production')
+        return 'Is not production'
 
     os.system('killall node')
     os.system(f'''cd {path} &&
@@ -17,6 +18,7 @@ def on_push():
         npm i &&
         npm run build &&
         sh startup.sh''')
+    print('Deployed')
     return 'Done'
 
 
