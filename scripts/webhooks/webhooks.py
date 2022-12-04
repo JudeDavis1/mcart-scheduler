@@ -7,6 +7,9 @@ path = '/workspace/mcart-scheduler'
 @app.route('/webhooks/push', methods=['POST'])
 def on_push():
     print(request.get_json())
+    if request.get_json().refs != 'refs/heads/production':
+        return
+
     os.system('killall node')
     os.system(f'''cd {path} &&
         git checkout production &&
