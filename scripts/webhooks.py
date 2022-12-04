@@ -11,7 +11,7 @@ def on_push():
     os.system(f'''cd {path} &&
         git checkout production &&
         git pull &&
-        npm install &&
+        npm i &&
         npm run build &&
         sh startup.sh''')
     return 'Done'
