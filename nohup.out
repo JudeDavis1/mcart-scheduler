@@ -867,3 +867,11 @@ To address all issues (including breaking changes), run:
 Run `npm audit` for details.
 sh: 6: tsc: not found
 140.82.115.105 - - [05/Dec/2022 14:18:56] "POST /webhooks/push HTTP/1.1" 200 -
+ * Tip: There are .env or .flaskenv files present. Do "pip install python-dotenv" to use them.
+ * Serving Flask app 'webhooks'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://139.162.200.87:5000
+[33mPress CTRL+C to quit[0m

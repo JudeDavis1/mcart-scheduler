@@ -2,4 +2,4 @@
 nohup node ./build-backend/server.js &
 nohup serve -s build -l 80 &
 
-echo "Press enter..."
+echo "Initial setup completed. You can now press ENTER..."
