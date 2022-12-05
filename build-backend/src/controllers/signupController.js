@@ -5,7 +5,7 @@ import config from '../config.js';
 function transport(info, setShouldSpin, setShouldShow, setStatus, setMsg) {
     let { firstName, lastName, email, password, userType, congregation } = info;
     window.scrollTo(window.scrollX, 0);
-    if (isInvalid(setStatus, setShouldShow, setMsg)) {
+    if (isInvalid(info, setStatus, setShouldShow, setMsg)) {
         setShouldSpin(false);
         return;
     }
@@ -34,18 +34,15 @@ function transport(info, setShouldSpin, setShouldShow, setStatus, setMsg) {
         setShouldShow(true);
     });
 }
-function isInvalid(setStatus, setShouldShow, setMsg) {
+function isInvalid(info, setStatus, setShouldShow, setMsg) {
     let messages = [];
-    if (password != retypedPassword) {
+    if (info.password != info.retypedPassword)
         messages.push("Both passwords must be the same!");
-    }
-    if (!(email && password && retypedPassword && congregation && userType && firstName && lastName)) {
+    if (!Object.values(info).every((val) => val))
         messages.push("Please fill out all fields!");
-    }
-    const isValid = emailValidator.validate(email);
-    if (!isValid) {
+    const isValid = emailValidator.validate(info.email);
+    if (!isValid)
         messages.push("Invalid email!");
-    }
     if (messages.length > 0) {
         setStatus("danger");
         setShouldShow(true);

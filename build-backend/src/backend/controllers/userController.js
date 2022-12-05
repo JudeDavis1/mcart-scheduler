@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { User } from "../models/userModel.js";
+import { sendAuthToken } from './authController.js';
 async function createUser(req, res, next) {
     try {
         const { name, email, congregation, hashedPassword, ...rest } = req.body;
@@ -96,9 +97,8 @@ async function userExists(req, res, next) {
         const user = await User.findById(userId);
         const newHash = await bcrypt.hash(hashedPassword, user.salt);
         if (user.hashedPassword == newHash) {
-            res
-                .status(200)
-                .json({ exists: true });
+            const user = await User.findOne({ email });
+            await sendAuthToken(user, 200, res);
         }
         else
             throw new Error("Invalid password");

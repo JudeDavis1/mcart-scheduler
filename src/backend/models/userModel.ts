@@ -9,6 +9,7 @@ enum UserType {
 interface IUser {
   name: String;
   email: String;
+  hashedPassword: String;
   userType: UserType;
   congregation: String;
   _id: mongoose.Types.ObjectId;

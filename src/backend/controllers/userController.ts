@@ -2,7 +2,8 @@
 
 import bcrypt from 'bcryptjs';
 import { Request, Response } from "express";
-import { User, UserType } from "../models/userModel.js";
+import { User } from "../models/userModel.js";
+import { sendAuthToken } from './authController.js';
 
 
 // Later, we will need authentication when creating a new user.
@@ -18,7 +19,7 @@ async function createUser(
     // Validate fields
     const userInvalid = !name || !email || !congregation;
     if (userInvalid) throw new Error("One or more fields are missing.");
-    
+
     const salt = await bcrypt.genSalt();
     const bcrytedPassword = await bcrypt.hash(hashedPassword, salt);
     const createdUser = await User.create({
@@ -46,7 +47,7 @@ async function getUser(
 ): Promise<void> {
   try {
     const { userId } = req.query;
-    
+
     if (!userId) throw new Error("Please provide a user ID.");
 
     const receivedUser = await User.findById(userId);
@@ -130,9 +131,9 @@ async function userExists(
 
     // Ensure hashes match.
     if (user!.hashedPassword == newHash) {
-      res
-        .status(200)
-        .json({ exists: true });
+      // This will handle the JWT auth
+      const user = await User.findOne({ email });
+      await sendAuthToken(user, 200, res);
     } else throw new Error("Invalid password");
   } catch (error: any) {
     res

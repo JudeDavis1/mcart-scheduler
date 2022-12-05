@@ -24,55 +24,30 @@ function Login() {
     var [shouldSpin, setShouldSpin] = useState(false);
     const didTapSubmit = async () => {
         setShouldSpin(true);
-        if (!(email && password)) {
-            setStatus('danger');
-            setMsg('Please enter an Email and Password');
-            setShouldShow(true);
-            setShouldSpin(false);
-            return;
-        }
-        transport({ email, password }, (success) => {
-            if (success) {
-                setStatus('success');
-                setMsg('Logged In!');
-            }
-            else {
-                setStatus("danger");
-                setMsg("The details seem incorrect. Please try again");
-            }
-        }, (err) => {
-            setStatus('danger');
-            setMsg(err.response.data.error);
-        }, () => {
-            setShouldShow(true);
-            setShouldSpin(false);
-        });
-    };
-    const closeAlert = () => {
-        setShouldShow(false);
+        transport({ email, password }, setStatus, setMsg, setShouldShow, setShouldSpin);
     };
     return (<div align='center' className='login app-sub-component'>
-            <ThemeProvider theme={darkTheme}>
-            <Item className='Item' elevation={15}>
-            <h1>Login</h1>
-            <div className='login-form' onChange={() => closeAlert()} onKeyDown={(e) => {
+			<ThemeProvider theme={darkTheme}>
+			<Item className='Item' elevation={15}>
+			<h1>Login</h1>
+			<div className='login-form' onChange={() => setShouldShow(false)} onKeyDown={(e) => {
             if (e.key == 'Enter')
                 didTapSubmit();
         }}>
-                {shouldSpin && <Spinner animation="border"/>}
-                <br />{shouldShow && <MAlert variant={status} onClose={() => closeAlert()} text={msg}/>}
-                <Grid container spacing={2} direction={'column'}>
-                    <Grid item><TextField onChange={(e) => setEmail(e.target.value)} className='email-field login-field' label='Email' type='email'/></Grid>
-                    <Grid item><TextField onChange={(e) => setPassword(e.target.value)} className='password-field login-field' label='Password' type='password'/></Grid>
-                    <Grid item>
-                        <Button variant='contained' style={{ padding: '10px', margin: "10px" }} onClick={async () => {
-            await didTapSubmit();
+				{shouldSpin && <Spinner animation="border"/>}
+				<br />{shouldShow && <MAlert variant={status} onClose={() => setShouldShow(false)} text={msg}/>}
+				<Grid container spacing={2} direction={'column'}>
+					<Grid item><TextField onChange={(e) => setEmail(e.target.value)} className='email-field login-field' label='Email' type='email'/></Grid>
+					<Grid item><TextField onChange={(e) => setPassword(e.target.value)} className='password-field login-field' label='Password' type='password'/></Grid>
+					<Grid item>
+						<Button variant='contained' style={{ padding: '10px', margin: "10px" }} onClick={async () => {
+            didTapSubmit();
         }}>Submit</Button>
-                    </Grid>
-                </Grid>
-            </div>
-            </Item>
-            </ThemeProvider>
-        </div>);
+					</Grid>
+				</Grid>
+			</div>
+			</Item>
+			</ThemeProvider>
+		</div>);
 }
 export default Login;

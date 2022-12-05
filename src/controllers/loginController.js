@@ -1,4 +1,3 @@
-import { isValidDateValue } from '@testing-library/user-event/dist/utils/index.js';
 import axios from 'axios';
 import sha256 from 'crypto-js/sha256.js';
 
@@ -9,11 +8,7 @@ function transport(info, setStatus, setMsg, setShouldShow, setShouldSpin) {
     if (!(info.email && info.password)) {
         setStatus('danger');
         setMsg('Please enter an Email and Password');
-
-        // Show alert
         setShouldShow(true);
-
-        // Stop spinning
         setShouldSpin(false);
         return;
     }
@@ -21,7 +16,7 @@ function transport(info, setStatus, setMsg, setShouldShow, setShouldSpin) {
 
     // SHA-2 hash for transport
     const hashedPassword = sha256(password).toString();
-    password = undefined;
+    password = undefined;  // If memory is dumped, password will not show xD
 
     // Verify user exists and is authenticated
     axios.post(config.backend_url + 'user/exists', { email, hashedPassword })
