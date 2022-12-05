@@ -822,3 +822,29 @@ Running on PORT: 3001.
  * Running on http://127.0.0.1:5000
  * Running on http://139.162.200.87:5000
 [33mPress CTRL+C to quit[0m
+node: no process found
+Already on 'production'
+M	nohup.out
+Your branch is up to date with 'origin/production'.
+From https://github.com/JudeDavis1/mcart-scheduler
+   f57c746..ea549e6  dev        -> origin/dev
+Already up to date.
+
+up to date, audited 1658 packages in 5s
+
+250 packages are looking for funding
+  run `npm fund` for details
+
+6 high severity vulnerabilities
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+sh: 6: tsc: not found
+140.82.115.146 - - [05/Dec/2022 14:16:39] "POST /webhooks/push HTTP/1.1" 200 -
+ * Tip: There are .env or .flaskenv files present. Do "pip install python-dotenv" to use them.
+ * Serving Flask app 'webhooks'
+ * Debug mode: off
+Address already in use
+Port 5000 is in use by another program. Either identify and stop that program, or start the server with a different port.
