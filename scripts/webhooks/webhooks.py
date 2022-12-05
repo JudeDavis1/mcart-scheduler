@@ -15,6 +15,8 @@ def on_push():
         git checkout production &&
         git pull &&
         npm i &&
+        rm -rf build build-backend &&
+        tsc &&
         npm run build &&
         sh startup.sh''')
     print('Deployed')
