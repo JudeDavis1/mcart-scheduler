@@ -875,3 +875,87 @@ sh: 6: tsc: not found
  * Running on http://127.0.0.1:5000
  * Running on http://139.162.200.87:5000
 [33mPress CTRL+C to quit[0m
+node: no process found
+Already on 'production'
+M	nohup.out
+Your branch is up to date with 'origin/production'.
+Already up to date.
+
+up to date, audited 1658 packages in 4s
+
+250 packages are looking for funding
+  run `npm fund` for details
+
+6 high severity vulnerabilities
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+> mcart-scheduler@0.1.0 build
+> react-scripts build
+
+Creating an optimized production build...
+Compiled with warnings.
+
+[eslint] 
+src/components/Home/Home.jsx
+  Line 8:12:  img elements must have an alt prop, either with meaningful text, or an empty string for decorative images  jsx-a11y/alt-text
+
+src/components/Login/Login.jsx
+  Line 74:27:  Expected '===' and instead saw '=='  eqeqeq
+
+src/components/MAlert/MAlert.jsx
+  Line 1:17:  'useState' is defined but never used  no-unused-vars
+
+src/components/Signup/Signup.jsx
+  Line 45:22:   Expected '!==' and instead saw '!='  eqeqeq
+  Line 92:28:   Expected '===' and instead saw '=='  eqeqeq
+  Line 116:27:  Expected '===' and instead saw '=='  eqeqeq
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+File sizes after gzip:
+
+  197.22 kB  build/static/js/main.9c284a52.js
+  28.53 kB   build/static/css/main.db6e6cbd.css
+
+The project was built assuming it is hosted at /.
+You can control this with the homepage field in your package.json.
+
+The build folder is ready to be deployed.
+You may serve it with a static server:
+
+  npm install -g serve
+  serve -s build
+
+Find out more about deployment here:
+
+  https://cra.link/deployment
+
+Initial setup completed. You can now press ENTER...
+140.82.115.144 - - [05/Dec/2022 14:25:32] "POST /webhooks/push HTTP/1.1" 200 -
+ INFO  Accepting connections at http://localhost:80
+Running on PORT: 3001.
+ HTTP  12/5/2022 2:26:05 PM 212.219.243.146 GET /
+ HTTP  12/5/2022 2:26:05 PM 212.219.243.146 Returned 200 in 48 ms
+ HTTP  12/5/2022 2:26:05 PM 212.219.243.146 GET /static/js/main.9c284a52.js
+ HTTP  12/5/2022 2:26:05 PM 212.219.243.146 Returned 200 in 6 ms
+ HTTP  12/5/2022 2:26:05 PM 212.219.243.146 GET /static/css/main.db6e6cbd.css
+ HTTP  12/5/2022 2:26:05 PM 212.219.243.146 Returned 200 in 14 ms
+ HTTP  12/5/2022 2:26:05 PM 212.219.243.146 GET /static/media/background.f3ebb5462c7b1797c957.jpg
+ HTTP  12/5/2022 2:26:05 PM 212.219.243.146 Returned 200 in 1 ms
+ HTTP  12/5/2022 2:26:05 PM 212.219.243.146 GET /favicon.ico
+ HTTP  12/5/2022 2:26:05 PM 212.219.243.146 Returned 200 in 2 ms
+ HTTP  12/5/2022 2:26:05 PM 212.219.243.146 GET /favicon.ico
+ HTTP  12/5/2022 2:26:05 PM 212.219.243.146 Returned 304 in 1 ms
+ HTTP  12/5/2022 2:26:20 PM 212.219.243.146 GET /static/css/main.db6e6cbd.css
+ HTTP  12/5/2022 2:26:20 PM 212.219.243.146 GET /manifest.json
+ HTTP  12/5/2022 2:26:20 PM 212.219.243.146 Returned 304 in 4 ms
+ HTTP  12/5/2022 2:26:20 PM 212.219.243.146 Returned 200 in 4 ms
+ HTTP  12/5/2022 2:26:20 PM 212.219.243.146 GET /static/js/main.9c284a52.js.map
+ HTTP  12/5/2022 2:26:20 PM 212.219.243.146 Returned 200 in 10 ms
+ HTTP  12/5/2022 2:26:20 PM 212.219.243.146 GET /static/css/main.db6e6cbd.css.map
+ HTTP  12/5/2022 2:26:20 PM 212.219.243.146 Returned 200 in 3 ms
