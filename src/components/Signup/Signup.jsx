@@ -1,19 +1,16 @@
-import axios from 'axios';
 import { useState } from "react";
-import sha256 from 'crypto-js/sha256';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
-import emailValidator from 'email-validator';
+import Spinner from 'react-bootstrap/Spinner';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
-import Spinner from 'react-bootstrap/Spinner';
-// import Button from "react-bootstrap/Button";
 
 import './Signup.css';
 import config from '../../config';
 import MAlert from '../MAlert/MAlert';
+import transport from '../../controllers/signupController.js';
 
 
 const Item = styled(Paper)(({theme}) => ({
@@ -38,74 +35,19 @@ function Signup() {
     var [shouldShow, setShouldShow] = useState(false);
     var [shouldSpin, setShouldSpin] = useState(false);
 
-    const isInvalid = () => {
-        let messages = [];
-
-        // Validate params
-        if (password != retypedPassword) {
-            messages.push("Both passwords must be the same!");
-        }
-
-        // Check all fields are filled out
-        if (!(email && password && retypedPassword && congregation && userType && firstName && lastName)) {
-            messages.push("Please fill out all fields!");
-        }
-
-        // Check if email
-        const isValid = emailValidator.validate(email);
-        if (!isValid) {
-            messages.push("Invalid email!");
-        }
-
-        if(messages.length > 0){
-            setStatus("danger");
-            setShouldShow(true);
-            setMsg(messages[0]);
-            return true;
-        }
-        return false;
-    }
-
     const didTapSubmit = () => {
         // Begin loading animation
         setShouldSpin(true);
 
-        // Scroll to the top so user can see the alert
-        window.scrollTo(window.scrollX, 0);
-        if(isInvalid()) {
-            setShouldSpin(false);
-            return;
-        }
-
-        // Prepare data for transport
-        const name = toTitleCase(firstName + ' ' + lastName);
-        const hashedPassword = sha256(password).toString();
-        password = undefined;
-
-        axios.post(config.backend_url + 'user/create', {
-            name,
+        transport({
+            firstName,
+            lastName,
             email,
-            hashedPassword,
-            userType,
-            congregation: toTitleCase(congregation)
-        }).then((val) => {
-            if (val.status == 200) {
-
-                setStatus('success');
-                setMsg(val.data.data);
-
-                setTimeout(() => {
-                    window.location = '/login';
-                }, 700);
-            }
-
-        }).catch((val) => {
-            setStatus('danger');
-            setMsg(val.response.data.error);
-        }).then(() => {
-            setShouldSpin(false);
-            setShouldShow(true);
-        });
+            password,
+            retypedPassword,
+            congregation,
+            userType
+        }, setShouldSpin, setShouldShow, setStatus, setMsg);
     }
 
     return (
@@ -141,19 +83,6 @@ function Signup() {
             </ThemeProvider>
         </div>
     );
-}
-
-// Convert to title case e.g.
-// hello, world => Hello, World
-function toTitleCase(string) {
-    const arr = string.split(' ');
-    var newStr = [];
-
-    for (var i = 0; i < arr.length; i++) {
-        newStr.push(arr[i][0].toUpperCase() + arr[i].substring(1, arr[i].length));
-    }
-
-    return newStr.join(' ');
 }
 
 
