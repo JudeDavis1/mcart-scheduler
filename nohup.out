@@ -848,3 +848,22 @@ sh: 6: tsc: not found
  * Debug mode: off
 Address already in use
 Port 5000 is in use by another program. Either identify and stop that program, or start the server with a different port.
+node: no process found
+Already on 'production'
+M	nohup.out
+Your branch is up to date with 'origin/production'.
+Already up to date.
+
+up to date, audited 1658 packages in 4s
+
+250 packages are looking for funding
+  run `npm fund` for details
+
+6 high severity vulnerabilities
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+sh: 6: tsc: not found
+140.82.115.105 - - [05/Dec/2022 14:18:56] "POST /webhooks/push HTTP/1.1" 200 -
