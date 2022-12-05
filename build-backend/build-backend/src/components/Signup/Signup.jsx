@@ -1,15 +1,17 @@
+import axios from 'axios';
 import { useState } from "react";
+import sha256 from 'crypto-js/sha256';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
-import Spinner from 'react-bootstrap/Spinner';
+import emailValidator from 'email-validator';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
+import Spinner from 'react-bootstrap/Spinner';
 import './Signup.css';
 import config from '../../config';
 import MAlert from '../MAlert/MAlert';
-import transport from '../../controllers/signupController.js';
 const Item = styled(Paper)(({ theme }) => ({
     color: theme.palette.text.secondary,
     padding: '20px',
@@ -29,17 +31,57 @@ function Signup() {
     var [status, setStatus] = useState('success');
     var [shouldShow, setShouldShow] = useState(false);
     var [shouldSpin, setShouldSpin] = useState(false);
+    const isInvalid = () => {
+        let messages = [];
+        if (password != retypedPassword) {
+            messages.push("Both passwords must be the same!");
+        }
+        if (!(email && password && retypedPassword && congregation && userType && firstName && lastName)) {
+            messages.push("Please fill out all fields!");
+        }
+        const isValid = emailValidator.validate(email);
+        if (!isValid) {
+            messages.push("Invalid email!");
+        }
+        if (messages.length > 0) {
+            setStatus("danger");
+            setShouldShow(true);
+            setMsg(messages[0]);
+            return true;
+        }
+        return false;
+    };
     const didTapSubmit = () => {
         setShouldSpin(true);
-        transport({
-            firstName,
-            lastName,
+        window.scrollTo(window.scrollX, 0);
+        if (isInvalid()) {
+            setShouldSpin(false);
+            return;
+        }
+        const name = toTitleCase(firstName + ' ' + lastName);
+        const hashedPassword = sha256(password).toString();
+        password = undefined;
+        axios.post(config.backend_url + 'user/create', {
+            name,
             email,
-            password,
-            retypedPassword,
-            congregation,
-            userType
-        }, setShouldSpin, setShouldShow, setStatus, setMsg);
+            hashedPassword,
+            userType,
+            congregation: toTitleCase(congregation)
+        }).then((val) => {
+            if (val.status == 200) {
+                setStatus('success');
+                setMsg(val.data.data);
+                setTimeout(() => {
+                    window.location = '/login';
+                }, 700);
+            }
+        }).catch((val) => {
+            setStatus('danger');
+            setMsg(val.response.data.error);
+        }).then(() => {
+            setShouldSpin(false);
+            setShouldShow(true);
+        });
     };
     return (<div align='center' className='signup app-sub-component'>
             <ThemeProvider theme={darkTheme}>
@@ -73,5 +115,13 @@ function Signup() {
             </Item>
             </ThemeProvider>
         </div>);
+}
+function toTitleCase(string) {
+    const arr = string.split(' ');
+    var newStr = [];
+    for (var i = 0; i < arr.length; i++) {
+        newStr.push(arr[i][0].toUpperCase() + arr[i].substring(1, arr[i].length));
+    }
+    return newStr.join(' ');
 }
 export default Signup;

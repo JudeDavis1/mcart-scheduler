@@ -1,31 +1,17 @@
 import axios from 'axios';
 import sha256 from 'crypto-js/sha256.js';
 import emailValidator from 'email-validator';
-
 import config from '../config.js';
-
-
-function transport(
-    info,
-    setShouldSpin,
-    setShouldShow,
-    setStatus,
-    setMsg
-) {
+function transport(info, setShouldSpin, setShouldShow, setStatus, setMsg) {
     let { firstName, lastName, email, password, userType, congregation } = info;
-
-    // Scroll to the top so user can see the alert
     window.scrollTo(window.scrollX, 0);
-    if(isInvalid(info, setStatus, setShouldShow, setMsg)) {
+    if (isInvalid(setStatus, setShouldShow, setMsg)) {
         setShouldSpin(false);
         return;
     }
-
-    // Prepare data for transport
     const name = toTitleCase(firstName + ' ' + lastName);
     const hashedPassword = sha256(password).toString();
     password = undefined;
-
     axios.post(config.backend_url + 'user/create', {
         name,
         email,
@@ -34,10 +20,8 @@ function transport(
         congregation: toTitleCase(congregation)
     }).then((val) => {
         if (val.status == 200) {
-
             setStatus('success');
             setMsg(val.data.data);
-
             setTimeout(() => {
                 window.location = '/login';
             }, 700);
@@ -50,29 +34,19 @@ function transport(
         setShouldShow(true);
     });
 }
-
-function isInvalid(
-    info,
-    setStatus,
-    setShouldShow,
-    setMsg
-) {
+function isInvalid(setStatus, setShouldShow, setMsg) {
     let messages = [];
-
-    // Validate params
-    if (info.password != info.retypedPassword)
+    if (password != retypedPassword) {
         messages.push("Both passwords must be the same!");
-
-    // Check all fields are filled out
-    if (!Object.values(info).every((val) => val))
+    }
+    if (!(email && password && retypedPassword && congregation && userType && firstName && lastName)) {
         messages.push("Please fill out all fields!");
-
-    // Check if email
-    const isValid = emailValidator.validate(info.email);
-    if (!isValid) messages.push("Invalid email!");
-
-    // Check if there were any errors
-    if(messages.length > 0){
+    }
+    const isValid = emailValidator.validate(email);
+    if (!isValid) {
+        messages.push("Invalid email!");
+    }
+    if (messages.length > 0) {
         setStatus("danger");
         setShouldShow(true);
         setMsg(messages[0]);
@@ -80,18 +54,12 @@ function isInvalid(
     }
     return false;
 }
-
-// Convert to title case e.g.
-// hello, world => Hello, World
 function toTitleCase(string) {
     const arr = string.split(' ');
     var newStr = [];
-
     for (var i = 0; i < arr.length; i++) {
         newStr.push(arr[i][0].toUpperCase() + arr[i].substring(1, arr[i].length));
     }
-
     return newStr.join(' ');
 }
-
 export default transport;

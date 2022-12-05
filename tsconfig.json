@@ -93,7 +93,7 @@
     "skipLibCheck": true /* Skip type checking all .d.ts files. */,
     "outDir": "./build-backend"
   },
-  "exclude": ["scripts"],
+  "exclude": ["scripts", "./build-backend/**/*"],
   "ts-node": {
     "esm": true,
     "experimentalSpecifierResolution": "node"

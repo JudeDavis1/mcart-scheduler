@@ -1,10 +1,22 @@
+import { isValidDateValue } from '@testing-library/user-event/dist/utils/index.js';
 import axios from 'axios';
 import sha256 from 'crypto-js/sha256.js';
 
 import config from '../config.js';
 
 
-function transport(info, callbackFn, catchFn, next) {
+function transport(info, setStatus, setMsg, setShouldShow, setShouldSpin) {
+    if (!(info.email && info.password)) {
+        setStatus('danger');
+        setMsg('Please enter an Email and Password');
+
+        // Show alert
+        setShouldShow(true);
+
+        // Stop spinning
+        setShouldSpin(false);
+        return;
+    }
     let { email, password } = info;
 
     // SHA-2 hash for transport
@@ -13,9 +25,28 @@ function transport(info, callbackFn, catchFn, next) {
 
     // Verify user exists and is authenticated
     axios.post(config.backend_url + 'user/exists', { email, hashedPassword })
-    .then((val) => callbackFn(val.data.exists))
-    .catch((err) => catchFn(err))  // A status of 400 should hopefully throw an error
-    .then(() => next());
+    .then((val) => {
+        if (val.data.exists) {
+            // User logged in successfully
+            setStatus('success');
+            setMsg('Logged In!');
+        } else {
+            setStatus("danger");
+            setMsg("The details seem incorrect. Please try again");
+        }
+    })
+
+    .catch((err) => {
+        // A status of 400 should hopefully throw an error
+        setStatus('danger');
+        setMsg(err.response.data.error);
+    })
+
+    .then(() => {
+        // After all of the above are completed
+        setShouldShow(true);
+        setShouldSpin(false);
+    });
 }
 
 export default transport;

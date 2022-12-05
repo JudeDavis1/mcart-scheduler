@@ -22,7 +22,7 @@ const darkTheme = createTheme({ palette: { mode: 'dark' } });
 function Login() {
     var [email, setEmail] = useState('');
     var [password, setPassword] = useState('');
-    
+
     var [msg, setMsg] = useState('');
     var [status, setStatus] = useState('success');
     var [shouldShow, setShouldShow] = useState(false);
@@ -30,35 +30,9 @@ function Login() {
 
     const didTapSubmit = async () => {
         setShouldSpin(true);
-        if (!(email && password)) {
-            setStatus('danger');
-            setMsg('Please enter an Email and Password');
 
-            // Show alert
-            setShouldShow(true);
-
-            // Stop spinning
-            setShouldSpin(false);
-            return;
-        }
-
-        // Verify user exists and is authenticated
-        transport({ email, password }, (success) => {
-            if (success) {
-                // User logged in successfully
-                setStatus('success');
-                setMsg('Logged In!');
-            } else {
-                setStatus("danger");
-                setMsg("The details seem incorrect. Please try again");
-            }
-        }, (err) => {
-            setStatus('danger');
-            setMsg(err.response.data.error);
-        }, () => {
-            setShouldShow(true);
-            setShouldSpin(false);
-        });
+        // Verify user exists and is authenticated and transport
+        transport({ email, password }, setStatus, setMsg, setShouldShow, setShouldSpin);  // Pass function pointers
     };
 
     const closeAlert = () => {

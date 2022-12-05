@@ -1,9 +1,9 @@
 import { useState } from "react";
 import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
 import Button from "@mui/material/Button";
-import Spinner from 'react-bootstrap/Spinner';
 import TextField from '@mui/material/TextField';
+import Paper from '@mui/material/Paper';
+import Spinner from 'react-bootstrap/Spinner';
 import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 import './Login.css';
 import MAlert from '../MAlert/MAlert';
@@ -23,12 +23,12 @@ function Login() {
     var [shouldShow, setShouldShow] = useState(false);
     var [shouldSpin, setShouldSpin] = useState(false);
     const didTapSubmit = async () => {
-        setShouldSpin(true);
+        await setShouldSpin(true);
         if (!(email && password)) {
             setStatus('danger');
             setMsg('Please enter an Email and Password');
             setShouldShow(true);
-            setShouldSpin(false);
+            await setShouldSpin(false);
             return;
         }
         transport({ email, password }, (success) => {
@@ -43,9 +43,9 @@ function Login() {
         }, (err) => {
             setStatus('danger');
             setMsg(err.response.data.error);
-        }, () => {
+        }, async () => {
             setShouldShow(true);
-            setShouldSpin(false);
+            await setShouldSpin(false);
         });
     };
     const closeAlert = () => {
@@ -73,6 +73,7 @@ function Login() {
             </div>
             </Item>
             </ThemeProvider>
+            
         </div>);
 }
 export default Login;
