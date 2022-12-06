@@ -8,7 +8,7 @@ import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 
 import './Login.css';
 import MAlert from '../MAlert/MAlert';
-import transport from '../../controllers/loginController.js';
+import { transport, hasJwt } from '../../controllers/loginController.js';
 
 
 const Item = styled(Paper)(({theme}) => ({
@@ -20,6 +20,9 @@ const Item = styled(Paper)(({theme}) => ({
 const darkTheme = createTheme({ palette: { mode: 'dark' } });
 
 function Login() {
+	// Check if client already has account
+	hasJwt();
+
 	var [email, setEmail] = useState('');
 	var [password, setPassword] = useState('');
 

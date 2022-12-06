@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { User } from "../models/userModel.js";
-import { sendAuthToken } from './authController.js';
+import { sendAuthToken, verifyJwt } from './authController.js';
 async function createUser(req, res, next) {
     try {
         const { name, email, congregation, hashedPassword, ...rest } = req.body;
@@ -24,6 +24,7 @@ async function createUser(req, res, next) {
             .json({ data: "Account created successfully!", user: createdUser });
     }
     catch (error) {
+        console.log(error.message);
         res.status(400).json({ error: "Invalid user fields: " + error.message });
         next(error);
     }
@@ -110,4 +111,15 @@ async function userExists(req, res, next) {
         next();
     }
 }
-export { createUser, getUser, updateUser, deleteUser, userExists };
+async function userVerify(req, res, next) {
+    try {
+        verifyJwt(req, res);
+    }
+    catch (error) {
+        res
+            .status(400)
+            .json({ error: error.message, isValid: false });
+        next(error);
+    }
+}
+export { createUser, getUser, updateUser, deleteUser, userExists, userVerify };

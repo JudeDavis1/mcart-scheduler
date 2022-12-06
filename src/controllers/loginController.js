@@ -4,6 +4,24 @@ import sha256 from 'crypto-js/sha256.js';
 import config from '../config.js';
 
 
+const withCookies = { withCredentials: true, credentials: 'include' };
+
+function hasJwt() {
+    console.log("CHECKING JWT");
+    axios.get(config.backend_url + '/user/verify', withCookies)
+    .then((val) => {
+        // User MAY have an account
+        if (val.data.isValid) {
+            // User DOES have an account
+            // TODO:
+        }
+    })
+    .catch((err) => {
+        // User definitely does not have an account
+        if (err) return;
+    });
+}
+
 function transport(info, setStatus, setMsg, setShouldShow, setShouldSpin) {
     if (!(info.email && info.password)) {
         setStatus('danger');
@@ -19,7 +37,7 @@ function transport(info, setStatus, setMsg, setShouldShow, setShouldSpin) {
     password = undefined;  // If memory is dumped, password will not show xD
 
     // Verify user exists and is authenticated
-    axios.post(config.backend_url + 'user/exists', { email, hashedPassword })
+    axios.post(config.backend_url + 'user/exists', { email, hashedPassword }, withCookies)
     .then((val) => {
         if (val.data.exists) {
             // User logged in successfully
@@ -44,4 +62,7 @@ function transport(info, setStatus, setMsg, setShouldShow, setShouldSpin) {
     });
 }
 
-export default transport;
+export {
+    transport,
+    hasJwt
+};

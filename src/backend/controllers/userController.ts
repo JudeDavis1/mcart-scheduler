@@ -3,7 +3,7 @@
 import bcrypt from 'bcryptjs';
 import { Request, Response } from "express";
 import { User } from "../models/userModel.js";
-import { sendAuthToken } from './authController.js';
+import { sendAuthToken, verifyJwt } from './authController.js';
 
 
 // Later, we will need authentication when creating a new user.
@@ -34,6 +34,7 @@ async function createUser(
       .status(200)
       .json({ data: "Account created successfully!", user: createdUser });
   } catch (error: any) {
+    console.log(error.message);
     res.status(400).json({ error: "Invalid user fields: " + error.message });
     next(error);
   }
@@ -129,7 +130,7 @@ async function userExists(
     const user = await User.findById(userId);
     const newHash = await bcrypt.hash(hashedPassword, user!.salt);
 
-    // Ensure hashes match.
+    // Ensure hashes match
     if (user!.hashedPassword == newHash) {
       // This will handle the JWT auth
       const user = await User.findOne({ email });
@@ -144,10 +145,28 @@ async function userExists(
 }
 
 
+
+async function userVerify(
+  req: Request,
+  res: Response,
+  next: Function
+): Promise<void> {
+  try {
+    verifyJwt(req, res);
+  } catch (error: any) {
+    res
+      .status(400)
+      .json({ error: error.message, isValid: false });
+    next(error);
+  }
+}
+
+
 export {
   createUser,
   getUser,
   updateUser,
   deleteUser,
-  userExists
+  userExists,
+  userVerify
 };

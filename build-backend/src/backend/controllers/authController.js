@@ -1,12 +1,12 @@
-import * as jwt from "jsonwebtoken";
-const signToken = (id) => jwt.sign({ id }, "the jwt secret", {
+import jwt from "jsonwebtoken";
+const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: "66d",
 });
 const sendAuthToken = (user, statusCode, res) => {
     const token = signToken(user._id.toString());
     const cookieOptions = {
-        expires: Date(),
         httpOnly: true,
+        expires: false
     };
     if (process.env.NODE_ENV === "production")
         cookieOptions.secure = true;
@@ -19,4 +19,11 @@ const sendAuthToken = (user, statusCode, res) => {
         exists: true
     });
 };
-export { sendAuthToken };
+const verifyJwt = (req, res) => {
+    const jwtSubject = req.cookies.jwt;
+    console.log(jwtSubject);
+    if (!jwtSubject)
+        throw Error('JWT invalid');
+    const verifiedJwt = jwt.verify(jwtSubject, process.env.JWT_SECRET);
+};
+export { sendAuthToken, verifyJwt };

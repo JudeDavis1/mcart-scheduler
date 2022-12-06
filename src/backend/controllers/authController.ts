@@ -1,14 +1,13 @@
+import jwt from "jsonwebtoken";
 import { Request, Response } from "express";
+import { KeywordToken } from "typescript";
 
-import { User } from "./../models/userModel.js";
-
-import * as jwt from "jsonwebtoken";
 
 // TODO:
 // - Check if user has already got a JWT, then let them through.
 
 const signToken = (id: string): string | any => jwt.sign(
-  { id }, "the jwt secret", {
+  { id }, process.env.JWT_SECRET!, {
   expiresIn: "66d",
 });
 
@@ -21,8 +20,8 @@ const sendAuthToken = (
   // generating the token with the payload (which is the user's mongodb id)
   const token: string = signToken(user._id.toString());
   const cookieOptions: any = {
-    expires: Date(),
     httpOnly: true,
+    expires: false
   };
 
   if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
@@ -37,5 +36,13 @@ const sendAuthToken = (
     });
 };
 
+const verifyJwt = (req: Request, res: Response) => {
+const jwtSubject = req.cookies.jwt;
+  if (!jwtSubject) throw Error('JWT invalid');
 
-export { sendAuthToken };
+  const verifiedJwt = jwt.verify(jwtSubject, process.env.JWT_SECRET!);
+  console.log(verifiedJwt);
+}
+
+
+export { sendAuthToken, verifyJwt };
