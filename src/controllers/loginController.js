@@ -1,5 +1,6 @@
 import axios from 'axios';
 import sha256 from 'crypto-js/sha256.js';
+import { redirect } from 'react-router-dom';
 
 import config from '../config.js';
 
@@ -18,7 +19,7 @@ function hasJwt() {
     })
     .catch((err) => {
         // User definitely does not have an account
-        if (err) return;
+        if (err) console.log(err);
     });
 }
 

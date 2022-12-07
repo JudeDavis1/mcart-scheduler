@@ -40,8 +40,11 @@ const verifyJwt = (req: Request, res: Response) => {
 const jwtSubject = req.cookies.jwt;
   if (!jwtSubject) throw Error('JWT invalid');
 
+  // NOTE: Console will throw an error if the JWT is invalid
   const verifiedJwt = jwt.verify(jwtSubject, process.env.JWT_SECRET!);
-  console.log(verifiedJwt);
+  res
+    .status(200)
+    .json({ isValid: true });
 }
 
 

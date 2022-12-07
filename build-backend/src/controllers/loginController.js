@@ -6,12 +6,14 @@ function hasJwt() {
     console.log("CHECKING JWT");
     axios.get(config.backend_url + '/user/verify', withCookies)
         .then((val) => {
+        console.log(val.data.isValid);
         if (val.data.isValid) {
+            console.log('User IS VALID');
         }
     })
         .catch((err) => {
         if (err)
-            return;
+            console.log(err);
     });
 }
 function transport(info, setStatus, setMsg, setShouldShow, setShouldSpin) {

@@ -19,10 +19,14 @@ const Item = styled(Paper)(({theme}) => ({
 }));
 const darkTheme = createTheme({ palette: { mode: 'dark' } });
 
-function Login() {
-	// Check if client already has account
+// Only check JWT when the window loads
+window.addEventListener("load", (event) => {
+	// Check if the user has logged in before
 	hasJwt();
+});
+  
 
+function Login() {
 	var [email, setEmail] = useState('');
 	var [password, setPassword] = useState('');
 

@@ -21,9 +21,12 @@ const sendAuthToken = (user, statusCode, res) => {
 };
 const verifyJwt = (req, res) => {
     const jwtSubject = req.cookies.jwt;
-    console.log(jwtSubject);
     if (!jwtSubject)
         throw Error('JWT invalid');
     const verifiedJwt = jwt.verify(jwtSubject, process.env.JWT_SECRET);
+    console.log(verifiedJwt);
+    res
+        .status(200)
+        .json({ isValid: true });
 };
 export { sendAuthToken, verifyJwt };
