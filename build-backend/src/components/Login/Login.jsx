@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Button from "@mui/material/Button";
@@ -8,6 +8,10 @@ import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 import './Login.css';
 import MAlert from '../MAlert/MAlert';
 import { transport, hasJwt } from '../../controllers/loginController.js';
+window.addEventListener("load", (event) => {
+    if (window.location.pathname != '/login')
+        return;
+});
 const Item = styled(Paper)(({ theme }) => ({
     color: theme.palette.text.secondary,
     padding: '20px',
@@ -16,13 +20,13 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 const darkTheme = createTheme({ palette: { mode: 'dark' } });
 function Login() {
-    hasJwt();
     var [email, setEmail] = useState('');
     var [password, setPassword] = useState('');
     var [msg, setMsg] = useState('');
     var [status, setStatus] = useState('success');
     var [shouldShow, setShouldShow] = useState(false);
     var [shouldSpin, setShouldSpin] = useState(false);
+    useEffect(() => hasJwt(), []);
     const didTapSubmit = async () => {
         setShouldSpin(true);
         transport({ email, password }, setStatus, setMsg, setShouldShow, setShouldSpin);

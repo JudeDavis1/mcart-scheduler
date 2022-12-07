@@ -1,6 +1,5 @@
 import axios from 'axios';
 import sha256 from 'crypto-js/sha256.js';
-import { redirect } from 'react-router-dom';
 
 import config from '../config.js';
 
@@ -8,13 +7,14 @@ import config from '../config.js';
 const withCookies = { withCredentials: true, credentials: 'include' };
 
 function hasJwt() {
-    console.log("CHECKING JWT");
     axios.get(config.backend_url + '/user/verify', withCookies)
     .then((val) => {
         // User MAY have an account
         if (val.data.isValid) {
             // User DOES have an account
             // TODO:
+            console.log("User IS VALID");
+            window.location = '/dashboard'
         }
     })
     .catch((err) => {

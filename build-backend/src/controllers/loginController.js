@@ -3,12 +3,11 @@ import sha256 from 'crypto-js/sha256.js';
 import config from '../config.js';
 const withCookies = { withCredentials: true, credentials: 'include' };
 function hasJwt() {
-    console.log("CHECKING JWT");
     axios.get(config.backend_url + '/user/verify', withCookies)
         .then((val) => {
-        console.log(val.data.isValid);
         if (val.data.isValid) {
-            console.log('User IS VALID');
+            console.log("User IS VALID");
+            window.location = '/dashboard';
         }
     })
         .catch((err) => {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Button from "@mui/material/Button";
@@ -11,6 +11,13 @@ import MAlert from '../MAlert/MAlert';
 import { transport, hasJwt } from '../../controllers/loginController.js';
 
 
+
+window.addEventListener("load", (event) => {
+	// Check if the user has logged in before
+	if (window.location.pathname != '/login') return;
+	
+});
+
 const Item = styled(Paper)(({theme}) => ({
     color: theme.palette.text.secondary,
     padding: '20px',
@@ -18,12 +25,6 @@ const Item = styled(Paper)(({theme}) => ({
     zIndex: 1
 }));
 const darkTheme = createTheme({ palette: { mode: 'dark' } });
-
-// Only check JWT when the window loads
-window.addEventListener("load", (event) => {
-	// Check if the user has logged in before
-	hasJwt();
-});
   
 
 function Login() {
@@ -34,6 +35,9 @@ function Login() {
 	var [status, setStatus] = useState('success');
 	var [shouldShow, setShouldShow] = useState(false);
 	var [shouldSpin, setShouldSpin] = useState(false);
+
+	// Only check JWT when the component renders for the first time
+	useEffect(() => hasJwt(), []);
 
 	const didTapSubmit = async () => {
 		setShouldSpin(true);

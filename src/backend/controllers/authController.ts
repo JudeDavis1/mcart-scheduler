@@ -1,6 +1,5 @@
 import jwt from "jsonwebtoken";
 import { Request, Response } from "express";
-import { KeywordToken } from "typescript";
 
 
 // TODO:
@@ -36,15 +35,17 @@ const sendAuthToken = (
     });
 };
 
-const verifyJwt = (req: Request, res: Response) => {
+const verifyJwt = (req: Request, res: Response): any => {
 const jwtSubject = req.cookies.jwt;
   if (!jwtSubject) throw Error('JWT invalid');
 
   // NOTE: Console will throw an error if the JWT is invalid
-  const verifiedJwt = jwt.verify(jwtSubject, process.env.JWT_SECRET!);
+  const verifiedJwt: any = jwt.verify(jwtSubject, process.env.JWT_SECRET!);
   res
     .status(200)
     .json({ isValid: true });
+  
+  return verifiedJwt;
 }
 
 

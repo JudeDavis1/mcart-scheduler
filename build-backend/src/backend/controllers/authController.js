@@ -24,7 +24,7 @@ const verifyJwt = (req, res) => {
     if (!jwtSubject)
         throw Error('JWT invalid');
     const verifiedJwt = jwt.verify(jwtSubject, process.env.JWT_SECRET);
-    console.log(verifiedJwt);
+    console.log(verifiedJwt.id);
     res
         .status(200)
         .json({ isValid: true });
