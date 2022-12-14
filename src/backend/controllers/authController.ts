@@ -36,7 +36,7 @@ const sendAuthToken = (
 };
 
 const verifyJwt = (req: Request, res: Response): any => {
-const jwtSubject = req.cookies.jwt;
+  const jwtSubject = req.cookies.jwt;
   if (!jwtSubject) throw Error('JWT invalid');
 
   // NOTE: Console will throw an error if the JWT is invalid
