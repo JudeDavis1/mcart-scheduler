@@ -11,13 +11,15 @@ def on_push():
         return 'Is not production'
 
     os.system('killall node')
-    os.system(f'''cd {path} &&
+    os.system(f'''
+        cd {path} &&
         git checkout production &&
         git pull &&
         npm i &&
         rm -rf build* &&
         npx tsc &&
-        npm run deploy''')
+        npm run deploy
+    ''')
     print('Deployed')
     return 'Deployed.'
 
