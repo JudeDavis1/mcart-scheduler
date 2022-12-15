@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
+
+import { getUserInfo } from "../../controllers/dashboardController";
 
 
 function Dashboard() {
+    const [name, setName] = useState('');
+    getUserInfo();
+
     return (
         <div className="Dashboard app-sub-component">
-
+            <h1>Dashboard</h1>
         </div>
     );
 }

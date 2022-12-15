@@ -19,6 +19,15 @@ const sendAuthToken = (user, statusCode, res) => {
         exists: true
     });
 };
+const jwtIsValid = (jwtSubject) => {
+    try {
+        const verifiedJwt = jwt.verify(jwtSubject, process.env.JWT_SECRET);
+        return verifiedJwt;
+    }
+    catch (err) {
+        return false;
+    }
+};
 const verifyJwt = (req, res) => {
     const jwtSubject = req.cookies.jwt;
     if (!jwtSubject)
@@ -29,4 +38,4 @@ const verifyJwt = (req, res) => {
         .json({ isValid: true });
     return verifiedJwt;
 };
-export { sendAuthToken, verifyJwt };
+export { sendAuthToken, verifyJwt, jwtIsValid };

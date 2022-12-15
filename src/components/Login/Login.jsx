@@ -11,21 +11,13 @@ import MAlert from '../MAlert/MAlert';
 import { transport, hasJwt } from '../../controllers/loginController.js';
 
 
-
-window.addEventListener("load", (event) => {
-	// Check if the user has logged in before
-	if (window.location.pathname != '/login') return;
-	
-});
-
 const Item = styled(Paper)(({theme}) => ({
     color: theme.palette.text.secondary,
     padding: '20px',
     opacity: '1',
     zIndex: 1
 }));
-const darkTheme = createTheme({ palette: { mode: 'dark' } });
-  
+const darkTheme = createTheme({ palette: { mode: 'dark' } });  
 
 function Login() {
 	var [email, setEmail] = useState('');

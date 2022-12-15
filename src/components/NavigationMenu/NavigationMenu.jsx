@@ -3,12 +3,14 @@ import { Link } from 'react-router-dom';
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
-import NavDropdown from 'react-bootstrap/NavDropdown';
+// import NavDropdown from 'react-bootstrap/NavDropdown';
 
 import './NavigationMenu.css';
+import { useEffect, useState } from 'react';
+import { hasJwt } from '../../controllers/loginController';
 
 
-function NavigationMenu() {
+function NavigationMenu(props) {
   return (
     <div className='navigation-menu'>
       <Navbar collapseOnSelect expand='sm' fixed='top' bg='dark' variant='dark'>
@@ -18,9 +20,6 @@ function NavigationMenu() {
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto">
               <Nav.Link as={ Link } to='/home'>Home</Nav.Link>
-              <NavDropdown title='Features'>
-                <NavDropdown.Item>Ministry Cart Pairing</NavDropdown.Item>
-              </NavDropdown>
               <Nav.Link as={ Link } to='/contact-us'>Contact Us</Nav.Link>
             </Nav>
             <Nav>
@@ -31,7 +30,7 @@ function NavigationMenu() {
         </Container>
       </Navbar>
     </div>
-  )
+  );
 }
 
 export default NavigationMenu;
