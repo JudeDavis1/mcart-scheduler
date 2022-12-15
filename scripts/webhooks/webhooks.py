@@ -14,7 +14,7 @@ def on_push():
     os.system(f'''
         cd {path} &&
         git checkout production &&
-        git pull &&
+        git pull origin production -f &&
         npm i &&
         rm -rf build* &&
         npx tsc &&
