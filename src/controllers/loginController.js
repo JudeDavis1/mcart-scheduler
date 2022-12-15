@@ -10,7 +10,7 @@ function hasJwt() {
     axios.get(config.backend_url + '/user/verify', withCookies)
     .then((val) => {
         // User MAY have an account
-        console.log(val.data.isValid);
+        console.log(val.data.isValid); 
         if (val.data.isValid) {
             // User DOES have an account
             // TODO:
