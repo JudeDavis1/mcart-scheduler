@@ -31,6 +31,7 @@ function transport(info, setStatus, setMsg, setShouldShow, setShouldSpin) {
         if (val.data.exists) {
             setStatus('success');
             setMsg('Logged In!');
+            hasJwt();
         }
         else {
             setStatus("danger");
