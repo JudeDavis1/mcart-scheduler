@@ -1130,7 +1130,9 @@ Error: User with this email already exists!
  HTTP  12/5/2022 9:06:03 PM 200.84.120.132 POST /
  HTTP  12/5/2022 9:06:03 PM 200.84.120.132 Returned 200 in 1 ms
 162.142.125.8 - - [05/Dec/2022 21:07:28] code 400, message Bad request version ('À\x14À')
-162.142.125.8 - - [05/Dec/2022 21:07:28] "[35m[1m î  êáÿ'ÛeÄÏØç¯ Pmyþ>Ví#Àcÿ×Pß[ ¾=IRV³ÏÐ(pÎA¿NYyè0ïB¿Ä° &Ì¨Ì©À/À0À+À,ÀÀ	ÀÀ[0m" HTTPStatus.BAD_REQUEST -
+162.142.125.8 - - [05/Dec/2022 21:07:28] "[35m[1m î  êáÿ
+'ÛeÄÏØç¯ Pmyþ>Ví#Àcÿ×Pß
+[ ¾=IRV³ÏÐ(pÎA¿NYyè0ïB¿Ä° &Ì¨Ì©À/À0À+À,ÀÀ	ÀÀ[0m" HTTPStatus.BAD_REQUEST -
 162.142.125.8 - - [05/Dec/2022 21:07:29] "[33mGET / HTTP/1.1[0m" 404 -
 162.142.125.8 - - [05/Dec/2022 21:07:29] "[33mGET / HTTP/1.1[0m" 404 -
 162.142.125.8 - - [05/Dec/2022 21:07:30] code 505, message Invalid HTTP version (2.0)
@@ -1672,3 +1674,4 @@ Error: User with this email already exists!
  HTTP  12/6/2022 6:29:00 PM 192.241.192.229 Returned 200 in 2 ms
  HTTP  12/6/2022 6:38:15 PM 2.177.93.89 POST /
  HTTP  12/6/2022 6:38:15 PM 2.177.93.89 Returned 200 in 3 ms
+ss
