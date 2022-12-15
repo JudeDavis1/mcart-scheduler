@@ -45,6 +45,7 @@ function transport(info, setStatus, setMsg, setShouldShow, setShouldSpin) {
             // User logged in successfully
             setStatus('success');
             setMsg('Logged In!');
+            hasJwt();
         } else {
             setStatus("danger");
             setMsg("The details seem incorrect. Please try again");
