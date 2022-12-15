@@ -10,7 +10,7 @@ def on_push():
         print('This isn\'t production')
         return 'Is not production'
 
-    os.system('killall node')
+    os.system('killall node serve')
     os.system(f'''
         cd {path} &&
         git checkout production &&
