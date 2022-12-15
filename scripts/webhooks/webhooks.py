@@ -18,7 +18,6 @@ def on_push():
         git pull origin production -f &&
         npm i &&
         rm -rf build* &&
-        npx tsc &&
         npm run deploy
     ''')
     print('Deployed')

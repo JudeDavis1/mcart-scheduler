@@ -15,7 +15,7 @@ function hasJwt() {
             // User DOES have an account
             // TODO:
             console.log("User IS VALID");
-            window.location = '/dashboard'
+            window.location.href = '/dashboard'
         }
     })
     .catch((err) => {
