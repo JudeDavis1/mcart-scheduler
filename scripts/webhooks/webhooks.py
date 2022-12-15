@@ -17,8 +17,7 @@ def on_push():
         npm i &&
         rm -rf build* &&
         npx tsc &&
-        npm run build &&
-        sh startup.sh''')
+        npm run deploy''')
     print('Deployed')
     return 'Deployed.'
 

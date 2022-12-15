@@ -40,8 +40,8 @@
   },
   "scripts": {
     "start": "npm i serve && npx serve -s build",
-    "deploy": "npm run build && npm run start",
-    "server": "npx tsc && node ./workspace/server.js",
+    "deploy": "npm run build && sh startup.sh",
+    "server": "npx tsc && node ./build-backend/server.js",
     "build": "react-scripts build",
     "test": "npx tsc && npx mocha ./build/tests --recursive"
   },
