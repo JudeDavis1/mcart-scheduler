@@ -2,7 +2,8 @@
 
 import bcrypt from 'bcryptjs';
 import { Request, Response } from "express";
-import { User, UserType } from "../models/userModel.js";
+import { User } from "../models/userModel.js";
+import { sendAuthToken, verifyJwt } from './authController.js';
 
 
 // Later, we will need authentication when creating a new user.
@@ -18,7 +19,7 @@ async function createUser(
     // Validate fields
     const userInvalid = !name || !email || !congregation;
     if (userInvalid) throw new Error("One or more fields are missing.");
-    
+
     const salt = await bcrypt.genSalt();
     const bcrytedPassword = await bcrypt.hash(hashedPassword, salt);
     const createdUser = await User.create({
@@ -33,6 +34,7 @@ async function createUser(
       .status(200)
       .json({ data: "Account created successfully!", user: createdUser });
   } catch (error: any) {
+    console.log(error.message);
     res.status(400).json({ error: "Invalid user fields: " + error.message });
     next(error);
   }
@@ -46,7 +48,7 @@ async function getUser(
 ): Promise<void> {
   try {
     const { userId } = req.query;
-    
+
     if (!userId) throw new Error("Please provide a user ID.");
 
     const receivedUser = await User.findById(userId);
@@ -128,11 +130,14 @@ async function userExists(
     const user = await User.findById(userId);
     const newHash = await bcrypt.hash(hashedPassword, user!.salt);
 
-    // Ensure hashes match.
+    // Ensure hashes match
     if (user!.hashedPassword == newHash) {
-      res
-        .status(200)
-        .json({ exists: true });
+      // This will handle the JWT auth
+      const user = await User.findOne({ email });
+      if (req.cookies.jwt) return;
+
+      // If there isn't a 'jwt' cookie, then create one
+      await sendAuthToken(user, 200, res);
     } else throw new Error("Invalid password");
   } catch (error: any) {
     res
@@ -143,10 +148,28 @@ async function userExists(
 }
 
 
+
+async function userVerify(
+  req: Request,
+  res: Response,
+  next: Function
+): Promise<void> {
+  try {
+    verifyJwt(req, res);
+  } catch (error: any) {
+    res
+      .status(400)
+      .json({ error: error.message, isValid: false });
+    next(error);
+  }
+}
+
+
 export {
   createUser,
   getUser,
   updateUser,
   deleteUser,
-  userExists
+  userExists,
+  userVerify
 };

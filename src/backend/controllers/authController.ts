@@ -1,49 +1,52 @@
+import jwt from "jsonwebtoken";
 import { Request, Response } from "express";
 
-import { User } from "./../models/userModel.js";
 
-import * as jwt from "jsonwebtoken";
+// TODO:
+// - Check if user has already got a JWT, then let them through.
 
-const signToken = (id: string): string | any =>
-  jwt.sign({ id }, "the jwt secret", {
-    expiresIn: "1d",
-  });
+const signToken = (id: string): string | any => jwt.sign(
+  { id }, process.env.JWT_SECRET!, {
+  expiresIn: "66d",
+});
 
 // user is the user document
-const createSendToken = (
+const sendAuthToken = (
   user: any,
   statusCode: number,
   res: Response
 ): void => {
   // generating the token with the payload (which is the user's mongodb id)
-  const token: string = signToken(user._id);
+  const token: string = signToken(user._id.toString());
   const cookieOptions: any = {
-    expires: Date(),
     httpOnly: true,
+    expires: false
   };
 
   if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
-
-  res.cookie("jwt", token, cookieOptions);
-
-  //   hide the password
-  user.password = undefined;
-
-  res.status(statusCode).json({
-    status: "success",
-    data: { user },
-  });
+  // Save the cookie as 'jwt'
+  res
+    .status(statusCode)
+    .cookie("jwt", token, cookieOptions)
+    .json({
+      status: "success",
+      data: { user },
+      exists: true
+    });
 };
 
-async function login(
-  req: Request,
-  res: Response,
-  next: Function
-): Promise<void> {
-  // do some validation and log the user in by sending the token
-  const { email, password } = req.body;
-  const user = await User.findOne({ email }).select(+password);
-  createSendToken(user, 200, res);
+const verifyJwt = (req: Request, res: Response): any => {
+  const jwtSubject = req.cookies.jwt;
+  if (!jwtSubject) throw Error('JWT invalid');
+
+  // NOTE: Console will throw an error if the JWT is invalid
+  const verifiedJwt: any = jwt.verify(jwtSubject, process.env.JWT_SECRET!);
+  res
+    .status(200)
+    .json({ isValid: true });
+  
+  return verifiedJwt;
 }
 
-export { login };
+
+export { sendAuthToken, verifyJwt };

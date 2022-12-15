@@ -1,15 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Grid from '@mui/material/Grid';
-import Button from "@mui/material/Button";
-import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
+import Button from "@mui/material/Button";
 import Spinner from 'react-bootstrap/Spinner';
+import TextField from '@mui/material/TextField';
 import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 
 import './Login.css';
 import MAlert from '../MAlert/MAlert';
-import transport from '../../controllers/loginController.js';
+import { transport, hasJwt } from '../../controllers/loginController.js';
 
+
+
+window.addEventListener("load", (event) => {
+	// Check if the user has logged in before
+	if (window.location.pathname != '/login') return;
+	
+});
 
 const Item = styled(Paper)(({theme}) => ({
     color: theme.palette.text.secondary,
@@ -18,78 +25,54 @@ const Item = styled(Paper)(({theme}) => ({
     zIndex: 1
 }));
 const darkTheme = createTheme({ palette: { mode: 'dark' } });
+  
 
 function Login() {
-    var [email, setEmail] = useState('');
-    var [password, setPassword] = useState('');
-    
-    var [msg, setMsg] = useState('');
-    var [status, setStatus] = useState('success');
-    var [shouldShow, setShouldShow] = useState(false);
-    var [shouldSpin, setShouldSpin] = useState(false);
+	var [email, setEmail] = useState('');
+	var [password, setPassword] = useState('');
 
-    const didTapSubmit = async () => {
-        await setShouldSpin(true);
-        if (!(email && password)) {
-            setStatus('danger');
-            setMsg('Please enter an Email and Password');
+	var [msg, setMsg] = useState('');
+	var [status, setStatus] = useState('success');
+	var [shouldShow, setShouldShow] = useState(false);
+	var [shouldSpin, setShouldSpin] = useState(false);
 
-            // Show alert
-            setShouldShow(true);
+	// Only check JWT when the component renders for the first time
+	useEffect(() => hasJwt(), []);
 
-            // Stop spinning
-            await setShouldSpin(false);
-            return;
-        }
+	const didTapSubmit = async () => {
+		setShouldSpin(true);
 
-        // Verify user exists and is authenticated
-        transport({ email, password }, (success) => {
-            if (success) {
-                // User logged in successfully
-                setStatus('success');
-                setMsg('Logged In!');
-            } else {
-                setStatus("danger");
-                setMsg("The details seem incorrect. Please try again");
-            }
-        }, (err) => {
-            setStatus('danger');
-            setMsg(err.response.data.error);
-        }, async () => {
-            setShouldShow(true);
-            await setShouldSpin(false);
-        });
-    };
+		// Verify user exists and is authenticated and transport
+		transport(
+			{ email, password },
+			setStatus, setMsg, setShouldShow, setShouldSpin
+		);  // Pass function pointers
+	};
 
-    const closeAlert = () => {
-        setShouldShow(false);
-    };
-
-    return (
-        <div align='center' className='login app-sub-component'>
-            <ThemeProvider theme={darkTheme}>
-            <Item className='Item' elevation={15}>
-            <h1>Login</h1>
-            <div className='login-form' onChange={ () => closeAlert() } onKeyDown={(e) => {
-                if (e.key == 'Enter') didTapSubmit();
-            }}>
-                {shouldSpin && <Spinner animation="border" />}
-                <br />{ shouldShow && <MAlert variant={ status } onClose={() => closeAlert()} text={ msg } /> }
-                <Grid container spacing={2} direction={'column'}>
-                    <Grid item><TextField onChange={(e) => setEmail(e.target.value)} className='email-field login-field' label='Email' type='email' /></Grid>
-                    <Grid item><TextField onChange={(e) => setPassword(e.target.value)} className='password-field login-field' label='Password' type='password' /></Grid>
-                    <Grid item>
-                        <Button variant='contained' style={{padding: '10px', margin: "10px"}} onClick={ async () => {
-                            await didTapSubmit();
-                        }}>Submit</Button>
-                    </Grid>
-                </Grid>
-            </div>
-            </Item>
-            </ThemeProvider>
-            
-        </div>
-    );
+	return (
+		<div align='center' className='login app-sub-component'>
+			<ThemeProvider theme={darkTheme}>
+			<Item className='Item' elevation={15}>
+			<h1>Login</h1>
+			<div className='login-form' onChange={ () => setShouldShow(false) } onKeyDown={(e) => {
+				if (e.key == 'Enter') didTapSubmit();
+			}}>
+				{shouldSpin && <Spinner animation="border" />}
+				<br />{ shouldShow && <MAlert variant={ status } onClose={() => setShouldShow(false)} text={ msg } /> }
+				<Grid container spacing={2} direction={'column'}>
+					<Grid item><TextField onChange={(e) => setEmail(e.target.value)} className='email-field login-field' label='Email' type='email' /></Grid>
+					<Grid item><TextField onChange={(e) => setPassword(e.target.value)} className='password-field login-field' label='Password' type='password' /></Grid>
+					<Grid item>
+						<Button variant='contained' style={{padding: '10px', margin: "10px"}} onClick={ () => {
+							didTapSubmit();
+						}}>Submit</Button>
+					</Grid>
+				</Grid>
+			</div>
+			</Item>
+			</ThemeProvider>
+		</div>
+	);
 }
 
 
