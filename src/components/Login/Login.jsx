@@ -8,7 +8,7 @@ import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 
 import './Login.css';
 import MAlert from '../MAlert/MAlert';
-import { transport, hasJwt } from '../../controllers/loginController.js';
+import { transport, hasJwt } from '../../controllers/loginController';
 
 
 const Item = styled(Paper)(({theme}) => ({
