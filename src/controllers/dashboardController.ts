@@ -1,10 +1,10 @@
 import axios from "axios";
 
 import config from "../config.js";
-import { UserType } from "../backend/models/userModel.js";
+import { IUser } from "../backend/models/userModel.js";
 
 
-async function getUserInfo(): Promise<UserType> {
+async function getUserInfo(): Promise<IUser> {
     const val = await axios.get(
         config.backend_url + '/user/getId', config.withCookies
     ).catch((err) => {
@@ -14,7 +14,7 @@ async function getUserInfo(): Promise<UserType> {
     const userData = await axios.get(
         config.backend_url + 'user/get?userId=' + userId
     );
-    const user = userData.data.user;
+    const user: IUser = userData.data.user;
 
     return user
 }
