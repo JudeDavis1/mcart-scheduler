@@ -19,7 +19,13 @@ async function getUserInfo(): Promise<IUser> {
     return user
 }
 
+async function didTapCreateAppointment() {
+    // const val = await axios.post(config.backend_url + '/session/create');
+    console.log('SUBMIT')
+}
+
 
 export {
-    getUserInfo
+    getUserInfo,
+    didTapCreateAppointment
 };
