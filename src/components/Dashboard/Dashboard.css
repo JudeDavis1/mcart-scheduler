@@ -1,8 +1,21 @@
 .dashboard-session-card {
-    z-index: 1;
+  z-index: 1;
 }
 
 .dashboard-session-card-container {
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
+}
+
+.app-sub-component {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+}
+
+.create-appointment-btn {
+  width: 15%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
