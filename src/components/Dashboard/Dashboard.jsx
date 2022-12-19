@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 
 import "./Dashboard.css";
 import { getUserInfo } from "../../controllers/dashboardController";
+import { useBootstrapPrefix } from "react-bootstrap/esm/ThemeProvider";
 
 
 function Dashboard() {
@@ -17,7 +18,7 @@ function Dashboard() {
     <div className="Dashboard app-sub-component">
       <h1 align="center">{info.name}</h1>
       <div className="dashboard-session-card-container">
-        {
+        { info.sessions &&
           info.sessions.map((sessions) => {
             return (
               <Card className="dashboard-session-card">
