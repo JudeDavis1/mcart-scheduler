@@ -1,0 +1,8 @@
+.dashboard-session-card {
+    z-index: 1;
+}
+
+.dashboard-session-card-container {
+    display: flex;
+    flex-direction: row;
+}

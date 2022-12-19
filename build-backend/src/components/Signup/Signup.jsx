@@ -8,7 +8,7 @@ import TextField from '@mui/material/TextField';
 import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 import './Signup.css';
 import MAlert from '../MAlert/MAlert';
-import transport from '../../controllers/signupController.js';
+import transport from '../../controllers/signupController';
 const Item = styled(Paper)(({ theme }) => ({
     color: theme.palette.text.secondary,
     padding: '20px',

@@ -22,6 +22,10 @@ const userSchema = new Schema({
         enum: UserType,
         required: true
     },
+    sessions: {
+        type: (Array),
+        required: false
+    },
     hashedPassword: {
         type: String,
         required: true

@@ -7,7 +7,7 @@ function hasJwt(next) {
         .then((val) => {
         if (val.data.isValid) {
             console.log("User IS VALID");
-            window.location = '/dashboard';
+            window.location.href = '/dashboard';
         }
         jwtValid = val.data.isValid;
     })
@@ -27,13 +27,13 @@ function transport(info, setStatus, setMsg, setShouldShow, setShouldSpin) {
     }
     let { email, password } = info;
     const hashedPassword = sha256(password).toString();
-    password = undefined;
+    password = '';
     axios.post(config.backend_url + 'user/exists', { email, hashedPassword }, config.withCookies)
         .then((val) => {
         if (val.data.exists) {
             setStatus('success');
             setMsg('Logged In!');
-            hasJwt();
+            hasJwt(() => { });
         }
         else {
             setStatus("danger");
