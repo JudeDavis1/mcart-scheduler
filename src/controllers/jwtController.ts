@@ -3,7 +3,7 @@ import axios from 'axios';
 import config from '../config';
 
 
-async function hasJwt(next: Function) {
+function hasJwt(next: Function) {
     let jwt: any;
     axios.get(config.backend_url + '/user/verify', config.withCookies)
     .then((val) => {
@@ -19,7 +19,7 @@ async function hasJwt(next: Function) {
         // User definitely does not have an account
         if (err) console.log(err);
     })
-    .then(() => next(jwt));
+    .then(() => next ? next(jwt) : {});
 }
 
 async function getUser(): Promise<any> {
