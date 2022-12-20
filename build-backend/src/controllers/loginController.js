@@ -15,7 +15,9 @@ function transport(info, setStatus, setMsg, setShouldShow, setShouldSpin) {
     password = '';
     axios.post(config.backend_url + 'user/exists', { email, hashedPassword }, config.withCookies)
         .then((val) => {
+        document.cookie = "jwt=" + val.data.token;
         if (val.data.exists) {
+            console.log('setting');
             setStatus('success');
             setMsg('Logged In!');
             hasJwt(() => { });

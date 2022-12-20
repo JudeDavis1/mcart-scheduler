@@ -20,18 +20,22 @@ const sendAuthToken = (
   const token: string = signToken(user.toJSON());
   const cookieOptions: any = {
     httpOnly: true,
-    expires: false
+    expires: false,
+    sameSite: 'none',
+    secure: true
   };
 
   if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
   // Save the cookie as 'jwt'
+  console.log("SETTING COOKIE")
   res
     .status(statusCode)
     .cookie("jwt", token, cookieOptions)
     .json({
       status: "success",
       data: { user },
-      exists: true
+      exists: true,
+      token: token
     });
 };
 
@@ -45,7 +49,7 @@ const jwtIsValid = (jwtSubject: string): boolean => {
 }
 
 const verifyJwt = (req: Request, res: Response): any => {
-  const jwtSubject = req.cookies.jwt;
+  const jwtSubject = req.cookies.jwt ? req.cookies.jwt : req.query.jwt;
   if (!jwtSubject) throw Error('JWT invalid');
 
   // NOTE: Console will throw an error if the JWT is invalid

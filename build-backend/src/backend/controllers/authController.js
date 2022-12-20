@@ -6,17 +6,21 @@ const sendAuthToken = (user, statusCode, res) => {
     const token = signToken(user.toJSON());
     const cookieOptions = {
         httpOnly: true,
-        expires: false
+        expires: false,
+        sameSite: 'none',
+        secure: true
     };
     if (process.env.NODE_ENV === "production")
         cookieOptions.secure = true;
+    console.log("SETTING COOKIE");
     res
         .status(statusCode)
         .cookie("jwt", token, cookieOptions)
         .json({
         status: "success",
         data: { user },
-        exists: true
+        exists: true,
+        token: token
     });
 };
 const jwtIsValid = (jwtSubject) => {
@@ -29,7 +33,8 @@ const jwtIsValid = (jwtSubject) => {
     }
 };
 const verifyJwt = (req, res) => {
-    const jwtSubject = req.cookies.jwt;
+    const jwtSubject = req.cookies.jwt ? req.cookies.jwt : req.query.jwt;
+    console.log(jwtSubject);
     if (!jwtSubject)
         throw Error('JWT invalid');
     const verifiedJwt = jwt.verify(jwtSubject, process.env.JWT_SECRET);

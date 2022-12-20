@@ -5,8 +5,10 @@ import config from '../config';
 
 function hasJwt(next: Function) {
     let jwt: any;
-    axios.get(config.backend_url + '/user/verify', config.withCookies)
+    axios.get(config.backend_url + '/user/verify?' + document.cookie, config.withCookies)
     .then((val) => {
+        console.log('ISVALID')
+        console.log(val.data.isValid)
         // User MAY have an account
         if (val.data.isValid) {
             // User DOES have an account
@@ -17,13 +19,15 @@ function hasJwt(next: Function) {
     })
     .catch((err) => {
         // User definitely does not have an account
-        if (err) console.log(err);
+        if (err) {
+            console.log(err);
+        }
     })
     .then(() => next ? next(jwt) : {});
 }
 
 async function getUser(): Promise<any> {
-    const data = await axios.get(config.backend_url + '/user/verify', config.withCookies);
+    const data = await axios.get(config.backend_url + '/user/verify?' + document.cookie, config.withCookies);
 
     return data.data.user;
 }
