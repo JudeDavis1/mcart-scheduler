@@ -7,7 +7,8 @@ import {
     updateUser,
     deleteUser,
     userExists,
-    userVerify
+    userVerify,
+    getId
 } from '../controllers/userController.js';
 
 // import { verifyUser } from "../controllers/authController.js";
@@ -23,6 +24,7 @@ router.route("/user/update").patch(updateUser);
 router.route("/user/delete").delete(deleteUser);
 router.route("/user/exists").post(userExists);
 router.route("/user/verify").get(userVerify);
+router.route("/user/getId").get(getId);
 
 
 export default router;

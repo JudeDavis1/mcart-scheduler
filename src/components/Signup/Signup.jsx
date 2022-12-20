@@ -9,7 +9,7 @@ import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 
 import './Signup.css';
 import MAlert from '../MAlert/MAlert';
-import transport from '../../controllers/signupController.js';
+import transport from '../../controllers/signupController';
 
 
 const Item = styled(Paper)(({theme}) => ({
@@ -69,7 +69,7 @@ function Signup() {
 					<Grid item><TextField onChange={(e) => setCongregation(e.target.value.trim())} className='congregation-field signup-field' label='Congregation' /></Grid>
 
 					<Grid item>
-						<TextField select label='User Type' className="signup-field" input onChange={(e) => setUserType(e.target.value)} value={userType} variant='standard'>
+						<TextField select label='User Type' className="signup-field" onChange={(e) => setUserType(e.target.value)} value={userType} variant='standard'>
 							<MenuItem value="publisher">Publisher</MenuItem>
 							<MenuItem value="congAdmin">Congregation Admin</MenuItem>
 						</TextField>

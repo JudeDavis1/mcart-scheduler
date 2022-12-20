@@ -1,16 +1,27 @@
 import axios from 'axios';
 import sha256 from 'crypto-js/sha256.js';
 import emailValidator from 'email-validator';
+import { UserType } from '../backend/models/userModel.js';
 
 import config from '../config.js';
 
 
+interface UserInfoSignup {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    retypedPassword: string;
+    userType: UserType;
+    congregation: string;
+}
+
 function transport(
-    info,
-    setShouldSpin,
-    setShouldShow,
-    setStatus,
-    setMsg
+    info: UserInfoSignup,
+    setShouldSpin: Function,
+    setShouldShow: Function,
+    setStatus: Function,
+    setMsg: Function
 ) {
     let { firstName, lastName, email, password, userType, congregation } = info;
 
@@ -24,7 +35,7 @@ function transport(
     // Prepare data for transport
     const name = toTitleCase(firstName + ' ' + lastName);
     const hashedPassword = sha256(password).toString();
-    password = undefined;
+    password = '';
 
     axios.post(config.backend_url + 'user/create', {
         name,
@@ -39,7 +50,7 @@ function transport(
             setMsg(val.data.data);
 
             setTimeout(() => {
-                window.location = '/login';
+                window.location.href = '/login';
             }, 700);
         }
     }).catch((val) => {
@@ -52,10 +63,10 @@ function transport(
 }
 
 function isInvalid(
-    info,
-    setStatus,
-    setShouldShow,
-    setMsg
+    info: UserInfoSignup,
+    setStatus: Function,
+    setShouldShow: Function,
+    setMsg: Function
 ) {
     let messages = [];
 
@@ -83,7 +94,7 @@ function isInvalid(
 
 // Convert to title case e.g.
 // hello, world => Hello, World
-function toTitleCase(string) {
+function toTitleCase(string: string) {
     const arr = string.split(' ');
     var newStr = [];
 

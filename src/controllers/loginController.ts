@@ -2,29 +2,21 @@ import axios from 'axios';
 import sha256 from 'crypto-js/sha256.js';
 
 import config from '../config.js';
+import { hasJwt } from './jwtController';
 
 
-const withCookies = { withCredentials: true, credentials: 'include' };
-
-function hasJwt() {
-    axios.get(config.backend_url + '/user/verify', withCookies)
-    .then((val) => {
-        // User MAY have an account
-        console.log(val.data.isValid); 
-        if (val.data.isValid) {
-            // User DOES have an account
-            // TODO:
-            console.log("User IS VALID");
-            window.location.href = '/dashboard'
-        }
-    })
-    .catch((err) => {
-        // User definitely does not have an account
-        if (err) console.log(err);
-    });
+interface UserInfoLogin {
+    email: string,
+    password: string
 }
 
-function transport(info, setStatus, setMsg, setShouldShow, setShouldSpin) {
+function transport(
+    info: UserInfoLogin,
+    setStatus: Function,
+    setMsg: Function,
+    setShouldShow: Function,
+    setShouldSpin: Function
+) {
     if (!(info.email && info.password)) {
         setStatus('danger');
         setMsg('Please enter an Email and Password');
@@ -36,16 +28,15 @@ function transport(info, setStatus, setMsg, setShouldShow, setShouldSpin) {
 
     // SHA-2 hash for transport
     const hashedPassword = sha256(password).toString();
-    password = undefined;  // If memory is dumped, password will not show xD
-
-    // Verify user exists and is authenticated
-    axios.post(config.backend_url + 'user/exists', { email, hashedPassword }, withCookies)
+    password = '';  // If memory is dumped, password will not show xD
+    
+    axios.post(config.backend_url + 'user/exists', { email, hashedPassword }, config.withCookies)
     .then((val) => {
         if (val.data.exists) {
             // User logged in successfully
             setStatus('success');
             setMsg('Logged In!');
-            hasJwt();
+            hasJwt(() => {});
         } else {
             setStatus("danger");
             setMsg("The details seem incorrect. Please try again");
@@ -66,6 +57,5 @@ function transport(info, setStatus, setMsg, setShouldShow, setShouldSpin) {
 }
 
 export {
-    transport,
-    hasJwt
+    transport
 };

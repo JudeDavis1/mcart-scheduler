@@ -8,15 +8,8 @@ import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 
 import './Login.css';
 import MAlert from '../MAlert/MAlert';
-import { transport, hasJwt } from '../../controllers/loginController.js';
-
-
-
-window.addEventListener("load", (event) => {
-	// Check if the user has logged in before
-	if (window.location.pathname != '/login') return;
-	
-});
+import { transport } from '../../controllers/loginController';
+import { hasJwt } from "../../controllers/jwtController";
 
 const Item = styled(Paper)(({theme}) => ({
     color: theme.palette.text.secondary,
@@ -24,8 +17,7 @@ const Item = styled(Paper)(({theme}) => ({
     opacity: '1',
     zIndex: 1
 }));
-const darkTheme = createTheme({ palette: { mode: 'dark' } });
-  
+const darkTheme = createTheme({ palette: { mode: 'dark' } });  
 
 function Login() {
 	var [email, setEmail] = useState('');

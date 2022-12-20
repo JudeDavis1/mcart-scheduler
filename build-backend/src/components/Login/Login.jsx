@@ -7,11 +7,7 @@ import TextField from '@mui/material/TextField';
 import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 import './Login.css';
 import MAlert from '../MAlert/MAlert';
-import { transport, hasJwt } from '../../controllers/loginController.js';
-window.addEventListener("load", (event) => {
-    if (window.location.pathname != '/login')
-        return;
-});
+import { transport, hasJwt } from '../../controllers/loginController';
 const Item = styled(Paper)(({ theme }) => ({
     color: theme.palette.text.secondary,
     padding: '20px',

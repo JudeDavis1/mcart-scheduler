@@ -11,7 +11,7 @@ function transport(info, setShouldSpin, setShouldShow, setStatus, setMsg) {
     }
     const name = toTitleCase(firstName + ' ' + lastName);
     const hashedPassword = sha256(password).toString();
-    password = undefined;
+    password = '';
     axios.post(config.backend_url + 'user/create', {
         name,
         email,
@@ -23,7 +23,7 @@ function transport(info, setShouldSpin, setShouldShow, setStatus, setMsg) {
             setStatus('success');
             setMsg(val.data.data);
             setTimeout(() => {
-                window.location = '/login';
+                window.location.href = '/login';
             }, 700);
         }
     }).catch((val) => {

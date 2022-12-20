@@ -1,9 +1,9 @@
 import jwt from "jsonwebtoken";
-const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET, {
+const signToken = (obj) => jwt.sign({ obj }, process.env.JWT_SECRET, {
     expiresIn: "66d",
 });
 const sendAuthToken = (user, statusCode, res) => {
-    const token = signToken(user._id.toString());
+    const token = signToken(user.toJSON());
     const cookieOptions = {
         httpOnly: true,
         expires: false
@@ -19,6 +19,15 @@ const sendAuthToken = (user, statusCode, res) => {
         exists: true
     });
 };
+const jwtIsValid = (jwtSubject) => {
+    try {
+        const verifiedJwt = jwt.verify(jwtSubject, process.env.JWT_SECRET);
+        return verifiedJwt;
+    }
+    catch (err) {
+        return false;
+    }
+};
 const verifyJwt = (req, res) => {
     const jwtSubject = req.cookies.jwt;
     if (!jwtSubject)
@@ -26,7 +35,7 @@ const verifyJwt = (req, res) => {
     const verifiedJwt = jwt.verify(jwtSubject, process.env.JWT_SECRET);
     res
         .status(200)
-        .json({ isValid: true });
+        .json({ isValid: true, user: verifiedJwt.obj });
     return verifiedJwt;
 };
-export { sendAuthToken, verifyJwt };
+export { sendAuthToken, verifyJwt, jwtIsValid };

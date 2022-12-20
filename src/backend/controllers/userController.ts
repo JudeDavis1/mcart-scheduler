@@ -3,7 +3,7 @@
 import bcrypt from 'bcryptjs';
 import { Request, Response } from "express";
 import { User } from "../models/userModel.js";
-import { sendAuthToken, verifyJwt } from './authController.js';
+import { jwtIsValid, sendAuthToken, verifyJwt } from './authController.js';
 
 
 // Later, we will need authentication when creating a new user.
@@ -48,7 +48,6 @@ async function getUser(
 ): Promise<void> {
   try {
     const { userId } = req.query;
-
     if (!userId) throw new Error("Please provide a user ID.");
 
     const receivedUser = await User.findById(userId);
@@ -165,11 +164,34 @@ async function userVerify(
 }
 
 
+
+async function getId(
+  req: Request,
+  res: Response,
+  next: Function
+) {
+  try {
+    const decodedToken: any = jwtIsValid(req.cookies.jwt);
+    if (decodedToken) {
+      res
+        .status(200)
+        .json({ userId: decodedToken.id });
+    }
+  } catch (error: any) {
+    res
+      .status(400)
+      .json({ error: error.message });
+    next(error)
+  }
+}
+
+
 export {
   createUser,
   getUser,
   updateUser,
   deleteUser,
   userExists,
-  userVerify
+  userVerify,
+  getId
 };

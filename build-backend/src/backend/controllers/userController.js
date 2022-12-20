@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { User } from "../models/userModel.js";
-import { sendAuthToken, verifyJwt } from './authController.js';
+import { jwtIsValid, sendAuthToken, verifyJwt } from './authController.js';
 async function createUser(req, res, next) {
     try {
         const { name, email, congregation, hashedPassword, ...rest } = req.body;
@@ -124,4 +124,20 @@ async function userVerify(req, res, next) {
         next(error);
     }
 }
-export { createUser, getUser, updateUser, deleteUser, userExists, userVerify };
+async function getId(req, res, next) {
+    try {
+        const decodedToken = jwtIsValid(req.cookies.jwt);
+        if (decodedToken) {
+            res
+                .status(200)
+                .json({ userId: decodedToken.id });
+        }
+    }
+    catch (error) {
+        res
+            .status(400)
+            .json({ error: error.message });
+        next(error);
+    }
+}
+export { createUser, getUser, updateUser, deleteUser, userExists, userVerify, getId };

@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import { Session } from "./sessionModel";
 
 
 enum UserType {
@@ -7,12 +8,13 @@ enum UserType {
 }
 
 interface IUser {
+  _id: mongoose.Types.ObjectId;
   name: String;
   email: String;
   hashedPassword: String;
   userType: UserType;
   congregation: String;
-  _id: mongoose.Types.ObjectId;
+  sessions: Array<typeof Session>;
 }
 
 // User blueprint
@@ -33,6 +35,11 @@ const userSchema = new Schema({
     type: String,
     enum: UserType,
     required: true
+  },
+  sessions: {
+    type: Array<typeof Session>,
+    required: false,
+    default: []
   },
   hashedPassword: {
     type: String,
