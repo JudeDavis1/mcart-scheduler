@@ -50,6 +50,7 @@ const jwtIsValid = (jwtSubject: string): boolean => {
 
 const verifyJwt = (req: Request, res: Response): any => {
   const jwtSubject = req.cookies.jwt ? req.cookies.jwt : req.query.jwt;
+  console.log(jwtSubject);
   if (!jwtSubject) throw Error('JWT invalid');
 
   // NOTE: Console will throw an error if the JWT is invalid
