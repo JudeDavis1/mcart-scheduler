@@ -8,8 +8,8 @@ import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 
 import './Login.css';
 import MAlert from '../MAlert/MAlert';
-import { transport, hasJwt } from '../../controllers/loginController';
-
+import { transport } from '../../controllers/loginController';
+import { hasJwt } from "../../controllers/jwtController";
 
 const Item = styled(Paper)(({theme}) => ({
     color: theme.palette.text.secondary,

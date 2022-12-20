@@ -2,31 +2,12 @@ import axios from 'axios';
 import sha256 from 'crypto-js/sha256.js';
 
 import config from '../config.js';
+import { hasJwt } from './jwtController';
 
 
 interface UserInfoLogin {
     email: string,
     password: string
-}
-
-function hasJwt(next: Function) {
-    let jwtValid = false;
-    axios.get(config.backend_url + '/user/verify', config.withCookies)
-    .then((val) => {
-        // User MAY have an account
-        if (val.data.isValid) {
-            // User DOES have an account
-            // TODO:
-            console.log("User IS VALID");
-            window.location.href = '/dashboard'
-        }
-        jwtValid = val.data.isValid;
-    })
-    .catch((err) => {
-        // User definitely does not have an account
-        if (err) console.log(err);
-    })
-    .then(() => next ? next(jwtValid) : {});
 }
 
 function transport(
@@ -76,6 +57,5 @@ function transport(
 }
 
 export {
-    transport,
-    hasJwt
+    transport
 };

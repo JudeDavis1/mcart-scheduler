@@ -5,8 +5,8 @@ import { Request, Response } from "express";
 // TODO:
 // - Check if user has already got a JWT, then let them through.
 
-const signToken = (id: string): string | any => jwt.sign(
-  { id }, process.env.JWT_SECRET!, {
+const signToken = (obj: string): string | any => jwt.sign(
+  { obj }, process.env.JWT_SECRET!, {
   expiresIn: "66d",
 });
 
@@ -17,7 +17,7 @@ const sendAuthToken = (
   res: Response
 ): void => {
   // generating the token with the payload (which is the user's mongodb id)
-  const token: string = signToken(user._id.toString());
+  const token: string = signToken(user.toJSON());
   const cookieOptions: any = {
     httpOnly: true,
     expires: false
@@ -52,7 +52,7 @@ const verifyJwt = (req: Request, res: Response): any => {
   const verifiedJwt: any = jwt.verify(jwtSubject, process.env.JWT_SECRET!);
   res
     .status(200)
-    .json({ isValid: true });
+    .json({ isValid: true, user: verifiedJwt.obj });
   
   return verifiedJwt;
 }
