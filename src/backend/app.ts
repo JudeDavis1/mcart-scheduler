@@ -22,8 +22,6 @@ app.use((req: Request, res: Response, next: Function) => {
         "Origin, X-Requested-With, Content-Type, Accept",
     );
 	res.header("Access-Control-Allow-Credentials", "true");
-
-    next();
 });
 app.use(cookieParser());
 app.use(express.json());
