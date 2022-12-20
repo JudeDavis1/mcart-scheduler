@@ -1,22 +1,7 @@
 import axios from 'axios';
 import sha256 from 'crypto-js/sha256.js';
 import config from '../config.js';
-function hasJwt(next) {
-    let jwtValid = false;
-    axios.get(config.backend_url + '/user/verify', config.withCookies)
-        .then((val) => {
-        if (val.data.isValid) {
-            console.log("User IS VALID");
-            window.location.href = '/dashboard';
-        }
-        jwtValid = val.data.isValid;
-    })
-        .catch((err) => {
-        if (err)
-            console.log(err);
-    })
-        .then(() => next ? next(jwtValid) : {});
-}
+import { hasJwt } from './jwtController';
 function transport(info, setStatus, setMsg, setShouldShow, setShouldSpin) {
     if (!(info.email && info.password)) {
         setStatus('danger');
@@ -49,4 +34,4 @@ function transport(info, setStatus, setMsg, setShouldShow, setShouldSpin) {
         setShouldSpin(false);
     });
 }
-export { transport, hasJwt };
+export { transport };
