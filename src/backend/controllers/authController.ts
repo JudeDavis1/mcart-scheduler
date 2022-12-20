@@ -25,6 +25,7 @@ const sendAuthToken = (
 
   if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
   // Save the cookie as 'jwt'
+  console.log("SETTING COOKIE")
   res
     .status(statusCode)
     .cookie("jwt", token, cookieOptions)
