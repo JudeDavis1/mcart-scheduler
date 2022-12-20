@@ -6,10 +6,12 @@ const sendAuthToken = (user, statusCode, res) => {
     const token = signToken(user.toJSON());
     const cookieOptions = {
         httpOnly: true,
-        expires: false
+        expires: false,
+        SameSite: 'None'
     };
     if (process.env.NODE_ENV === "production")
         cookieOptions.secure = true;
+    console.log("SETTING COOKIE");
     res
         .status(statusCode)
         .cookie("jwt", token, cookieOptions)
