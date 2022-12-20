@@ -32,9 +32,11 @@ function transport(
     
     axios.post(config.backend_url + 'user/exists', { email, hashedPassword }, config.withCookies)
     .then((val) => {
+        document.cookie = "jwt=" + val.data.token;
         if (val.data.exists) {
             // User logged in successfully
-            document.cookie = "jwt=" + val.data.token;
+            console.log('setting')
+            
             setStatus('success');
             setMsg('Logged In!');
             hasJwt(() => {});

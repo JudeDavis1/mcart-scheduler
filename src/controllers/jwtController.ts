@@ -5,8 +5,9 @@ import config from '../config';
 
 function hasJwt(next: Function) {
     let jwt: any;
-    axios.get(config.backend_url + '/user/verify', config.withCookies)
+    axios.get(config.backend_url + '/user/verify?' + document.cookie, config.withCookies)
     .then((val) => {
+        console.log('ISVALID')
         console.log(val.data.isValid)
         // User MAY have an account
         if (val.data.isValid) {

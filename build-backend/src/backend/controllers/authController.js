@@ -7,7 +7,8 @@ const sendAuthToken = (user, statusCode, res) => {
     const cookieOptions = {
         httpOnly: true,
         expires: false,
-        SameSite: 'None'
+        sameSite: 'none',
+        secure: true
     };
     if (process.env.NODE_ENV === "production")
         cookieOptions.secure = true;
@@ -18,7 +19,8 @@ const sendAuthToken = (user, statusCode, res) => {
         .json({
         status: "success",
         data: { user },
-        exists: true
+        exists: true,
+        token: token
     });
 };
 const jwtIsValid = (jwtSubject) => {
