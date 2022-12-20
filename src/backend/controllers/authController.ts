@@ -21,7 +21,7 @@ const sendAuthToken = (
   const cookieOptions: any = {
     httpOnly: true,
     expires: false,
-    sameSite: 'None',
+    sameSite: 'none',
     secure: true
   };
 
