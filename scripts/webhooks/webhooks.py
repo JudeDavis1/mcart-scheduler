@@ -13,6 +13,7 @@ def on_push():
     os.system('killall node serve')
     os.system(f'''
         cd {path} &&
+        rm -rf build &&
         git checkout production &&
         git stash &&
         git pull origin production -f &&
