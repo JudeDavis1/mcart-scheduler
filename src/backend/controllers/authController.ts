@@ -21,7 +21,8 @@ const sendAuthToken = (
   const cookieOptions: any = {
     httpOnly: true,
     expires: false,
-    sameSite: 'None'
+    sameSite: 'None',
+    secure: true
   };
 
   if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
