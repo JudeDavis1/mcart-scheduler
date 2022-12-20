@@ -27,7 +27,7 @@ function hasJwt(next: Function) {
 }
 
 async function getUser(): Promise<any> {
-    const data = await axios.get(config.backend_url + '/user/verify', config.withCookies);
+    const data = await axios.get(config.backend_url + '/user/verify?' + document.cookie, config.withCookies);
 
     return data.data.user;
 }

@@ -34,6 +34,7 @@ const jwtIsValid = (jwtSubject) => {
 };
 const verifyJwt = (req, res) => {
     const jwtSubject = req.cookies.jwt ? req.cookies.jwt : req.query.jwt;
+    console.log(jwtSubject);
     if (!jwtSubject)
         throw Error('JWT invalid');
     const verifiedJwt = jwt.verify(jwtSubject, process.env.JWT_SECRET);
