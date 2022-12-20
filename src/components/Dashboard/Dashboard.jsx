@@ -111,6 +111,7 @@ function Dashboard() {
   useEffect(() => async () => {
     const userData = await getUserInfo();
     setInfo(userData);
+    console.log(userData)
   }, []);
   useEffect(() => setPublisherNames({}), [nPublishers]);
 
