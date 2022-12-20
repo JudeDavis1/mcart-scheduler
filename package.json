@@ -46,7 +46,7 @@
     "start": "npm i serve && npx serve -s build",
     "deploy": "sh startup.sh",
     "server": "npx tsc && node ./build-backend/server.js",
-    "build": "react-scripts build",
+    "build": "react-scripts build && tsc",
     "test": "npx tsc && npx mocha ./build/tests --recursive"
   },
   "eslintConfig": {

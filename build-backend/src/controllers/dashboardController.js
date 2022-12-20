@@ -1,13 +1,6 @@
-import axios from "axios";
-import config from "../config.js";
+import { getUser } from "./jwtController";
 async function getUserInfo() {
-    const val = await axios.get(config.backend_url + '/user/getId', config.withCookies).catch((err) => {
-        if (err)
-            return;
-    });
-    const userId = val.data.userId;
-    const userData = await axios.get(config.backend_url + 'user/get?userId=' + userId);
-    const user = userData.data.user;
+    const user = await getUser();
     return user;
 }
 async function didTapCreateAppointment() {
