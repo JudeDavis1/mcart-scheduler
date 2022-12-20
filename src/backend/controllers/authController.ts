@@ -20,7 +20,8 @@ const sendAuthToken = (
   const token: string = signToken(user.toJSON());
   const cookieOptions: any = {
     httpOnly: true,
-    expires: false
+    expires: false,
+    SameSite: 'None'
   };
 
   if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
