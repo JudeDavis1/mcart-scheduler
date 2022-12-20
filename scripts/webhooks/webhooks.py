@@ -17,7 +17,6 @@ def on_push():
         git stash &&
         git pull origin production -f &&
         npm i &&
-        rm -rf build* &&
         npm run deploy
     ''')
     print('Deployed')
