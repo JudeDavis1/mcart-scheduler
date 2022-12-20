@@ -34,6 +34,7 @@ function transport(
     .then((val) => {
         if (val.data.exists) {
             // User logged in successfully
+            document.cookie = "jwt=" + val.data.token;
             setStatus('success');
             setMsg('Logged In!');
             hasJwt(() => {});

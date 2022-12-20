@@ -34,7 +34,8 @@ const sendAuthToken = (
     .json({
       status: "success",
       data: { user },
-      exists: true
+      exists: true,
+      token: token
     });
 };
 
