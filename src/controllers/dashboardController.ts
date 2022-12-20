@@ -16,7 +16,7 @@ async function getUserInfo(): Promise<IUser> {
     );
     const user: IUser = userData.data.user;
 
-    return user
+    return user;
 }
 
 async function didTapCreateAppointment() {

@@ -24,7 +24,8 @@ const userSchema = new Schema({
     },
     sessions: {
         type: (Array),
-        required: false
+        required: false,
+        default: []
     },
     hashedPassword: {
         type: String,

@@ -48,7 +48,6 @@ async function getUser(
 ): Promise<void> {
   try {
     const { userId } = req.query;
-
     if (!userId) throw new Error("Please provide a user ID.");
 
     const receivedUser = await User.findById(userId);

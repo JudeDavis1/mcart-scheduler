@@ -35,7 +35,16 @@ const AppointmentCreationPopover = (data, hooks, didSubmit) => {
               defaultValue={2}
               style={{width: "250px"}}
               label="Number of publishers"
-              onChange={(value) => hooks.setNPublishers(value.target.value)}>
+              onChange={(value) => {
+                hooks.setNPublishers(value.target.value);
+
+                const nNames = document.getElementsByClassName('publisher-name').length;
+                for (let i = 1; i < data.nPublishers; i++)
+                {
+                  const element = document.getElementById(`${i}`);
+                  element.value = '';
+                }
+              }}>
               {[2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => {
                 return <MenuItem value={i}>{i}</MenuItem>
               })}
@@ -45,15 +54,30 @@ const AppointmentCreationPopover = (data, hooks, didSubmit) => {
             let publishers = [];
             for (let i = 1; i < data.nPublishers; i++) {
               publishers.push(
-                <Grid item><TextField className='publisher-name' label={`Person ${i + 1}'s name`} /></Grid>
+                <Grid item>
+                  <TextField
+                    id={`${i}`}
+                    onBlur={(e) => {
+                      const newObj = data.publisherNames;
+                      if (!e.target.value)
+                        delete newObj[e.target.id];
+                      newObj[e.target.id] = e.target.value;
+
+                      e.target.value = newObj[e.target.id];
+                      // Concat new values whilst removing duplicates
+                      hooks.setPublisherNames(newObj);
+                    }}
+                    className="publisher-name"
+                    label={`Person ${i + 1}'s name`} />
+                </Grid>
               );
             }
             return publishers;
           })()}
           <Grid item>
             <Button onClick={() => {
-              const elements = document.getElementsByClassName("publisher-name");
-              // TODO: Add element text to publisherNames hook
+              const names = Object.values(data.publisherNames);
+              console.log(names);
             }}>Create</Button>
           </Grid>
         </Grid>
@@ -63,6 +87,14 @@ const AppointmentCreationPopover = (data, hooks, didSubmit) => {
 };
 
 function Dashboard() {
+  const initialBtnState = (
+    <>Appointment {<Add />}</>
+  );
+
+  const [nPublishers, setNPublishers] = useState(0);
+  const [publisherNames, setPublisherNames] = useState({});
+  const [info, setInfo] = useState({});
+  const [appointmentText, setAppointmentText] = useState(initialBtnState);
   const [location, setLocation] = useState('');
   const [time, setTime] = useState((() => {
     const date = new Date();
@@ -71,22 +103,16 @@ function Dashboard() {
     date.setMinutes(0);
     date.setDate(1);
     date.setMonth(1);
-    return date.getTime()
+    
+    return date.getTime();
   })());
-  const [nPublishers, setNPublishers] = useState(0);
-  const [publisherNames, setPublisherNames] = useState([]);
-  console.log(publisherNames)
-  const initialBtnState = (
-    <>Appointment {<Add />}</>
-  );
-  const [info, setInfo] = useState({});
-  const [appointmentText, setAppointmentText] = useState(initialBtnState);
 
   // Load user data and fill 'info'
   useEffect(() => async () => {
-      const userData = await getUserInfo();
-      setInfo(userData);
-    }, []);
+    const userData = await getUserInfo();
+    setInfo(userData);
+  }, []);
+  useEffect(() => setPublisherNames({}), [nPublishers]);
 
   return (
     <div className="Dashboard app-sub-component">
