@@ -108,10 +108,12 @@ function Dashboard() {
   })());
 
   // Load user data and fill 'info'
-  useEffect(() => async () => {
-    const userData = await getUserInfo();
-    setInfo(userData);
-    console.log(userData)
+  useEffect(() => {
+    async function load() {
+      const userData = await getUserInfo();
+      setInfo(userData);
+    }
+    load();
   }, []);
   useEffect(() => setPublisherNames({}), [nPublishers]);
 
