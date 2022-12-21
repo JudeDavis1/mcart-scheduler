@@ -7,7 +7,6 @@ import { getUser } from "./jwtController";
 
 async function getUserInfo(): Promise<IUser> {
     const user = await getUser();
-    console.log(user);
     return user;
 }
 
