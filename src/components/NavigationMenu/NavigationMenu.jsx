@@ -3,11 +3,9 @@ import { Link } from 'react-router-dom';
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
-// import NavDropdown from 'react-bootstrap/NavDropdown';
+
 
 import './NavigationMenu.css';
-import { useEffect, useState } from 'react';
-import { hasJwt } from '../../controllers/loginController';
 
 
 function NavigationMenu(props) {

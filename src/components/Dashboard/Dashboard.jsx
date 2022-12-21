@@ -37,11 +37,10 @@ const AppointmentCreationPopover = (data, hooks, didSubmit) => {
               label="Number of publishers"
               onChange={(value) => {
                 hooks.setNPublishers(value.target.value);
-
-                const nNames = document.getElementsByClassName('publisher-name').length;
+                // Clear the contents of the publisher name fields
                 for (let i = 1; i < data.nPublishers; i++)
                 {
-                  const element = document.getElementById(`${i}`);
+                  const element = document.getElementById(`publisher-name${i}`);
                   element.value = '';
                 }
               }}>
@@ -56,7 +55,7 @@ const AppointmentCreationPopover = (data, hooks, didSubmit) => {
               publishers.push(
                 <Grid item>
                   <TextField
-                    id={`${i}`}
+                    id={`publisher-name${i}`}
                     onBlur={(e) => {
                       const newObj = data.publisherNames;
                       if (!e.target.value)
@@ -78,6 +77,7 @@ const AppointmentCreationPopover = (data, hooks, didSubmit) => {
             <Button onClick={() => {
               const names = Object.values(data.publisherNames);
               console.log(names);
+              didSubmit();
             }}>Create</Button>
           </Grid>
         </Grid>
@@ -125,7 +125,8 @@ function Dashboard() {
         overlay={AppointmentCreationPopover(
           {location, time, publisherNames, nPublishers},
           {setLocation, setTime, setPublisherNames, setNPublishers},
-          () => didTapCreateAppointment())}
+          () => didTapCreateAppointment())
+        }
         placement='bottom'
         onEnter={() => setAppointmentText('Cancel')}
         onExit={() => setAppointmentText(initialBtnState)}>

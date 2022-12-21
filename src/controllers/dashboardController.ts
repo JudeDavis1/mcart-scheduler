@@ -1,6 +1,3 @@
-import axios from "axios";
-
-import config from "../config.js";
 import { IUser } from "../backend/models/userModel.js";
 import { getUser } from "./jwtController";
 
