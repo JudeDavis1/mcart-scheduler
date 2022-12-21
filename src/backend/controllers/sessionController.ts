@@ -2,6 +2,8 @@
 
 import { Session } from "../models/sessionModel.js";
 import { Request, Response } from "express";
+import { User } from "../models/userModel.js";
+import { ObjectId } from "mongoose";
 
 
 async function createSession(
@@ -10,20 +12,28 @@ async function createSession(
   next: Function
 ): Promise<void> {
   try {
-    console.log('ehl;lodifhsds')
     // time: milliseconds since 1970
     const { place, members, time } = req.body;
-
+    
     // Validate session attributes
     const sessionInvalid = !place || !members || !time;
     if (sessionInvalid) throw new Error("Invalid session");
+    
+    const getId = async (name: string): Promise<any> => {
+      const user = await User.findOne({ name });
+      return user?._id ? user?._id : null;
+    };
+    let userIds: Array<any> = []
+    for (let name of members) {
+      userIds.push(await getId(name));
+    }
 
     const timeObj = new Date();
     timeObj.setTime(parseInt(time));
 
     const createdSession = await Session.create({
       place: place,
-      members: members,
+      members: userIds,
       time: timeObj
     });
 
@@ -37,7 +47,6 @@ async function createSession(
     next(error);
   }
 }
-
 
 async function getSession(
   req: Request,

@@ -4,8 +4,6 @@ import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import './NavigationMenu.css';
-import { useEffect, useState } from 'react';
-import { hasJwt } from '../../controllers/loginController';
 function NavigationMenu(props) {
     return (<div className='navigation-menu'>
       <Navbar collapseOnSelect expand='sm' fixed='top' bg='dark' variant='dark'>

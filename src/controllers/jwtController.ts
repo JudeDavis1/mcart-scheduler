@@ -28,11 +28,11 @@ function hasJwt(next: Function) {
 }
 
 async function getUser(): Promise<any> {
-    const data = await axios.get(
+    const request = await axios.get(
         config.backend_url + '/user/verify?' + document.cookie,
-        config.withCookies  // Just in case 
+        config.withCookies  // Just in case of cookie HTTPS errors
     );
-    return data.data.user;
+    return request.data.user;
 }
 
 export {

@@ -19,7 +19,7 @@ const AppointmentCreationPopover = (data, hooks, didSubmit) => {
       <Popover.Header>Create Appointment</Popover.Header>
       <Popover.Body style={{padding: "10px"}}>
         <Grid container spacing={2}>
-          <Grid item><TextField label="Location" onChange={hooks.setLocation} /></Grid>
+          <Grid item><TextField label="place" onChange={(e) => hooks.setPlace(e.target.value)} /></Grid>
           <Grid item>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DateTimePicker
@@ -57,14 +57,14 @@ const AppointmentCreationPopover = (data, hooks, didSubmit) => {
                   <TextField
                     id={`publisher-name${i}`}
                     onBlur={(e) => {
-                      const newObj = data.publisherNames;
+                      const newObj = data.members;
                       if (!e.target.value)
                         delete newObj[e.target.id];
                       newObj[e.target.id] = e.target.value;
 
                       e.target.value = newObj[e.target.id];
                       // Concat new values whilst removing duplicates
-                      hooks.setPublisherNames(newObj);
+                      hooks.setMembers(newObj);
                     }}
                     className="publisher-name"
                     label={`Person ${i + 1}'s name`} />
@@ -75,8 +75,7 @@ const AppointmentCreationPopover = (data, hooks, didSubmit) => {
           })()}
           <Grid item>
             <Button onClick={() => {
-              const names = Object.values(data.publisherNames);
-              console.log(names);
+              const names = Object.values(data.members);
               didSubmit();
             }}>Create</Button>
           </Grid>
@@ -92,17 +91,14 @@ function Dashboard() {
   );
 
   const [nPublishers, setNPublishers] = useState(0);
-  const [publisherNames, setPublisherNames] = useState({});
+  const [members, setMembers] = useState({});
   const [info, setInfo] = useState({});
   const [appointmentText, setAppointmentText] = useState(initialBtnState);
-  const [location, setLocation] = useState('');
+  const [place, setPlace] = useState('');
   const [time, setTime] = useState((() => {
     const date = new Date();
-    date.setFullYear(2023);
     date.setHours(0);
     date.setMinutes(0);
-    date.setDate(1);
-    date.setMonth(1);
     
     return date.getTime();
   })());
@@ -115,7 +111,7 @@ function Dashboard() {
     }
     load();
   }, []);
-  useEffect(() => setPublisherNames({}), [nPublishers]);
+  useEffect(() => setMembers({}), [nPublishers]);
 
   return (
     <div className="Dashboard app-sub-component">
@@ -123,9 +119,9 @@ function Dashboard() {
       <OverlayTrigger
         trigger='click'
         overlay={AppointmentCreationPopover(
-          {location, time, publisherNames, nPublishers},
-          {setLocation, setTime, setPublisherNames, setNPublishers},
-          () => didTapCreateAppointment())
+          {place, time, members, nPublishers},
+          {setPlace, setTime, setMembers, setNPublishers},
+          () => didTapCreateAppointment({place, members: Object.values(members), time}))
         }
         placement='bottom'
         onEnter={() => setAppointmentText('Cancel')}

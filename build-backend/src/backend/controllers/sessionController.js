@@ -1,16 +1,25 @@
 import { Session } from "../models/sessionModel.js";
+import { User } from "../models/userModel.js";
 async function createSession(req, res, next) {
     try {
-        console.log('ehl;lodifhsds');
         const { place, members, time } = req.body;
         const sessionInvalid = !place || !members || !time;
         if (sessionInvalid)
             throw new Error("Invalid session");
+        const getId = async (name) => {
+            const user = await User.findOne({ name });
+            return user?._id ? user?._id : null;
+        };
+        let userIds = [];
+        for (let name of members) {
+            userIds.push(await getId(name));
+        }
+        console.log(userIds);
         const timeObj = new Date();
         timeObj.setTime(parseInt(time));
         const createdSession = await Session.create({
             place: place,
-            members: members,
+            members: userIds,
             time: timeObj
         });
         res
