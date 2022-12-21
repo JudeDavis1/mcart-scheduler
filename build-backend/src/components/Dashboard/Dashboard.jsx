@@ -24,9 +24,8 @@ const AppointmentCreationPopover = (data, hooks, didSubmit) => {
           <Grid item>
             <TextField select defaultValue={2} style={{ width: "250px" }} label="Number of publishers" onChange={(value) => {
             hooks.setNPublishers(value.target.value);
-            const nNames = document.getElementsByClassName('publisher-name').length;
             for (let i = 1; i < data.nPublishers; i++) {
-                const element = document.getElementById(`${i}`);
+                const element = document.getElementById(`publisher-name${i}`);
                 element.value = '';
             }
         }}>
@@ -39,7 +38,7 @@ const AppointmentCreationPopover = (data, hooks, didSubmit) => {
             let publishers = [];
             for (let i = 1; i < data.nPublishers; i++) {
                 publishers.push(<Grid item>
-                  <TextField id={`${i}`} onBlur={(e) => {
+                  <TextField id={`publisher-name${i}`} onBlur={(e) => {
                         const newObj = data.publisherNames;
                         if (!e.target.value)
                             delete newObj[e.target.id];
@@ -55,6 +54,7 @@ const AppointmentCreationPopover = (data, hooks, didSubmit) => {
             <Button onClick={() => {
             const names = Object.values(data.publisherNames);
             console.log(names);
+            didSubmit();
         }}>Create</Button>
           </Grid>
         </Grid>

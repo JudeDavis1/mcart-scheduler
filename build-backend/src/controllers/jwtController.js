@@ -4,8 +4,6 @@ function hasJwt(next) {
     let jwt;
     axios.get(config.backend_url + '/user/verify?' + document.cookie, config.withCookies)
         .then((val) => {
-        console.log('ISVALID');
-        console.log(val.data.isValid);
         if (val.data.isValid) {
             jwt = val.data.user;
             window.location.href = '/dashboard';
