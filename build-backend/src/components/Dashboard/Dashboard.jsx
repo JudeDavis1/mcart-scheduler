@@ -77,10 +77,12 @@ function Dashboard() {
         date.setMonth(1);
         return date.getTime();
     })());
-    useEffect(() => async () => {
-        const userData = await getUserInfo();
-        setInfo(userData);
-        console.log(userData);
+    useEffect(() => {
+        async function load() {
+            const userData = await getUserInfo();
+            setInfo(userData);
+        }
+        load();
     }, []);
     useEffect(() => setPublisherNames({}), [nPublishers]);
     return (<div className="Dashboard app-sub-component">
