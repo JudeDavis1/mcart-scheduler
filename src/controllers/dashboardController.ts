@@ -66,11 +66,15 @@ async function loadSessions(info: any): Promise<any> {
     return sessionObjects;
   }
 
+async function deleteSessionItem(idx: number) {
+
+}
 
 export {
     getUserInfo,
     didTapCreateAppointment,
     getSession,
     getUserFromSession,
-    loadSessions
+    loadSessions,
+    deleteSessionItem
 };

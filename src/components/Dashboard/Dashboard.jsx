@@ -1,5 +1,5 @@
 import Card from "react-bootstrap/Card";
-import { Add } from "@mui/icons-material";
+import { Add, Delete } from "@mui/icons-material";
 import Button from "react-bootstrap/Button";
 import { useState, useEffect } from "react";
 import Popover from "react-bootstrap/Popover";
@@ -11,7 +11,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import Spinner from "react-bootstrap/Spinner";
 
 import "./Dashboard.css";
-import { getUserInfo, didTapCreateAppointment, loadSessions } from "../../controllers/dashboardController";
+import { getUserInfo, didTapCreateAppointment, loadSessions, deleteSessionItem } from "../../controllers/dashboardController";
 
 
 const AppointmentCreationPopover = (data, hooks, didSubmit) => {
@@ -143,13 +143,14 @@ function Dashboard() {
       </OverlayTrigger>
 
       <div className="dashboard-session-card-container">
-      {!sessionsLoaded && <Spinner animation="border" color="#FFFFFF" />}
+        {!sessionsLoaded && <Spinner animation="border" color="#FFFFFF" />}
         {sessionsLoaded &&
-          currentSessions.map((session) => {
+          currentSessions.map((session, sessionIdx) => {
             const time = new Date(session.time);
             const months = ["Jan", "Feb", "March", "Apr", "May", "Jun", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
             return (
-              <Card className="dashboard-session-card" onClick={() => {}}>
+              <Card className="dashboard-session-card" id={`session-card-${sessionIdx}`}>
+                <Delete onClick={() => deleteSessionItem(sessionIdx)} />
                 <Card.Body>
                   <Card.Subtitle>{`${time.getDate()} ${months[time.getMonth()]} ${time.getFullYear()}`}</Card.Subtitle>
                   <Card.Text>{session.place}</Card.Text>
