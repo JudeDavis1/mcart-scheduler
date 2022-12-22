@@ -53,7 +53,11 @@ async function getUser(
     const receivedUser = await User.findById(userId);
     if (!receivedUser) throw new Error("User doesn't exist.");
 
-    res.status(200).json({ data: "Found user!", user: receivedUser });
+    res
+      .status(200)
+      .json({ data: "Found user!",
+        user: receivedUser
+      });
   } catch (error: any) {
     res
       .status(400)
@@ -133,7 +137,6 @@ async function userExists(
     if (user!.hashedPassword == newHash) {
       // This will handle the JWT auth
       const user = await User.findOne({ email });
-      if (req.cookies.jwt) return;
 
       // If there isn't a 'jwt' cookie, then create one
       await sendAuthToken(user, 200, res);
@@ -142,6 +145,25 @@ async function userExists(
     res
       .status(400)
       .json({ error: "Couldn't find user: " + error.message });
+    next();
+  }
+}
+
+async function updateJwt(
+  req: Request,
+  res: Response,
+  next: Function
+): Promise<void> {
+  try {
+    const { userId } = req.body;
+    const foundUser = await User.findOne({ _id: userId });
+
+    if (!foundUser) throw new Error("User ID invalid or doesn't exist");
+    await sendAuthToken(foundUser, 200, res);
+  } catch (error: any) {
+    res
+      .status(400)
+      .json({ error: "Error: " + error.message });
     next();
   }
 }
@@ -193,5 +215,6 @@ export {
   deleteUser,
   userExists,
   userVerify,
-  getId
+  getId,
+  updateJwt
 };

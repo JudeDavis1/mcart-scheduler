@@ -1,8 +1,10 @@
 import axios from "axios";
 
 import config from "../config";
-import { getUser } from "./jwtController";
+import { getUser, updateUser } from "./jwtController";
 import { IUser } from "../backend/models/userModel.js";
+import { toTitleCase } from "../utils/strUtils";
+import { ISession } from "../backend/models/sessionModel";
 
 
 interface SessionInfo {
@@ -13,25 +15,62 @@ interface SessionInfo {
 
 async function getUserInfo(): Promise<IUser> {
     const user = await getUser();
-    return user;
+    await updateUser();
+
+    return await getUser();
 }
 
 async function didTapCreateAppointment(
     info: SessionInfo
 ): Promise<boolean> {
+    // Add the current user to the members
+    const user = await getUser();
+    info.members.push(user.name);
+    info.members = info.members.map(toTitleCase);
     // Create the session
-    console.log(info)
     const request = await axios.post(config.backend_url + '/session/create', info);
     const createdSession = request.data.session;
-    console.log(createdSession)
-    if (createdSession) {
-        return true;
-    }
-    return false;
+    
+    if (!createdSession) return false;
+    
+    return true;
 }
+
+async function getSession(id: string): Promise<any> {
+    const request = await axios.get(
+        config.backend_url + "/session/get?sessionId=" + id
+    );
+    return request.data.session;
+}
+
+async function getUserFromSession(id: string): Promise<IUser> {
+    const request = await axios.get(
+        config.backend_url + "/user/get?userId=" + id
+    );
+    return request.data.user;
+}
+
+
+async function loadSessions(info: any): Promise<any> {
+    const sessionObjects = [];
+    for (let sessionId of info.sessions) {
+      const users = [];
+      const object = await getSession(sessionId.toString());
+      for (let userId of object.members) {
+        users.push(await getUserFromSession(userId.toString()));
+      }
+      object.members = users;
+      sessionObjects.push(object);
+    }
+
+    return sessionObjects;
+  }
 
 
 export {
     getUserInfo,
-    didTapCreateAppointment
+    didTapCreateAppointment,
+    getSession,
+    getUserFromSession,
+    loadSessions
 };

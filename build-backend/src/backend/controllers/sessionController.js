@@ -1,8 +1,14 @@
 import { Session } from "../models/sessionModel.js";
 import { User } from "../models/userModel.js";
+async function hasExistingTime(sessionTime) {
+    const sessionsWithTime = await Session.find({ time: sessionTime });
+    return Boolean(sessionsWithTime.length);
+}
 async function createSession(req, res, next) {
     try {
         const { place, members, time } = req.body;
+        if (await hasExistingTime(parseInt(time)))
+            throw new Error("An appointment at this time already exists!");
         const sessionInvalid = !place || !members || !time;
         if (sessionInvalid)
             throw new Error("Invalid session");
@@ -12,15 +18,27 @@ async function createSession(req, res, next) {
         };
         let userIds = [];
         for (let name of members) {
-            userIds.push(await getId(name));
+            const id = await getId(name);
+            if (id)
+                userIds.push(id);
         }
-        console.log(userIds);
+        if (userIds.length < 2)
+            throw new Error("Must be more than 2 members");
         const timeObj = new Date();
         timeObj.setTime(parseInt(time));
         const createdSession = await Session.create({
             place: place,
             members: userIds,
             time: timeObj
+        });
+        Session.findOne({ _id: createdSession._id })
+            .populate("members")
+            .exec((err, session) => {
+            if (err)
+                console.log(err.message);
+            session?.members.forEach(async (member) => {
+                await User.findOneAndUpdate({ _id: member._id }, { $push: { sessions: session._id } });
+            });
         });
         res
             .status(200)
@@ -29,7 +47,7 @@ async function createSession(req, res, next) {
     catch (error) {
         res
             .status(400)
-            .json({ error: "Couldn't create session. Try checking your data." });
+            .json({ error: "Couldn't create session. " + error.message });
         next(error);
     }
 }

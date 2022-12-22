@@ -5,7 +5,7 @@ import mongoose, { Schema } from "mongoose";
 
 interface ISession {
     _id: mongoose.Types.ObjectId;
-    place: String;
+    place: string;
     members: Array<mongoose.Types.ObjectId>;
     time: string;
 }

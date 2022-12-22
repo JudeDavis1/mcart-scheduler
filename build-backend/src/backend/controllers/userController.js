@@ -37,7 +37,11 @@ async function getUser(req, res, next) {
         const receivedUser = await User.findById(userId);
         if (!receivedUser)
             throw new Error("User doesn't exist.");
-        res.status(200).json({ data: "Found user!", user: receivedUser });
+        res
+            .status(200)
+            .json({ data: "Found user!",
+            user: receivedUser
+        });
     }
     catch (error) {
         res
@@ -99,8 +103,6 @@ async function userExists(req, res, next) {
         const newHash = await bcrypt.hash(hashedPassword, user.salt);
         if (user.hashedPassword == newHash) {
             const user = await User.findOne({ email });
-            if (req.cookies.jwt)
-                return;
             await sendAuthToken(user, 200, res);
         }
         else
@@ -110,6 +112,22 @@ async function userExists(req, res, next) {
         res
             .status(400)
             .json({ error: "Couldn't find user: " + error.message });
+        next();
+    }
+}
+async function updateJwt(req, res, next) {
+    try {
+        const { userId } = req.body;
+        const foundUser = await User.findOne({ _id: userId });
+        if (!foundUser)
+            throw new Error("User ID invalid or doesn't exist");
+        console.log(foundUser.toJSON());
+        await sendAuthToken(foundUser, 200, res);
+    }
+    catch (error) {
+        res
+            .status(400)
+            .json({ error: "Error: " + error.message });
         next();
     }
 }
@@ -140,4 +158,4 @@ async function getId(req, res, next) {
         next(error);
     }
 }
-export { createUser, getUser, updateUser, deleteUser, userExists, userVerify, getId };
+export { createUser, getUser, updateUser, deleteUser, userExists, userVerify, getId, updateJwt };

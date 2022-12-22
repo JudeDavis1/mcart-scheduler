@@ -8,9 +8,10 @@ import { Grid, MenuItem, TextField } from "@mui/material";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import Spinner from "react-bootstrap/Spinner";
 
 import "./Dashboard.css";
-import { getUserInfo, didTapCreateAppointment } from "../../controllers/dashboardController";
+import { getUserInfo, didTapCreateAppointment, loadSessions } from "../../controllers/dashboardController";
 
 
 const AppointmentCreationPopover = (data, hooks, didSubmit) => {
@@ -19,7 +20,7 @@ const AppointmentCreationPopover = (data, hooks, didSubmit) => {
       <Popover.Header>Create Appointment</Popover.Header>
       <Popover.Body style={{padding: "10px"}}>
         <Grid container spacing={2}>
-          <Grid item><TextField label="place" onChange={(e) => hooks.setPlace(e.target.value)} /></Grid>
+          <Grid item><TextField label="Location" onChange={(e) => hooks.setPlace(e.target.value)} /></Grid>
           <Grid item>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DateTimePicker
@@ -95,6 +96,7 @@ function Dashboard() {
   const [info, setInfo] = useState({});
   const [appointmentText, setAppointmentText] = useState(initialBtnState);
   const [place, setPlace] = useState('');
+  const [currentSessions, setCurrentSessions] = useState([{}]);
   const [time, setTime] = useState((() => {
     const date = new Date();
     date.setHours(0);
@@ -102,15 +104,23 @@ function Dashboard() {
     
     return date.getTime();
   })());
+  const [sessionsLoaded, setSessionsLoaded] = useState(false);
 
   // Load user data and fill 'info'
   useEffect(() => {
-    async function load() {
+    (async function load() {
       const userData = await getUserInfo();
       setInfo(userData);
-    }
-    load();
+    }());
   }, []);
+
+  useEffect(() => {
+    (async function () {
+      const sessionObjects = await loadSessions(info);
+      setCurrentSessions(sessionObjects);
+      setSessionsLoaded(true);
+    }());
+  }, [info]);
   useEffect(() => setMembers({}), [nPublishers]);
 
   return (
@@ -133,13 +143,17 @@ function Dashboard() {
       </OverlayTrigger>
 
       <div className="dashboard-session-card-container">
-        {info.sessions &&
-          info.sessions.map((sessions) => {
+      {!sessionsLoaded && <Spinner animation="border" color="#FFFFFF" />}
+        {sessionsLoaded &&
+          currentSessions.map((session) => {
+            const time = new Date(session.time);
+            const months = ["Jan", "Feb", "March", "Apr", "May", "Jun", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
             return (
-              <Card className="dashboard-session-card">
+              <Card className="dashboard-session-card" onClick={() => {}}>
                 <Card.Body>
-                  <Card.Title>Hello</Card.Title>
-                  <Card.Text>Hello again</Card.Text>
+                  <Card.Subtitle>{`${time.getDate()} ${months[time.getMonth()]} ${time.getFullYear()}`}</Card.Subtitle>
+                  <Card.Text>{session.place}</Card.Text>
+                  {session.members.map((user) => <Card.Text>{user.name}</Card.Text>)}
                 </Card.Body>
               </Card>
             );
