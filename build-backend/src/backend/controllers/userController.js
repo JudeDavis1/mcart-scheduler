@@ -103,6 +103,8 @@ async function userExists(req, res, next) {
         const newHash = await bcrypt.hash(hashedPassword, user.salt);
         if (user.hashedPassword == newHash) {
             const user = await User.findOne({ email });
+            if (req.cookies.jwt || req.body.token)
+                return;
             await sendAuthToken(user, 200, res);
         }
         else

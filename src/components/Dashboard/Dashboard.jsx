@@ -19,12 +19,14 @@ function Dashboard() {
     <>Appointment {<Add />}</>
   );
 
-  const [nPublishers, setNPublishers] = useState(0);
-  const [members, setMembers] = useState({});
   const [info, setInfo] = useState({});
-  const [appointmentText, setAppointmentText] = useState(initialBtnState);
   const [place, setPlace] = useState('');
+  const [reloadAll, setReloadAll] = useState();
+  const [members, setMembers] = useState({});
+  const [nPublishers, setNPublishers] = useState(0);
+  const [sessionsLoaded, setSessionsLoaded] = useState(false);
   const [currentSessions, setCurrentSessions] = useState([{}]);
+  const [appointmentText, setAppointmentText] = useState(initialBtnState);
   const [time, setTime] = useState((() => {
     const date = new Date();
     date.setHours(0);
@@ -32,15 +34,15 @@ function Dashboard() {
     
     return date.getTime();
   })());
-  const [sessionsLoaded, setSessionsLoaded] = useState(false);
 
   // Load user data and fill 'info'
   useEffect(() => {
     (async function load() {
       const userData = await getUserInfo();
+      console.log(userData.sessions);
       setInfo(userData);
     }());
-  }, []);
+  }, [reloadAll]);
 
   useEffect(() => {
     (async function () {
@@ -48,7 +50,7 @@ function Dashboard() {
       setCurrentSessions(sessionObjects);
       setSessionsLoaded(true);
     }());
-  }, [info]);
+  }, [info, reloadAll]);
   useEffect(() => setMembers({}), [nPublishers]);
 
   return (
@@ -78,7 +80,7 @@ function Dashboard() {
             const months = ["Jan", "Feb", "March", "Apr", "May", "Jun", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
             return (
               <Card className="dashboard-session-card" id={`session-card-${sessionIdx}`}>
-                <Delete onClick={() =>deleteSessionItem(currentSessions[sessionIdx]._id)} />
+                <Delete onClick={() => deleteSessionItem(currentSessions[sessionIdx]._id)} />
                 <Card.Body>
                   <Card.Subtitle>{`${time.getDate()} ${months[time.getMonth()]} ${time.getFullYear()}`}</Card.Subtitle>
                   <Card.Text>{session.place}</Card.Text>

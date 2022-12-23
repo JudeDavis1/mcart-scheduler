@@ -93,15 +93,22 @@ async function deleteSession(req, res, next) {
         const { sessionId } = req.query;
         if (!sessionId)
             throw new Error("Invalid ID");
-        await Session.deleteOne({ _id: sessionId });
+        const session = await Session.findById(sessionId).populate("members");
+        if (!session)
+            throw new Error("Session doesn't exist");
+        session.members.forEach(async (user) => {
+            const userSessions = user.sessions.filter((val) => val.toString() != session._id.toString());
+            await User.findByIdAndUpdate(user._id, { sessions: userSessions });
+        });
+        await Session.findByIdAndDelete(sessionId);
         res
             .status(200)
-            .json({ data: "Successfully delete session" });
+            .json({ data: "Successfully deleted session" });
     }
     catch (error) {
         res
             .status(400)
-            .json({ error: "Couldn't delete session" });
+            .json({ error: "Couldn't delete session: " + error.message });
         next(error);
     }
 }

@@ -137,19 +137,30 @@ async function deleteSession(
 ): Promise<void> {
   try {
     // Request should be in the format:
-    // { _id: ..., updates: { ... } }
     const { sessionId } = req.query;
     if (!sessionId) throw new Error("Invalid ID");
+    
+    const session = await Session.findById(sessionId).populate("members");
+    if (!session) throw new Error("Session doesn't exist");
+    
+    // For each user in the session members,
+    // we need to remove the id from the 'sessions' attribute
+    session.members.forEach(async (user: any) => {
+      // Filter the sessionId and add the new sessions to the user
+      const userSessions = user.sessions.filter(
+        (val: ObjectId) => val.toString() != session._id.toString()
+      );
+      await User.findByIdAndUpdate(user._id, { sessions: userSessions });
+    });
+    await Session.findByIdAndDelete(sessionId);
 
-    await Session.deleteOne({ _id: sessionId });
     res
       .status(200)
       .json({ data: "Successfully deleted session" });
-
-  } catch (error) {
+  } catch (error: any) {
     res
       .status(400)
-      .json({ error: "Couldn't delete session" });
+      .json({ error: "Couldn't delete session: " + error.message });
     next(error);
   }
 }

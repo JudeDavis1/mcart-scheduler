@@ -31,11 +31,14 @@ function hasJwt(next: Function=() => {}, redirect: boolean=true) {
 
 
 async function getUser(): Promise<IUser> {
-    hasJwt(() => {}, false);
+    hasJwt((jwt: string) => {
+
+    }, false);
     const request = await axios.get(
         config.backend_url + '/user/verify?' + document.cookie,
         config.withCookies  // Just in case of cookie HTTPS errors
     );
+    console.log(request.data.user.sessions)
     
     return request.data.user;
 }

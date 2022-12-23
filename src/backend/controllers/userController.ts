@@ -138,6 +138,7 @@ async function userExists(
       // This will handle the JWT auth
       const user = await User.findOne({ email });
 
+      if (req.cookies.jwt || req.body.token) return;
       // If there isn't a 'jwt' cookie, then create one
       await sendAuthToken(user, 200, res);
     } else throw new Error("Invalid password");
