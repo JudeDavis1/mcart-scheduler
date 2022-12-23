@@ -66,8 +66,12 @@ async function loadSessions(info: any): Promise<any> {
     return sessionObjects;
   }
 
-async function deleteSessionItem(idx: number) {
-
+async function deleteSessionItem(sessionId: string) {
+    console.log(sessionId)
+    const request = await axios.delete(
+        config.backend_url + "/session/delete?sessionId=" + sessionId
+    );
+    console.log(request.data.data);
 }
 
 export {

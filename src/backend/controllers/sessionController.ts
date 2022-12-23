@@ -141,10 +141,10 @@ async function deleteSession(
     const { sessionId } = req.query;
     if (!sessionId) throw new Error("Invalid ID");
 
-    await Session.deleteOne({ _id: sessionId })
+    await Session.deleteOne({ _id: sessionId });
     res
       .status(200)
-      .json({ data: "Successfully delete session" });
+      .json({ data: "Successfully deleted session" });
 
   } catch (error) {
     res

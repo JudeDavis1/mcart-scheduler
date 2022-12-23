@@ -78,7 +78,7 @@ function Dashboard() {
             const months = ["Jan", "Feb", "March", "Apr", "May", "Jun", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
             return (
               <Card className="dashboard-session-card" id={`session-card-${sessionIdx}`}>
-                <Delete onClick={() => deleteSessionItem(sessionIdx)} />
+                <Delete onClick={() =>deleteSessionItem(currentSessions[sessionIdx]._id)} />
                 <Card.Body>
                   <Card.Subtitle>{`${time.getDate()} ${months[time.getMonth()]} ${time.getFullYear()}`}</Card.Subtitle>
                   <Card.Text>{session.place}</Card.Text>
@@ -162,8 +162,10 @@ const onOutOfFocus = (event, data, hooks) => {
   // ID of the text field that maps to it's value
   const newObj = data.members;
   // If the text field doesn't contain a value, delete it's id
-  if (!event.target.value)
+  if (!event.target.value) {
     delete newObj[event.target.id];
+    return;
+  }
   newObj[event.target.id] = event.target.value;
 
   event.target.value = newObj[event.target.id];
