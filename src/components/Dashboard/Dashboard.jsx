@@ -14,78 +14,6 @@ import "./Dashboard.css";
 import { getUserInfo, didTapCreateAppointment, loadSessions, deleteSessionItem } from "../../controllers/dashboardController";
 
 
-const AppointmentCreationPopover = (data, hooks, didSubmit) => {
-  return (
-    <Popover>
-      <Popover.Header>Create Appointment</Popover.Header>
-      <Popover.Body style={{padding: "10px"}}>
-        <Grid container spacing={2}>
-          <Grid item><TextField label="Location" onChange={(e) => hooks.setPlace(e.target.value)} /></Grid>
-          <Grid item>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DateTimePicker
-                onChange={(value) => hooks.setTime(value.toDate().getTime())}
-                label="Time"
-                value={data.time}
-                renderInput={(props) => <TextField {...props} />} />
-            </LocalizationProvider>
-          </Grid>
-          <Grid item>
-            <TextField
-              select
-              defaultValue={2}
-              style={{width: "250px"}}
-              label="Number of publishers"
-              onChange={(value) => {
-                hooks.setNPublishers(value.target.value);
-                // Clear the contents of the publisher name fields
-                for (let i = 1; i < data.nPublishers; i++)
-                {
-                  const element = document.getElementById(`publisher-name${i}`);
-                  element.value = '';
-                }
-              }}>
-              {[2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => {
-                return <MenuItem value={i}>{i}</MenuItem>
-              })}
-            </TextField>
-          </Grid>
-          {(() => {
-            let publishers = [];
-            for (let i = 1; i < data.nPublishers; i++) {
-              publishers.push(
-                <Grid item>
-                  <TextField
-                    id={`publisher-name${i}`}
-                    onBlur={(e) => {
-                      const newObj = data.members;
-                      if (!e.target.value)
-                        delete newObj[e.target.id];
-                      newObj[e.target.id] = e.target.value;
-
-                      e.target.value = newObj[e.target.id];
-                      // Concat new values whilst removing duplicates
-                      hooks.setMembers(newObj);
-                    }}
-                    className="publisher-name"
-                    label={`Person ${i + 1}'s name`} />
-                </Grid>
-              );
-            }
-            return publishers;
-          })()}
-          <Grid item>
-            <Button onClick={() => {
-              const names = Object.values(data.members);
-              didSubmit();
-            }}>Create</Button>
-          </Grid>
-        </Grid>
-      </Popover.Body>
-    </Popover>
-  );
-};
-
 function Dashboard() {
   const initialBtnState = (
     <>Appointment {<Add />}</>
@@ -163,5 +91,85 @@ function Dashboard() {
     </div>
   );
 }
+
+const AppointmentCreationPopover = (data, hooks, didSubmit) => {
+  return (
+    <Popover>
+      <Popover.Header>Create Appointment</Popover.Header>
+      <Popover.Body style={{padding: "10px"}}>
+        <Grid container spacing={2}>
+          <Grid item><TextField label="Location" onChange={(e) => hooks.setPlace(e.target.value)} /></Grid>
+          <Grid item>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DateTimePicker
+                onChange={(value) => hooks.setTime(value.toDate().getTime())}
+                label="Time"
+                value={data.time}
+                renderInput={(props) => <TextField {...props} />} />
+            </LocalizationProvider>
+          </Grid>
+          <Grid item>
+            <TextField
+              select
+              defaultValue={2}
+              style={{width: "250px"}}
+              label="Number of publishers"
+              onChange={(value) => {
+                hooks.setNPublishers(value.target.value);
+                // Clear the contents of the publisher name fields
+                for (let i = 1; i < data.nPublishers; i++)
+                {
+                  const element = document.getElementById(`publisher-name${i}`);
+                  element.value = '';
+                }
+              }}>
+              {[2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => {
+                return <MenuItem value={i}>{i}</MenuItem>
+              })}
+            </TextField>
+          </Grid>
+          {publisherNameFields(data, hooks)}
+          <Grid item>
+            <Button onClick={() => {
+              const names = Object.values(data.members);
+              didSubmit();
+            }}>Create</Button>
+          </Grid>
+        </Grid>
+      </Popover.Body>
+    </Popover>
+  );
+};
+
+const publisherNameFields = (data, hooks) => {
+  let publishers = [];
+  for (let i = 1; i < data.nPublishers; i++) {
+    publishers.push(
+      <Grid item>
+        <TextField
+          id={`publisher-name${i}`}
+          onBlur={(event) => onOutOfFocus(event, data, hooks)}
+          className="publisher-name"
+          label={`Person ${i + 1}'s name`} />
+      </Grid>
+    );
+  }
+  return publishers;
+};
+
+// When the user leaves the text field
+const onOutOfFocus = (event, data, hooks) => {
+  // ID of the text field that maps to it's value
+  const newObj = data.members;
+  // If the text field doesn't contain a value, delete it's id
+  if (!event.target.value)
+    delete newObj[event.target.id];
+  newObj[event.target.id] = event.target.value;
+
+  event.target.value = newObj[event.target.id];
+  // Concat new values whilst removing duplicates
+  hooks.setMembers(newObj);
+}
+
 
 export default Dashboard;

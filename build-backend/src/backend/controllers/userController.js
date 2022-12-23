@@ -121,7 +121,6 @@ async function updateJwt(req, res, next) {
         const foundUser = await User.findOne({ _id: userId });
         if (!foundUser)
             throw new Error("User ID invalid or doesn't exist");
-        console.log(foundUser.toJSON());
         await sendAuthToken(foundUser, 200, res);
     }
     catch (error) {
