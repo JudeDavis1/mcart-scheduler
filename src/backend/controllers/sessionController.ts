@@ -37,12 +37,16 @@ async function createSession(
       return user?._id ? user?._id : null;
     };
     // If id is not null, add that to the array
+    let hasNull: boolean = false;
     let userIds: Array<ObjectId> = [];
     for (let name of members) {
       const id = await getId(name);
       if (id) userIds.push(id);
+      else hasNull = true;
     }
 
+    if (hasNull)
+      throw new Error("One or more publishers don't exist");
     if (userIds.length < 2)
       throw new Error("Must be more than 2 members");
 

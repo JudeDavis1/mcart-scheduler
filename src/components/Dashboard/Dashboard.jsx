@@ -12,6 +12,7 @@ import Spinner from "react-bootstrap/Spinner";
 
 import "./Dashboard.css";
 import { getUserInfo, didTapCreateAppointment, loadSessions, deleteSessionItem } from "../../controllers/dashboardController";
+import MAlert from "../MAlert/MAlert";
 
 
 function Dashboard() {
@@ -23,7 +24,7 @@ function Dashboard() {
   const [place, setPlace] = useState('');
   const [reloadAll, setReloadAll] = useState(crypto.randomUUID());
   const [members, setMembers] = useState({});
-  const [nPublishers, setNPublishers] = useState(0);
+  const [nPublishers, setNPublishers] = useState(2);
   const [sessionsLoaded, setSessionsLoaded] = useState(false);
   const [currentSessions, setCurrentSessions] = useState([{}]);
   const [appointmentText, setAppointmentText] = useState(initialBtnState);
@@ -66,13 +67,13 @@ function Dashboard() {
         onEnter={() => setAppointmentText('Cancel')}
         onExit={() => setAppointmentText(initialBtnState)}>
         <Button
-          className="create-appointment-btn" onClick={() => setNPublishers(2)}>
+          className="create-appointment-btn">
           {appointmentText}
         </Button>
       </OverlayTrigger>
 
       <div className="dashboard-session-card-container">
-        {!sessionsLoaded && <Spinner animation="border" color="#FFFFFF" />}
+        {!sessionsLoaded && <Spinner animation="border" />}
         {sessionsLoaded &&
           currentSessions.map((session, sessionIdx) => {
             const time = new Date(session.time);
@@ -99,6 +100,9 @@ const AppointmentCreationPopover = (data, hooks, didSubmit) => {
       <Popover.Header>Create Appointment</Popover.Header>
       <Popover.Body style={{padding: "10px"}}>
         <Grid container spacing={2}>
+          <Grid item>
+            <MAlert text="" />
+          </Grid>
           <Grid item><TextField label="Location" onChange={(e) => hooks.setPlace(e.target.value)} /></Grid>
           <Grid item>
             <LocalizationProvider dateAdapter={AdapterDayjs}>

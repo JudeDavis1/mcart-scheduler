@@ -16,12 +16,17 @@ async function createSession(req, res, next) {
             const user = await User.findOne({ name });
             return user?._id ? user?._id : null;
         };
+        let hasNull = false;
         let userIds = [];
         for (let name of members) {
             const id = await getId(name);
             if (id)
                 userIds.push(id);
+            else
+                hasNull = true;
         }
+        if (hasNull)
+            throw new Error("One or more publishers don't exist");
         if (userIds.length < 2)
             throw new Error("Must be more than 2 members");
         const timeObj = new Date();
