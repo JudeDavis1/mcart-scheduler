@@ -20,7 +20,8 @@ async function getUserInfo(): Promise<IUser> {
 }
 
 async function didTapCreateAppointment(
-  info: SessionInfo
+  info: SessionInfo,
+  reloadFn: Function
 ): Promise<boolean> {
   // Add the current user to the members
   const user = await getUser();
@@ -29,6 +30,8 @@ async function didTapCreateAppointment(
   // Create the session
   const request = await axios.post(config.backend_url + '/session/create', info);
   const createdSession = request.data.session;
+  await updateUser();
+  reloadFn(crypto.randomUUID());
   
   if (!createdSession) return false;
   
@@ -67,13 +70,14 @@ async function loadSessions(info: any): Promise<any> {
   return sessionObjects;
 }
 
-async function deleteSessionItem(sessionId: string) {
+async function deleteSessionItem(sessionId: string, reloadFn: Function) {
   console.log(sessionId)
   const request = await axios.delete(
     config.backend_url + "/session/delete?sessionId=" + sessionId
   );
   console.log(request.data.data);
-  updateUser();
+  await updateUser();
+  reloadFn(crypto.randomUUID());
 }
 
 export {

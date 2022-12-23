@@ -21,7 +21,7 @@ function Dashboard() {
 
   const [info, setInfo] = useState({});
   const [place, setPlace] = useState('');
-  const [reloadAll, setReloadAll] = useState();
+  const [reloadAll, setReloadAll] = useState(crypto.randomUUID());
   const [members, setMembers] = useState({});
   const [nPublishers, setNPublishers] = useState(0);
   const [sessionsLoaded, setSessionsLoaded] = useState(false);
@@ -39,7 +39,6 @@ function Dashboard() {
   useEffect(() => {
     (async function load() {
       const userData = await getUserInfo();
-      console.log(userData.sessions);
       setInfo(userData);
     }());
   }, [reloadAll]);
@@ -61,7 +60,7 @@ function Dashboard() {
         overlay={AppointmentCreationPopover(
           {place, time, members, nPublishers},
           {setPlace, setTime, setMembers, setNPublishers},
-          () => didTapCreateAppointment({place, members: Object.values(members), time}))
+          () => didTapCreateAppointment({place, members: Object.values(members), time}, setReloadAll))
         }
         placement='bottom'
         onEnter={() => setAppointmentText('Cancel')}
@@ -80,7 +79,7 @@ function Dashboard() {
             const months = ["Jan", "Feb", "March", "Apr", "May", "Jun", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
             return (
               <Card className="dashboard-session-card" id={`session-card-${sessionIdx}`}>
-                <Delete onClick={() => deleteSessionItem(currentSessions[sessionIdx]._id)} />
+                <Delete onClick={() => deleteSessionItem(currentSessions[sessionIdx]._id, setReloadAll) } />
                 <Card.Body>
                   <Card.Subtitle>{`${time.getDate()} ${months[time.getMonth()]} ${time.getFullYear()}`}</Card.Subtitle>
                   <Card.Text>{session.place}</Card.Text>

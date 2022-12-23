@@ -38,7 +38,6 @@ async function getUser(): Promise<IUser> {
         config.backend_url + '/user/verify?' + document.cookie,
         config.withCookies  // Just in case of cookie HTTPS errors
     );
-    console.log(request.data.user.sessions)
     
     return request.data.user;
 }
