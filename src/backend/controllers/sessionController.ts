@@ -29,7 +29,7 @@ async function createSession(
     
     // Validate session attributes
     const sessionInvalid = !place || !members || !time;
-    if (sessionInvalid) throw new Error("Invalid session");
+    if (sessionInvalid) throw new Error("Please fill out all fields");
     
     // Get IDs if exists, or return null otherwise
     const getId = async (name: string): Promise<ObjectId | null> => {
@@ -48,7 +48,7 @@ async function createSession(
     if (hasNull)
       throw new Error("One or more publishers don't exist");
     if (userIds.length < 2)
-      throw new Error("Must be more than 2 members");
+      throw new Error("Must be 2 or more members");
 
     // Convert milliseconds to a Date object
     const timeObj = new Date();

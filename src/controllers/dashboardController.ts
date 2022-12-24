@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosHeaders, AxiosResponse } from "axios";
 
 import config from "../config";
 import { getUser, updateUser } from "./jwtController";
@@ -21,21 +21,29 @@ async function getUserInfo(): Promise<IUser> {
 
 async function didTapCreateAppointment(
   info: SessionInfo,
-  reloadFn: Function
-): Promise<boolean> {
+  reloadFn: Function,
+  msg: Object,
+  msgFn: Function
+): Promise<void> {
   // Add the current user to the members
   const user = await getUser();
   info.members.push(user.name);
   info.members = info.members.map(toTitleCase);
   // Create the session
-  const request = await axios.post(config.backend_url + '/session/create', info);
-  const createdSession = request.data.session;
-  await updateUser();
-  reloadFn(crypto.randomUUID());
-  
-  if (!createdSession) return false;
-  
-  return true;
+  let response: AxiosResponse;
+  try {
+    response = await axios.post(config.backend_url + '/session/create', info);
+    const createdSession = response.data.session;
+    await updateUser();
+
+    reloadFn(crypto.randomUUID());
+  } catch (error: any) {
+    msgFn({...msg, text: error.response.data.error, shouldShow: true, status: "danger"});
+    console.error(error.response.data.error);
+    return;
+  }
+
+  msgFn({ ...msg, text: "Successfully created session", shouldShow: true, status: "success" });
 }
 
 async function getSession(id: string): Promise<any> {

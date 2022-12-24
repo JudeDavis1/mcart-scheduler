@@ -22,11 +22,12 @@ function Dashboard() {
 
   const [info, setInfo] = useState({});
   const [place, setPlace] = useState('');
-  const [reloadAll, setReloadAll] = useState(crypto.randomUUID());
   const [members, setMembers] = useState({});
+  const [popoverMsg, setPopoverMsg] = useState({text: "", shouldShow: false, status: "info"});
   const [nPublishers, setNPublishers] = useState(2);
   const [sessionsLoaded, setSessionsLoaded] = useState(false);
   const [currentSessions, setCurrentSessions] = useState([{}]);
+  const [reloadAll, setReloadAll] = useState(crypto.randomUUID());
   const [appointmentText, setAppointmentText] = useState(initialBtnState);
   const [time, setTime] = useState((() => {
     const date = new Date();
@@ -58,10 +59,17 @@ function Dashboard() {
       <h1 align="center">{info.name}</h1><br />
       <OverlayTrigger
         trigger='click'
-        overlay={AppointmentCreationPopover(
-          {place, time, members, nPublishers},
-          {setPlace, setTime, setMembers, setNPublishers},
-          () => didTapCreateAppointment({place, members: Object.values(members), time}, setReloadAll))
+        overlay={
+          AppointmentCreationPopover(
+            {place, time, members, nPublishers, popoverMsg},
+            {setPlace, setTime, setMembers, setNPublishers, setPopoverMsg},
+            () => didTapCreateAppointment(
+                    {place, members: Object.values(members), time},
+                    setReloadAll,
+                    popoverMsg,
+                    setPopoverMsg
+                  )
+          )
         }
         placement='bottom'
         onEnter={() => setAppointmentText('Cancel')}
@@ -100,9 +108,14 @@ const AppointmentCreationPopover = (data, hooks, didSubmit) => {
       <Popover.Header>Create Appointment</Popover.Header>
       <Popover.Body style={{padding: "10px"}}>
         <Grid container spacing={2}>
-          <Grid item>
-            <MAlert text="" />
-          </Grid>
+          
+            {data.popoverMsg.shouldShow && 
+            <Grid item>
+            <MAlert
+              variant={data.popoverMsg.status}
+              onClose={() => hooks.setPopoverMsg({...data.popoverMsg, shouldShow: false})}
+              text={data.popoverMsg.text} />
+            </Grid>}
           <Grid item><TextField label="Location" onChange={(e) => hooks.setPlace(e.target.value)} /></Grid>
           <Grid item>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -135,10 +148,7 @@ const AppointmentCreationPopover = (data, hooks, didSubmit) => {
           </Grid>
           {publisherNameFields(data, hooks)}
           <Grid item>
-            <Button onClick={() => {
-              const names = Object.values(data.members);
-              didSubmit();
-            }}>Create</Button>
+            <Button onClick={() => didSubmit()}>Create</Button>
           </Grid>
         </Grid>
       </Popover.Body>

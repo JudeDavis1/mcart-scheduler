@@ -11,7 +11,7 @@ async function createSession(req, res, next) {
             throw new Error("An appointment at this time already exists!");
         const sessionInvalid = !place || !members || !time;
         if (sessionInvalid)
-            throw new Error("Invalid session");
+            throw new Error("Please fill out all fields");
         const getId = async (name) => {
             const user = await User.findOne({ name });
             return user?._id ? user?._id : null;
@@ -28,7 +28,7 @@ async function createSession(req, res, next) {
         if (hasNull)
             throw new Error("One or more publishers don't exist");
         if (userIds.length < 2)
-            throw new Error("Must be more than 2 members");
+            throw new Error("Must be 2 or more members");
         const timeObj = new Date();
         timeObj.setTime(parseInt(time));
         const createdSession = await Session.create({
