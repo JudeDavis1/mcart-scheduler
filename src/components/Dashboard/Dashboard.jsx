@@ -19,16 +19,19 @@ function Dashboard() {
   const initialBtnState = (
     <>Appointment {<Add />}</>
   );
+  const globalMsgConfig = {text: "", shouldShow: false, status: "info"};
 
   const [info, setInfo] = useState({});
   const [place, setPlace] = useState('');
   const [members, setMembers] = useState({});
-  const [popoverMsg, setPopoverMsg] = useState({text: "", shouldShow: false, status: "info"});
   const [nPublishers, setNPublishers] = useState(2);
   const [sessionsLoaded, setSessionsLoaded] = useState(false);
   const [currentSessions, setCurrentSessions] = useState([{}]);
+  const [popoverMsg, setPopoverMsg] = useState(globalMsgConfig);
   const [reloadAll, setReloadAll] = useState(crypto.randomUUID());
+  const [dashboardMsg, setDashboardMsg] = useState(globalMsgConfig);
   const [appointmentText, setAppointmentText] = useState(initialBtnState);
+  const [showPopover, setShowPopover] = useState(false);
   const [time, setTime] = useState((() => {
     const date = new Date();
     date.setHours(0);
@@ -57,6 +60,13 @@ function Dashboard() {
   return (
     <div className="Dashboard app-sub-component">
       <h1 align="center">{info.name}</h1><br />
+      {dashboardMsg.shouldShow && 
+      <MAlert
+        variant={dashboardMsg.status}
+        onClose={() => setDashboardMsg({...dashboardMsg, shouldShow: false})}
+        text={dashboardMsg.text}
+      />
+      }
       <OverlayTrigger
         trigger='click'
         overlay={
@@ -72,9 +82,14 @@ function Dashboard() {
           )
         }
         placement='bottom'
+        show={showPopover}
         onEnter={() => setAppointmentText('Cancel')}
-        onExit={() => setAppointmentText(initialBtnState)}>
+        onExit={() => {
+          setAppointmentText(initialBtnState);
+          setPopoverMsg({ shouldShow: false });
+        }}>
         <Button
+          onClick={() => setShowPopover(!showPopover)}
           className="create-appointment-btn">
           {appointmentText}
         </Button>
@@ -85,11 +100,16 @@ function Dashboard() {
         {sessionsLoaded &&
           currentSessions.map((session, sessionIdx) => {
             const time = new Date(session.time);
+            console.log(session.time)
             const months = ["Jan", "Feb", "March", "Apr", "May", "Jun", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
             return (
               <Card className="dashboard-session-card" id={`session-card-${sessionIdx}`}>
-                <Delete onClick={() => deleteSessionItem(currentSessions[sessionIdx]._id, setReloadAll) } />
+                <Delete onClick={() => {
+                  deleteSessionItem(currentSessions[sessionIdx]._id, setReloadAll);
+                  setDashboardMsg({text: "Deleted session", shouldShow: true, status: "success"});
+                }} />
                 <Card.Body>
+                  <Card.Title>{`${time.getUTCHours()}:${time.getMinutes() == "0" ? "00" : time.getMinutes()}`}</Card.Title>
                   <Card.Subtitle>{`${time.getDate()} ${months[time.getMonth()]} ${time.getFullYear()}`}</Card.Subtitle>
                   <Card.Text>{session.place}</Card.Text>
                   {session.members.map((user) => <Card.Text>{user.name}</Card.Text>)}
@@ -163,7 +183,7 @@ const publisherNameFields = (data, hooks) => {
       <Grid item>
         <TextField
           id={`publisher-name${i}`}
-          onBlur={(event) => onOutOfFocus(event, data, hooks)}
+          onBlur={(event) => onExitFocus(event, data, hooks)}
           className="publisher-name"
           label={`Person ${i + 1}'s name`} />
       </Grid>
@@ -173,7 +193,7 @@ const publisherNameFields = (data, hooks) => {
 };
 
 // When the user leaves the text field
-const onOutOfFocus = (event, data, hooks) => {
+const onExitFocus = (event, data, hooks) => {
   // ID of the text field that maps to it's value
   const newObj = data.members;
   // If the text field doesn't contain a value, delete it's id
