@@ -1,4 +1,4 @@
-import axios, { AxiosHeaders, AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios";
 
 import config from "../config";
 import { getUser, updateUser } from "./jwtController";
@@ -21,9 +21,9 @@ async function getUserInfo(): Promise<IUser> {
 
 async function didTapCreateAppointment(
   info: SessionInfo,
-  reloadFn: Function,
   msg: Object,
-  msgFn: Function
+  msgFn: Function,
+  done: Function
 ): Promise<void> {
   // Add the current user to the members
   const user = await getUser();
@@ -36,7 +36,7 @@ async function didTapCreateAppointment(
     const createdSession = response.data.session;
     await updateUser();
 
-    reloadFn(crypto.randomUUID());
+    done();
   } catch (error: any) {
     msgFn({...msg, text: error.response.data.error, shouldShow: true, status: "danger"});
     console.error(error.response.data.error);

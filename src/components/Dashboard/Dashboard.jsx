@@ -13,6 +13,7 @@ import Spinner from "react-bootstrap/Spinner";
 import "./Dashboard.css";
 import { getUserInfo, didTapCreateAppointment, loadSessions, deleteSessionItem } from "../../controllers/dashboardController";
 import MAlert from "../MAlert/MAlert";
+import dayjs from "dayjs";
 
 
 function Dashboard() {
@@ -34,7 +35,7 @@ function Dashboard() {
   const [showPopover, setShowPopover] = useState(false);
   const [time, setTime] = useState((() => {
     const date = new Date();
-    date.setHours(0);
+    date.setHours(12);
     date.setMinutes(0);
     
     return date.getTime();
@@ -42,7 +43,7 @@ function Dashboard() {
 
   // Load user data and fill 'info'
   useEffect(() => {
-    (async function load() {
+    (async function () {
       const userData = await getUserInfo();
       setInfo(userData);
     }());
@@ -73,12 +74,17 @@ function Dashboard() {
           AppointmentCreationPopover(
             {place, time, members, nPublishers, popoverMsg},
             {setPlace, setTime, setMembers, setNPublishers, setPopoverMsg},
-            () => didTapCreateAppointment(
-                    {place, members: Object.values(members), time},
-                    setReloadAll,
-                    popoverMsg,
-                    setPopoverMsg
-                  )
+            () => {
+              didTapCreateAppointment(
+                {place, members: Object.values(members), time},
+                popoverMsg,
+                setPopoverMsg,
+                () => {
+                  setReloadAll(crypto.randomUUID());
+                  setShowPopover(false);
+                }
+              );
+            }
           )
         }
         placement='bottom'
@@ -100,7 +106,6 @@ function Dashboard() {
         {sessionsLoaded &&
           currentSessions.map((session, sessionIdx) => {
             const time = new Date(session.time);
-            console.log(session.time)
             const months = ["Jan", "Feb", "March", "Apr", "May", "Jun", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
             return (
               <Card className="dashboard-session-card" id={`session-card-${sessionIdx}`}>
@@ -109,11 +114,13 @@ function Dashboard() {
                   setDashboardMsg({text: "Deleted session", shouldShow: true, status: "success"});
                 }} />
                 <Card.Body>
-                  <Card.Title>{`${time.getUTCHours()}:${time.getMinutes() == "0" ? "00" : time.getMinutes()}`}</Card.Title>
+                  <Card.Title>{formatTime(time.getHours(), time.getMinutes())}</Card.Title>
                   <Card.Subtitle>{`${time.getDate()} ${months[time.getMonth()]} ${time.getFullYear()}`}</Card.Subtitle>
                   <Card.Text>{session.place}</Card.Text>
-                  {session.members.map((user) => <Card.Text>{user.name}</Card.Text>)}
                 </Card.Body>
+                <Card.Footer>
+                  {session.members.map((user) => <>{user.name}<br /></>)}
+                </Card.Footer>
               </Card>
             );
           })}
@@ -206,6 +213,13 @@ const onExitFocus = (event, data, hooks) => {
   event.target.value = newObj[event.target.id];
   // Concat new values whilst removing duplicates
   hooks.setMembers(newObj);
+}
+
+// Adds leading zero if hours/minutes < 10
+// formatTime(7, 5) -> 07:05
+function formatTime(hours, minutes) {
+  const leadingZero = (string) => (parseInt(string) < 10 ? "0" : "") + string;
+  return `${leadingZero(hours)}:${leadingZero(minutes)}`;
 }
 
 
