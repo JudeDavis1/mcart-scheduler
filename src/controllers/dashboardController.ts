@@ -36,7 +36,7 @@ async function didTapCreateAppointment(
     const createdSession = response.data.session;
     await updateUser();
 
-    done();
+    setTimeout(() => done(), 700);
   } catch (error: any) {
     msgFn({...msg, text: error.response.data.error, shouldShow: true, status: "danger"});
     console.error(error.response.data.error);

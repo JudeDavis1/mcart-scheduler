@@ -13,7 +13,6 @@ import Spinner from "react-bootstrap/Spinner";
 import "./Dashboard.css";
 import { getUserInfo, didTapCreateAppointment, loadSessions, deleteSessionItem } from "../../controllers/dashboardController";
 import MAlert from "../MAlert/MAlert";
-import dayjs from "dayjs";
 
 
 function Dashboard() {
@@ -175,7 +174,7 @@ const AppointmentCreationPopover = (data, hooks, didSubmit) => {
           </Grid>
           {publisherNameFields(data, hooks)}
           <Grid item>
-            <Button onClick={() => didSubmit()}>Create</Button>
+            <Button id="okok" onClick={() => didSubmit()}>Create</Button>
           </Grid>
         </Grid>
       </Popover.Body>
