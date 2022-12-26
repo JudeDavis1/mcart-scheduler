@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 
 import config from "../config";
-import { getUser, updateUser } from "./jwtController";
+import { getUser, updateUser, deleteJwt } from "./jwtController";
 import { IUser } from "../backend/models/userModel.js";
 import { toTitleCase } from "../utils/strUtils";
 
@@ -88,11 +88,17 @@ async function deleteSessionItem(sessionId: string, reloadFn: Function) {
   reloadFn(crypto.randomUUID());
 }
 
+function logout() {
+  deleteJwt();
+  window.location.href = '/';
+}
+
 export {
   getUserInfo,
   didTapCreateAppointment,
   getSession,
   getUserFromSession,
   loadSessions,
-  deleteSessionItem
+  deleteSessionItem,
+  logout
 };

@@ -53,10 +53,16 @@ async function getUser(
     const receivedUser = await User.findById(userId);
     if (!receivedUser) throw new Error("User doesn't exist.");
 
+    // Create a new object and remove all sensitive information
+    const userObject: any = receivedUser.toObject();
+    delete userObject.hashedPassword;
+    delete userObject.salt;
+
     res
       .status(200)
-      .json({ data: "Found user!",
-        user: receivedUser
+      .json({
+        data: "Found user!",
+        user: userObject
       });
   } catch (error: any) {
     res

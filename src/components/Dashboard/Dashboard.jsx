@@ -11,7 +11,12 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import Spinner from "react-bootstrap/Spinner";
 
 import "./Dashboard.css";
-import { getUserInfo, didTapCreateAppointment, loadSessions, deleteSessionItem } from "../../controllers/dashboardController";
+import {
+  getUserInfo,
+  didTapCreateAppointment,
+  loadSessions,
+  deleteSessionItem,
+  logout } from "../../controllers/dashboardController";
 import MAlert from "../MAlert/MAlert";
 
 
@@ -59,6 +64,7 @@ function Dashboard() {
 
   return (
     <div className="Dashboard app-sub-component">
+      <span align="right" className="logout-button"><Button onClick={(e) => logout()} variant="danger">Logout</Button></span>
       <h1 align="center">{info.name}</h1><br />
       {dashboardMsg.shouldShow && 
       <MAlert
