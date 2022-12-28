@@ -37,10 +37,14 @@ async function getUser(req, res, next) {
         const receivedUser = await User.findById(userId);
         if (!receivedUser)
             throw new Error("User doesn't exist.");
+        const userObject = receivedUser.toObject();
+        delete userObject.hashedPassword;
+        delete userObject.salt;
         res
             .status(200)
-            .json({ data: "Found user!",
-            user: receivedUser
+            .json({
+            data: "Found user!",
+            user: userObject
         });
     }
     catch (error) {

@@ -3,6 +3,12 @@
     color: white;
 }
 
+
+img {
+    object-fit: contain;
+    display: flex;
+    align-self: center;
+}
 .car {
     z-index: 1 !important;
 }

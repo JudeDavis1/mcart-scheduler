@@ -83,7 +83,7 @@ async function deleteSessionItem(sessionId: string, reloadFn: Function) {
   const request = await axios.delete(
     config.backend_url + "/session/delete?sessionId=" + sessionId
   );
-  console.log(request.data.data);
+  
   await updateUser();
   reloadFn(crypto.randomUUID());
 }

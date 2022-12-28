@@ -31,6 +31,11 @@ h1 {
   margin: 0 auto;
 }
 
+.dashboard-user-link {
+  text-decoration: none;
+  color: darkblue;
+}
+
 @media screen and (max-width: 605px) {
   .dashboard-session-card-container {
     display: flex;

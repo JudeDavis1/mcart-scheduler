@@ -87,10 +87,8 @@ function Dashboard() {
                 () => {
                   setReloadAll(crypto.randomUUID());
                   setShowPopover(false);
-                }
-              );
-            }
-          )
+                });
+            })
         }
         placement='bottom'
         show={showPopover}
@@ -124,7 +122,7 @@ function Dashboard() {
                   <Card.Text>{session.place}</Card.Text>
                 </Card.Body>
                 <Card.Footer>
-                  {session.members.map((user) => <>{user.name}<br /></>)}
+                  {session.members.map((user) => <><a href={`/viewuser?id=` + user._id} className="dashboard-user-link">{user.name}</a><br /></>)}
                 </Card.Footer>
               </Card>
             );
