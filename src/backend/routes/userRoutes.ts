@@ -8,7 +8,8 @@ import {
     deleteUser,
     userExists,
     userVerify,
-    getId
+    getId,
+    updateJwt
 } from '../controllers/userController.js';
 
 // import { verifyUser } from "../controllers/authController.js";
@@ -25,6 +26,7 @@ router.route("/user/delete").delete(deleteUser);
 router.route("/user/exists").post(userExists);
 router.route("/user/verify").get(userVerify);
 router.route("/user/getId").get(getId);
+router.route("/user/updateJwt").post(updateJwt);
 
 
 export default router;

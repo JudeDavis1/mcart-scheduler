@@ -1,5 +1,5 @@
 import express from "express";
-import { createUser, getUser, updateUser, deleteUser, userExists, userVerify, getId } from '../controllers/userController.js';
+import { createUser, getUser, updateUser, deleteUser, userExists, userVerify, getId, updateJwt } from '../controllers/userController.js';
 const router = express.Router();
 router.route("/user/create").post(createUser);
 router.route("/user/get").get(getUser);
@@ -8,4 +8,5 @@ router.route("/user/delete").delete(deleteUser);
 router.route("/user/exists").post(userExists);
 router.route("/user/verify").get(userVerify);
 router.route("/user/getId").get(getId);
+router.route("/user/updateJwt").post(updateJwt);
 export default router;

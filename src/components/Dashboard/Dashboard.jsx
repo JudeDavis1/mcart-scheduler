@@ -1,5 +1,5 @@
 import Card from "react-bootstrap/Card";
-import { Add } from "@mui/icons-material";
+import { Add, Delete } from "@mui/icons-material";
 import Button from "react-bootstrap/Button";
 import { useState, useEffect } from "react";
 import Popover from "react-bootstrap/Popover";
@@ -8,10 +8,129 @@ import { Grid, MenuItem, TextField } from "@mui/material";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import Spinner from "react-bootstrap/Spinner";
 
 import "./Dashboard.css";
-import { getUserInfo, didTapCreateAppointment } from "../../controllers/dashboardController";
+import {
+  getUserInfo,
+  didTapCreateAppointment,
+  loadSessions,
+  deleteSessionItem,
+  logout } from "../../controllers/dashboardController";
+import MAlert from "../MAlert/MAlert";
 
+
+function Dashboard() {
+  const initialBtnState = (
+    <>Appointment {<Add />}</>
+  );
+  const globalMsgConfig = {text: "", shouldShow: false, status: "info"};
+
+  const [info, setInfo] = useState({});
+  const [place, setPlace] = useState('');
+  const [members, setMembers] = useState({});
+  const [nPublishers, setNPublishers] = useState(2);
+  const [sessionsLoaded, setSessionsLoaded] = useState(false);
+  const [currentSessions, setCurrentSessions] = useState([{}]);
+  const [popoverMsg, setPopoverMsg] = useState(globalMsgConfig);
+  const [reloadAll, setReloadAll] = useState(crypto.randomUUID());
+  const [dashboardMsg, setDashboardMsg] = useState(globalMsgConfig);
+  const [appointmentText, setAppointmentText] = useState(initialBtnState);
+  const [showPopover, setShowPopover] = useState(false);
+  const [time, setTime] = useState((() => {
+    const date = new Date();
+    date.setHours(12);
+    date.setMinutes(0);
+    
+    return date.getTime();
+  })());
+
+  // Load user data and fill 'info'
+  useEffect(() => {
+    (async function () {
+      const userData = await getUserInfo();
+      setInfo(userData);
+    }());
+  }, [reloadAll]);
+
+  useEffect(() => {
+    (async function () {
+      const sessionObjects = await loadSessions(info);
+      setCurrentSessions(sessionObjects);
+      setSessionsLoaded(true);
+    }());
+  }, [info, reloadAll]);
+  useEffect(() => setMembers({}), [nPublishers]);
+
+  return (
+    <div className="Dashboard app-sub-component">
+      <span align="right" className="logout-button"><Button onClick={(e) => logout()} variant="danger">Logout</Button></span>
+      <h1 align="center">{info.name}</h1><br />
+      {dashboardMsg.shouldShow && 
+      <MAlert
+        variant={dashboardMsg.status}
+        onClose={() => setDashboardMsg({...dashboardMsg, shouldShow: false})}
+        text={dashboardMsg.text}
+      />
+      }
+      <OverlayTrigger
+        trigger='click'
+        overlay={
+          AppointmentCreationPopover(
+            {place, time, members, nPublishers, popoverMsg},
+            {setPlace, setTime, setMembers, setNPublishers, setPopoverMsg},
+            () => {
+              didTapCreateAppointment(
+                {place, members: Object.values(members), time},
+                popoverMsg,
+                setPopoverMsg,
+                () => {
+                  setReloadAll(crypto.randomUUID());
+                  setShowPopover(false);
+                });
+            })
+        }
+        placement='bottom'
+        show={showPopover}
+        onEnter={() => setAppointmentText('Cancel')}
+        onExit={() => {
+          setAppointmentText(initialBtnState);
+          setPopoverMsg({ shouldShow: false });
+        }}>
+        <Button
+          onClick={() => setShowPopover(!showPopover)}
+          className="create-appointment-btn">
+          {appointmentText}
+        </Button>
+      </OverlayTrigger>
+
+      <div className="dashboard-session-card-container">
+        {!sessionsLoaded && <Spinner animation="border" />}
+        {sessionsLoaded &&
+          currentSessions.map((session, sessionIdx) => {
+            const time = new Date(session.time);
+            const months = ["Jan", "Feb", "March", "Apr", "May", "Jun", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            return (
+              <Card className="dashboard-session-card" id={`session-card-${sessionIdx}`}>
+                <Delete onClick={() => {
+                  deleteSessionItem(currentSessions[sessionIdx]._id, setReloadAll);
+                  setDashboardMsg({text: "Deleted session", shouldShow: true, status: "success"});
+                }} />
+                <Card.Body>
+                  <Card.Title>{formatTime(time.getHours(), time.getMinutes())}</Card.Title>
+                  <Card.Subtitle>{`${time.getDate()} ${months[time.getMonth()]} ${time.getFullYear()}`}</Card.Subtitle>
+                  <Card.Text>{session.place}</Card.Text>
+                </Card.Body>
+                <Card.Footer>
+                  {session.members.map((user) => <><a href={`/viewuser?id=` + user._id} className="dashboard-user-link">{user.name}</a><br /></>)}
+                </Card.Footer>
+              </Card>
+            );
+          })}
+      </div>
+    </div>
+  );
+}
 
 const AppointmentCreationPopover = (data, hooks, didSubmit) => {
   return (
@@ -19,7 +138,15 @@ const AppointmentCreationPopover = (data, hooks, didSubmit) => {
       <Popover.Header>Create Appointment</Popover.Header>
       <Popover.Body style={{padding: "10px"}}>
         <Grid container spacing={2}>
-          <Grid item><TextField label="Location" onChange={hooks.setLocation} /></Grid>
+          
+            {data.popoverMsg.shouldShow && 
+            <Grid item>
+            <MAlert
+              variant={data.popoverMsg.status}
+              onClose={() => hooks.setPopoverMsg({...data.popoverMsg, shouldShow: false})}
+              text={data.popoverMsg.text} />
+            </Grid>}
+          <Grid item><TextField label="Location" onChange={(e) => hooks.setPlace(e.target.value)} /></Grid>
           <Grid item>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DateTimePicker
@@ -49,36 +176,9 @@ const AppointmentCreationPopover = (data, hooks, didSubmit) => {
               })}
             </TextField>
           </Grid>
-          {(() => {
-            let publishers = [];
-            for (let i = 1; i < data.nPublishers; i++) {
-              publishers.push(
-                <Grid item>
-                  <TextField
-                    id={`publisher-name${i}`}
-                    onBlur={(e) => {
-                      const newObj = data.publisherNames;
-                      if (!e.target.value)
-                        delete newObj[e.target.id];
-                      newObj[e.target.id] = e.target.value;
-
-                      e.target.value = newObj[e.target.id];
-                      // Concat new values whilst removing duplicates
-                      hooks.setPublisherNames(newObj);
-                    }}
-                    className="publisher-name"
-                    label={`Person ${i + 1}'s name`} />
-                </Grid>
-              );
-            }
-            return publishers;
-          })()}
+          {publisherNameFields(data, hooks)}
           <Grid item>
-            <Button onClick={() => {
-              const names = Object.values(data.publisherNames);
-              console.log(names);
-              didSubmit();
-            }}>Create</Button>
+            <Button id="okok" onClick={() => didSubmit()}>Create</Button>
           </Grid>
         </Grid>
       </Popover.Body>
@@ -86,71 +186,44 @@ const AppointmentCreationPopover = (data, hooks, didSubmit) => {
   );
 };
 
-function Dashboard() {
-  const initialBtnState = (
-    <>Appointment {<Add />}</>
-  );
+const publisherNameFields = (data, hooks) => {
+  let publishers = [];
+  for (let i = 1; i < data.nPublishers; i++) {
+    publishers.push(
+      <Grid item>
+        <TextField
+          id={`publisher-name${i}`}
+          onBlur={(event) => onExitFocus(event, data, hooks)}
+          className="publisher-name"
+          label={`Person ${i + 1}'s name`} />
+      </Grid>
+    );
+  }
+  return publishers;
+};
 
-  const [nPublishers, setNPublishers] = useState(0);
-  const [publisherNames, setPublisherNames] = useState({});
-  const [info, setInfo] = useState({});
-  const [appointmentText, setAppointmentText] = useState(initialBtnState);
-  const [location, setLocation] = useState('');
-  const [time, setTime] = useState((() => {
-    const date = new Date();
-    date.setFullYear(2023);
-    date.setHours(0);
-    date.setMinutes(0);
-    date.setDate(1);
-    date.setMonth(1);
-    
-    return date.getTime();
-  })());
+// When the user leaves the text field
+const onExitFocus = (event, data, hooks) => {
+  // ID of the text field that maps to it's value
+  const newObj = data.members;
+  // If the text field doesn't contain a value, delete it's id
+  if (!event.target.value) {
+    delete newObj[event.target.id];
+    return;
+  }
+  newObj[event.target.id] = event.target.value;
 
-  // Load user data and fill 'info'
-  useEffect(() => {
-    async function load() {
-      const userData = await getUserInfo();
-      setInfo(userData);
-    }
-    load();
-  }, []);
-  useEffect(() => setPublisherNames({}), [nPublishers]);
-
-  return (
-    <div className="Dashboard app-sub-component">
-      <h1 align="center">{info.name}</h1><br />
-      <OverlayTrigger
-        trigger='click'
-        overlay={AppointmentCreationPopover(
-          {location, time, publisherNames, nPublishers},
-          {setLocation, setTime, setPublisherNames, setNPublishers},
-          () => didTapCreateAppointment())
-        }
-        placement='bottom'
-        onEnter={() => setAppointmentText('Cancel')}
-        onExit={() => setAppointmentText(initialBtnState)}>
-        <Button
-          className="create-appointment-btn" onClick={() => setNPublishers(2)}>
-          {appointmentText}
-        </Button>
-      </OverlayTrigger>
-
-      <div className="dashboard-session-card-container">
-        {info.sessions &&
-          info.sessions.map((sessions) => {
-            return (
-              <Card className="dashboard-session-card">
-                <Card.Body>
-                  <Card.Title>Hello</Card.Title>
-                  <Card.Text>Hello again</Card.Text>
-                </Card.Body>
-              </Card>
-            );
-          })}
-      </div>
-    </div>
-  );
+  event.target.value = newObj[event.target.id];
+  // Concat new values whilst removing duplicates
+  hooks.setMembers(newObj);
 }
+
+// Adds leading zero if hours/minutes < 10
+// formatTime(7, 5) -> 07:05
+function formatTime(hours, minutes) {
+  const leadingZero = (string) => (parseInt(string) < 10 ? "0" : "") + string;
+  return `${leadingZero(hours)}:${leadingZero(minutes)}`;
+}
+
 
 export default Dashboard;

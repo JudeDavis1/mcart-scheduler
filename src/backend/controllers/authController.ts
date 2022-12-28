@@ -16,10 +16,10 @@ const sendAuthToken = (
   statusCode: number,
   res: Response
 ): void => {
-  // generating the token with the payload (which is the user's mongodb id)
+  // generating the token with the payload (user as json)
   const token: string = signToken(user.toJSON());
   const cookieOptions: any = {
-    httpOnly: true,
+    httpOnly: false,
     expires: false,
     sameSite: 'none',
     secure: true
@@ -27,9 +27,9 @@ const sendAuthToken = (
 
   if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
   // Save the cookie as 'jwt'
-  console.log("SETTING COOKIE")
   res
     .status(statusCode)
+    .clearCookie("jwt")
     .cookie("jwt", token, cookieOptions)
     .json({
       status: "success",

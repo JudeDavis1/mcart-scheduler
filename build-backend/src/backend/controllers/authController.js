@@ -5,16 +5,16 @@ const signToken = (obj) => jwt.sign({ obj }, process.env.JWT_SECRET, {
 const sendAuthToken = (user, statusCode, res) => {
     const token = signToken(user.toJSON());
     const cookieOptions = {
-        httpOnly: true,
+        httpOnly: false,
         expires: false,
         sameSite: 'none',
         secure: true
     };
     if (process.env.NODE_ENV === "production")
         cookieOptions.secure = true;
-    console.log("SETTING COOKIE");
     res
         .status(statusCode)
+        .clearCookie("jwt")
         .cookie("jwt", token, cookieOptions)
         .json({
         status: "success",

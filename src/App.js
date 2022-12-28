@@ -12,6 +12,7 @@ import ContactUs from './components/ContactUs/ContactUs.jsx';
 import NavigationMenu from './components/NavigationMenu/NavigationMenu.jsx';
 import Footer from './components/Footer/Footer.jsx';
 import Dashboard from './components/Dashboard/Dashboard.jsx';
+import ViewUser from './components/ViewUser/ViewUser.jsx';
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
       <Route element={ <Signup /> } path="/signup" />
       <Route element={ <ContactUs /> } path="/contact-us" />
       <Route element={ <Dashboard /> } path="/dashboard" />
+      <Route element={ <ViewUser /> } path="/viewuser" />
     </Routes>
     <Particles id="tsparticles" init={particlesInit} options={options} />
     <Footer />

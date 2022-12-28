@@ -2,6 +2,7 @@ import axios from 'axios';
 import sha256 from 'crypto-js/sha256.js';
 import emailValidator from 'email-validator';
 import { UserType } from '../backend/models/userModel.js';
+import { toTitleCase } from '../utils/strUtils';
 
 import config from '../config.js';
 
@@ -90,19 +91,6 @@ function isInvalid(
         return true;
     }
     return false;
-}
-
-// Convert to title case e.g.
-// hello, world => Hello, World
-function toTitleCase(string: string) {
-    const arr = string.split(' ');
-    var newStr = [];
-
-    for (var i = 0; i < arr.length; i++) {
-        newStr.push(arr[i][0].toUpperCase() + arr[i].substring(1, arr[i].length));
-    }
-
-    return newStr.join(' ');
 }
 
 export default transport;

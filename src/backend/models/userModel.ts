@@ -9,11 +9,11 @@ enum UserType {
 
 interface IUser {
   _id: mongoose.Types.ObjectId;
-  name: String;
-  email: String;
-  hashedPassword: String;
+  name: string;
+  email: string;
+  hashedPassword: string;
   userType: UserType;
-  congregation: String;
+  congregation: string;
   sessions: Array<typeof Session>;
 }
 
@@ -37,8 +37,9 @@ const userSchema = new Schema({
     required: true
   },
   sessions: {
-    type: Array<typeof Session>,
+    type: Array<mongoose.Types.ObjectId>,
     required: false,
+    ref: "Session",
     default: []
   },
   hashedPassword: {

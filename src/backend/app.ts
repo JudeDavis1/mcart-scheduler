@@ -22,6 +22,7 @@ app.use((req: Request, res: Response, next: Function) => {
         "Origin, X-Requested-With, Content-Type, Accept",
     );
 	res.header("Access-Control-Allow-Credentials", "true");
+	res.header("Access-Control-Allow-Methods", "*");
 
     next();
 });

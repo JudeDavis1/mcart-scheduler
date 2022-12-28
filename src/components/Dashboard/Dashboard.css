@@ -2,13 +2,21 @@ h1 {
   z-index: 1;
 }
 
+.logout-button {
+  margin: 10px;
+  z-index: 1;
+}
+
 .dashboard-session-card {
   z-index: 1;
+  padding: 10px;
+  margin: 5px;
 }
 
 .dashboard-session-card-container {
   display: flex;
   flex-direction: row;
+  padding: 10px;
 }
 
 .app-sub-component {
@@ -23,3 +31,30 @@ h1 {
   margin: 0 auto;
 }
 
+.dashboard-user-link {
+  text-decoration: none;
+  color: darkblue;
+}
+
+@media screen and (max-width: 605px) {
+  .dashboard-session-card-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .dashboard-session-card {
+    width: 50vw;
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: 328px) {
+  .dashboard-session-card {
+    width: 80vw;
+  }
+}
+
+.PAAlert {
+  width: auto;
+}
