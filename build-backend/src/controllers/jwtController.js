@@ -1,12 +1,13 @@
 import axios from 'axios';
 import config from '../config';
-function hasJwt(next) {
+function hasJwt(next = () => { }, redirect = true) {
     let jwt;
     axios.get(config.backend_url + '/user/verify?' + document.cookie, config.withCookies)
         .then((val) => {
         if (val.data.isValid) {
             jwt = val.data.user;
-            window.location.href = '/dashboard';
+            if (redirect)
+                window.location.href = '/dashboard';
         }
     })
         .catch((err) => {
@@ -17,7 +18,17 @@ function hasJwt(next) {
         .then(() => next ? next(jwt) : {});
 }
 async function getUser() {
-    const data = await axios.get(config.backend_url + '/user/verify?' + document.cookie, config.withCookies);
-    return data.data.user;
+    hasJwt((jwt) => {
+    }, false);
+    const request = await axios.get(config.backend_url + '/user/verify?' + document.cookie, config.withCookies);
+    return request.data.user;
 }
-export { hasJwt, getUser };
+async function updateUser() {
+    const currentUser = await getUser();
+    const request = await axios.post(config.backend_url + "/user/updateJwt", { userId: currentUser._id });
+    document.cookie = "jwt=" + request.data.token;
+}
+function deleteJwt() {
+    document.cookie = "jwt=; max-age=0";
+}
+export { hasJwt, getUser, updateUser, deleteJwt };
