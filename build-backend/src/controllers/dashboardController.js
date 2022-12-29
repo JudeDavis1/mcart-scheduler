@@ -56,7 +56,7 @@ async function deleteSessionItem(sessionId, reloadFn) {
     console.log(sessionId);
     const request = await axios.delete(config.backend_url + "/session/delete?sessionId=" + sessionId);
     await updateUser();
-    reloadFn(crypto.randomUUID());
+    reloadFn(Date.now.toString());
 }
 function logout() {
     deleteJwt();
