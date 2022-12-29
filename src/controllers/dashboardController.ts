@@ -6,6 +6,8 @@ import { IUser } from "../backend/models/userModel.js";
 import { toTitleCase } from "../utils/strUtils";
 
 
+const crypto = window.crypto;
+
 interface SessionInfo {
   time: number;
   place: string;
@@ -85,7 +87,7 @@ async function deleteSessionItem(sessionId: string, reloadFn: Function) {
   );
   
   await updateUser();
-  reloadFn(Date.now.toString());
+  reloadFn(crypto.randomUUID());
 }
 
 function logout() {
