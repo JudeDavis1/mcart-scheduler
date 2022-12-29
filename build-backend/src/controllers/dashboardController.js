@@ -2,6 +2,7 @@ import axios from "axios";
 import config from "../config";
 import { getUser, updateUser, deleteJwt } from "./jwtController";
 import { toTitleCase } from "../utils/strUtils";
+const crypto = window.crypto;
 async function getUserInfo() {
     const user = await getUser();
     await updateUser();
@@ -56,7 +57,7 @@ async function deleteSessionItem(sessionId, reloadFn) {
     console.log(sessionId);
     const request = await axios.delete(config.backend_url + "/session/delete?sessionId=" + sessionId);
     await updateUser();
-    reloadFn(Date.now.toString());
+    reloadFn(crypto.randomUUID());
 }
 function logout() {
     deleteJwt();
