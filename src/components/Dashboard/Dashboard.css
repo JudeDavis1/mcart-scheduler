@@ -11,12 +11,14 @@ h1 {
   z-index: 1;
   padding: 10px;
   margin: 5px;
+  min-width: 200px;
 }
 
 .dashboard-session-card-container {
   display: flex;
   flex-direction: row;
   padding: 10px;
+  overflow: auto;
 }
 
 .app-sub-component {
@@ -44,7 +46,7 @@ h1 {
   }
 
   .dashboard-session-card {
-    width: 50vw;
+    width: 65vw;
     text-align: center;
   }
 }
