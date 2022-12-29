@@ -22,7 +22,7 @@ function Dashboard() {
     const [sessionsLoaded, setSessionsLoaded] = useState(false);
     const [currentSessions, setCurrentSessions] = useState([{}]);
     const [popoverMsg, setPopoverMsg] = useState(globalMsgConfig);
-    const [reloadAll, setReloadAll] = useState(crypto.randomUUID());
+    const [reloadAll, setReloadAll] = useState(Date.now().toString());
     const [dashboardMsg, setDashboardMsg] = useState(globalMsgConfig);
     const [appointmentText, setAppointmentText] = useState(initialBtnState);
     const [showPopover, setShowPopover] = useState(false);
@@ -53,7 +53,7 @@ function Dashboard() {
             <MAlert variant={dashboardMsg.status} onClose={() => setDashboardMsg({ ...dashboardMsg, shouldShow: false })} text={dashboardMsg.text}/>}
       <OverlayTrigger trigger='click' overlay={AppointmentCreationPopover({ place, time, members, nPublishers, popoverMsg }, { setPlace, setTime, setMembers, setNPublishers, setPopoverMsg }, () => {
             didTapCreateAppointment({ place, members: Object.values(members), time }, popoverMsg, setPopoverMsg, () => {
-                setReloadAll(crypto.randomUUID());
+                setReloadAll(Date.now.toString());
                 setShowPopover(false);
             });
         })} placement='bottom' show={showPopover} onEnter={() => setAppointmentText('Cancel')} onExit={() => {
