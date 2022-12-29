@@ -19,6 +19,7 @@ import {
   logout } from "../../controllers/dashboardController";
 import MAlert from "../MAlert/MAlert";
 
+const crypto = window.crypto;
 
 function Dashboard() {
   const initialBtnState = (
@@ -85,7 +86,7 @@ function Dashboard() {
                 popoverMsg,
                 setPopoverMsg,
                 () => {
-                  setReloadAll(Date.now.toString());
+                  setReloadAll(crypto.randomUUID());
                   setShowPopover(false);
                 });
             })
@@ -114,7 +115,7 @@ function Dashboard() {
               <Card className="dashboard-session-card" id={`session-card-${sessionIdx}`}>
                 <Delete onClick={() => {
                   deleteSessionItem(currentSessions[sessionIdx]._id, setReloadAll);
-                  setDashboardMsg({text: "Deleted session", shouldShow: true, status: "success"});
+                  setDashboardMsg({ text: "Deleted session", shouldShow: true, status: "success" });
                 }} />
                 <Card.Body>
                   <Card.Title>{formatTime(time.getHours(), time.getMinutes())}</Card.Title>
@@ -178,7 +179,7 @@ const AppointmentCreationPopover = (data, hooks, didSubmit) => {
           </Grid>
           {publisherNameFields(data, hooks)}
           <Grid item>
-            <Button id="okok" onClick={() => didSubmit()}>Create</Button>
+            <Button onClick={() => didSubmit()}>Create</Button>
           </Grid>
         </Grid>
       </Popover.Body>
