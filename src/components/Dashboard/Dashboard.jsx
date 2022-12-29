@@ -33,7 +33,7 @@ function Dashboard() {
   const [sessionsLoaded, setSessionsLoaded] = useState(false);
   const [currentSessions, setCurrentSessions] = useState([{}]);
   const [popoverMsg, setPopoverMsg] = useState(globalMsgConfig);
-  const [reloadAll, setReloadAll] = useState(crypto.randomUUID());
+  const [reloadAll, setReloadAll] = useState(Date.now().toString());
   const [dashboardMsg, setDashboardMsg] = useState(globalMsgConfig);
   const [appointmentText, setAppointmentText] = useState(initialBtnState);
   const [showPopover, setShowPopover] = useState(false);
@@ -85,7 +85,7 @@ function Dashboard() {
                 popoverMsg,
                 setPopoverMsg,
                 () => {
-                  setReloadAll(crypto.randomUUID());
+                  setReloadAll(Date.now.toString());
                   setShowPopover(false);
                 });
             })
