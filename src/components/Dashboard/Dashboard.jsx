@@ -19,7 +19,6 @@ import {
   logout } from "../../controllers/dashboardController";
 import MAlert from "../MAlert/MAlert";
 
-const crypto = window.crypto;
 
 function Dashboard() {
   const initialBtnState = (
@@ -86,7 +85,7 @@ function Dashboard() {
                 popoverMsg,
                 setPopoverMsg,
                 () => {
-                  setReloadAll(crypto.randomUUID());
+                  setReloadAll(Date.now());
                   setShowPopover(false);
                 });
             })
