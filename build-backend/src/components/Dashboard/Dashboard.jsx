@@ -12,7 +12,6 @@ import Spinner from "react-bootstrap/Spinner";
 import "./Dashboard.css";
 import { getUserInfo, didTapCreateAppointment, loadSessions, deleteSessionItem, logout } from "../../controllers/dashboardController";
 import MAlert from "../MAlert/MAlert";
-const crypto = window.crypto;
 function Dashboard() {
     const initialBtnState = (<>Appointment {<Add />}</>);
     const globalMsgConfig = { text: "", shouldShow: false, status: "info" };
@@ -54,7 +53,7 @@ function Dashboard() {
             <MAlert variant={dashboardMsg.status} onClose={() => setDashboardMsg({ ...dashboardMsg, shouldShow: false })} text={dashboardMsg.text}/>}
       <OverlayTrigger trigger='click' overlay={AppointmentCreationPopover({ place, time, members, nPublishers, popoverMsg }, { setPlace, setTime, setMembers, setNPublishers, setPopoverMsg }, () => {
             didTapCreateAppointment({ place, members: Object.values(members), time }, popoverMsg, setPopoverMsg, () => {
-                setReloadAll(crypto.randomUUID());
+                setReloadAll(Date.now());
                 setShowPopover(false);
             });
         })} placement='bottom' show={showPopover} onEnter={() => setAppointmentText('Cancel')} onExit={() => {
