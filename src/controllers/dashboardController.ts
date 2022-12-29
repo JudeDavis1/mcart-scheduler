@@ -85,7 +85,7 @@ async function deleteSessionItem(sessionId: string, reloadFn: Function) {
   );
   
   await updateUser();
-  reloadFn(crypto.randomUUID());
+  reloadFn(Date.now.toString());
 }
 
 function logout() {
